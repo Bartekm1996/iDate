@@ -85,7 +85,7 @@ h1 {
 
       <div style="border-radius: 30px 3px;" class="card test">
         <div class="card-content center-align">
-				<h1 style="text-align:center">iDate</h1>
+				<h1 style="text-align:center">iDate - Test for commit</h1>
 			  <div class="row">
 			  
 				  <div class="col m6 s12">
