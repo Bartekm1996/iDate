@@ -1,4 +1,4 @@
-#iDate
+# iDate
 
 
 ![alt text](https://github.com/Bartekm1996/iDate/blob/master/iDtae.jpg "iDate Logo")
