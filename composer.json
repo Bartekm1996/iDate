@@ -1,5 +1,6 @@
 {
     "require": {
-        "mongodb/mongodb": "^1.6"
+        "ext-bcmath": "*",
+        "ext-mongodb": "^1.1.0"
     }
 }

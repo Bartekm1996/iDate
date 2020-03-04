@@ -6,29 +6,9 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit09f41bd3ebb9450087141d4ca3907aae
 {
-    public static $files = array (
-        '3a37ebac017bc098e9a86b35401e7a68' => __DIR__ . '/..' . '/mongodb/mongodb/src/functions.php',
-    );
-
-    public static $prefixLengthsPsr4 = array (
-        'M' => 
-        array (
-            'MongoDB\\' => 8,
-        ),
-    );
-
-    public static $prefixDirsPsr4 = array (
-        'MongoDB\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/mongodb/mongodb/src',
-        ),
-    );
-
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit09f41bd3ebb9450087141d4ca3907aae::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit09f41bd3ebb9450087141d4ca3907aae::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }
