@@ -80,7 +80,16 @@ h1 {
 <body>
 
 	<div class="container">
-
+        <nav>
+            <div class="nav-wrapper card-panel pink ">
+                <a href="#" class="brand-logo">iDate</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="confections.html">Confections</a></li>
+                    <li><a href="profile.html">Profile</a></li>
+                </ul>
+            </div>
+        </nav>
   <div class="row">
 
       <div style="border-radius: 30px 3px;" class="card test">
@@ -102,6 +111,7 @@ h1 {
 					</div>
 				
 					<a class="waves-effect waves-light btn purple"><i class="material-icons left">play_arrow</i>Login</a>
+                      <a class="waves-effect waves-light btn green"><i class="material-icons right">play_arrow</i>Register</a>
 				</div>
 			  <div class="col s6 center-align hide-on-small-only">
 				<img style="border-radius: 20px 20px 0px 0px;"  height="300px" width="100%" src="https://image.shutterstock.com/image-vector/vector-app-user-illustration-flat-600w-1229510083.jpg"/>
