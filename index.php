@@ -1,10 +1,10 @@
 <?php
   # get the mongo db name out of the env
-  $mongo_url = parse_url(getenv("MONGO_URL"));
+  $mongo_url = parse_url(getenv("MONGO_URI"));
   $dbname = str_replace("/", "", $mongo_url["path"]);
 
   # connect
-  $m   = new MongoDB\Driver\Manager(getenv("MONGO_URL"));
+  $m   = new MongoDB\Driver\Manager(getenv("MONGO_URI"));
   $db  = $m->$dbname;
   $col = $db->access;
 
