@@ -1,5 +1,8 @@
 {
     "require": {
-        "ext-mongo": "*"
-     }
-  }
+        "ext-bcmath": "*",
+        "ext-mcrypt": "*",
+        "ext-memcached": "*",
+        "ext-mongodb": "^1.1.0"
+    }
+}
