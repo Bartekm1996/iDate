@@ -20,8 +20,6 @@ class Email
         $this->to = $to;
         $this->subject = $subject;
         $this->content = $content;
-        $this->apiKey = getenv('SENDGRID_API_KEY');
-        $this->sg = new \SendGrid($this->apiKey);
 
     }
 
@@ -32,10 +30,20 @@ class Email
         $emailContent = new SendGrid\Content("text/plain", $this->getContent());
         $mail = new SendGrid\Mail($emailFrom, $emailSubject, $emailTo, $emailContent);
 
-        $response = $this->sg->client->mail()->send()->post($mail);
-        echo $response->statusCode();
-        echo $response->headers();
-        echo $response->body();
+
+        $this->apiKey = getenv('SENDGRID_API_KEY');
+        $this->sg = new \SendGrid($this->apiKey);
+
+
+        try {
+            $response = $this->sg->client->mail()->send()->post($mail);
+            print $response->statusCode() . "\n";
+            print_r($response->headers());
+            print $response->body() . "\n";
+        } catch (Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+        }
+
     }
 
     /**

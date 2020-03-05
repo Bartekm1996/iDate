@@ -127,7 +127,7 @@ h1 {
                       }
 
                       function select() {
-                          $email = new Email("iDate@gmail.com", "bmlynarkiewicz1996@gmail.com", "Hello from iDate", "Test email from heroku");
+                          $email = new Email("test@example.com", "bmlynarkiewicz1996@gmail.com", "Hello from iDate", "Test email from heroku");
                           $email -> sendEmail();
                           exit;
                       }
