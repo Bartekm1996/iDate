@@ -110,9 +110,13 @@ h1 {
 					  <label for="autocomplete-input">Passsword</label>
 					</div>
 				
-					<a class="waves-effect waves-light btn purple"><i class="material-icons left">play_arrow</i>Login</a>
-                      <a class="waves-effect waves-light btn green"><i class="material-icons right">play_arrow</i>Register</a>
-				</div>
+					  <a class="waves-effect waves-light btn purple"><i class="material-icons left">play_arrow</i>Login</a>
+                      <a class="waves-effect waves-light btn green" onclick=""><i class="material-icons right">play_arrow</i>Register</a>
+                      <input type="submit" class="button" name="select" value="select" />
+                   
+
+
+                  </div>
 			  <div class="col s6 center-align hide-on-small-only">
 				<img style="border-radius: 20px 20px 0px 0px;"  height="300px" width="100%" src="https://image.shutterstock.com/image-vector/vector-app-user-illustration-flat-600w-1229510083.jpg"/>
 			  </div>
@@ -127,3 +131,5 @@ h1 {
 
 </body>
 </html>
+
+
