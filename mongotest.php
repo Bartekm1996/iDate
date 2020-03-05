@@ -7,4 +7,3 @@ $connectionString = "mongodb://idev.ie:27017";
 //echo $dbs;
 $conn = new MongoClient($connectionString);
 echo 'Is connected '. $conn->connect();
-echo $conn->listDBs();
