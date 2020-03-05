@@ -80,7 +80,7 @@ h1 {
 <body>
 
 	<div class="container">
-        <nav>
+        <nav><!-- Norbert We don't need a nav as left menu like in spec image is all we need. -->
             <div class="nav-wrapper card-panel pink ">
                 <a href="#" class="brand-logo">iDate</a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
