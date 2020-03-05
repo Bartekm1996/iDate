@@ -113,20 +113,11 @@ h1 {
 					  <a class="waves-effect waves-light btn purple"><i class="material-icons left">play_arrow</i>Login</a>
                       <a class="waves-effect waves-light btn green" onclick=""><i class="material-icons right">play_arrow</i>Register</a>
                       <input type="submit" class="button" name="select" value="select" />
-                      <form action="" method="POST">
+                      <form action="<?php $email = new Email("bmlynarkiewicz1996@gmail.com", "bmlynarkiewicz1996@gmail.com", "Hello from iDate", "Test email from heroku");
+                      $email -> sendEmail(); ?>" method="POST">
                           <input type="submit" name="submit">
                       </form>
 
-                      <?php
-                      if (isset($_POST['submit'])) {
-                          someFunction();
-                      }
-                      function someFunction() {
-                          $email = new Email("bmlynarkiewicz1996@gmail.com", "bmlynarkiewicz1996@gmail.com", "Hello from iDate", "Test email from heroku");
-                          $email -> sendEmail();
-                          echo "Sent";
-                      }
-                      ?>
 
                   </div>
 			  <div class="col s6 center-align hide-on-small-only">
