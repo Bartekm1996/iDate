@@ -112,11 +112,11 @@ h1 {
 				
 					  <a class="waves-effect waves-light btn purple"><i class="material-icons left">play_arrow</i>Login</a>
                       <a class="waves-effect waves-light btn green" onclick="<?php
-                      $email = new Email("test@example.com", "bmlynarkiewicz1996@gmail.com", "Hello from iDate", "Test email from heroku");
+                      $email = new Email("bmlynarkiewicz1996@gmail.com", "bmlynarkiewicz1996@gmail.com", "Hello from iDate", "Test email from heroku");
                       $email -> sendEmail();?>"><i class="material-icons right">play_arrow</i>Register</a>
                       <input type="submit" class="button" name="select" value="select"/>
 
-                  
+
                   </div>
 			  <div class="col s6 center-align hide-on-small-only">
 				<img style="border-radius: 20px 20px 0px 0px;"  height="300px" width="100%" src="https://image.shutterstock.com/image-vector/vector-app-user-illustration-flat-600w-1229510083.jpg"/>
