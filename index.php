@@ -40,11 +40,11 @@
             sendDataTest(resquest, "Register.php");
         }
 
-        function sendDataTest($request, $urll) {
+        function sendDataTest(request, urll) {
             $.ajax({
                 type: "post",
-                url: $urll,
-                data: JSON.stringify($request),
+                url: urll,
+                data: JSON.stringify(request),
                 success: function (response) {
                     swal('Testing.....');
                     alert("testing2....");
