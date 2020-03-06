@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 </head>
 <body style="background-color: #999999;">
@@ -30,7 +31,7 @@
         <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
             <span class="login100-form-title p-b-59" id="signUpHeader">Sing In</span>
 
-            <form id="loginForm" class="login100-form validate-form" action="Login.php" >
+            <form id="loginForm" class="login100-form validate-form" action="Login.php"  method="post">
 
                 <div class="wrap-input100 validate-input" data-validate="UserName / Email is required">
                     <span class="label-input100">User Name</span>
@@ -38,9 +39,9 @@
                     <span class="focus-input100"></span>
                 </div>
 
-                <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-                    <span class="label-input100">Email</span>
-                    <input class="input100" type="text" name="email" placeholder="Email addess...">
+                <div class="wrap-input100 validate-input" data-validate = "Password is required:  Abc123!!">
+                    <span class="label-input100">Password</span>
+                    <input class="input100" type="text" name="password" placeholder="Password">
                     <span class="focus-input100"></span>
                 </div>
 
@@ -55,12 +56,6 @@
 
 
             </form>
-
-
-
-
-
-
 
             <form id="registerForm" class="login100-form validate-form" style="display: none;">
 
