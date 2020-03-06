@@ -46,7 +46,7 @@
                 url: urll,
                 data: JSON.stringify(request),
                 success: function (response) {
-                    swal(response.data);
+                    swal(response);
                 },
                 failure: function (response) { alert("failure:" + response); },
                 error: function (response) { alert("error:" + response); }
