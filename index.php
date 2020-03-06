@@ -38,9 +38,9 @@
                     <span class="focus-input100"></span>
                 </div>
 
-                <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-                    <span class="label-input100">Email</span>
-                    <input class="input100" type="text" name="email" placeholder="Email addess...">
+                <div class="wrap-input100 validate-input" data-validate = "Password is required:  Abc123!!">
+                    <span class="label-input100">Password</span>
+                    <input class="input100" type="text" name="password" placeholder="Password">
                     <span class="focus-input100"></span>
                 </div>
 
@@ -55,12 +55,6 @@
 
 
             </form>
-
-
-
-
-
-
 
             <form id="registerForm" class="login100-form validate-form" style="display: none;">
 
