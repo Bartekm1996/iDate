@@ -42,6 +42,7 @@
         }
 
         function sendDataTest(request, urll) {
+            console.log(request);
             $.ajax({
                 type: "post",
                 url: urll,
