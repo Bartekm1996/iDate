@@ -204,6 +204,8 @@ iframe {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  text-align: center;
+  color: white;
   width: calc(100% - 520px);
   position: relative;
   z-index: 1;
