@@ -15,7 +15,7 @@ if (isset($_REQUEST['username']) && isset($_REQUEST['pass'])
         $upass = $conn->real_escape_string($upass);
         $email = $conn->real_escape_string($email);
 
-        $sql = "SELECT registered FROM user where username='{$uname}' AND password='{$upass}' LIMIT 1;";
+        $sql = "SELECT registered FROM user where username='{$uname}' LIMIT 1;";
 
         $result = $conn->query($sql);
         if ($result->num_rows > 0)
