@@ -24,20 +24,21 @@
     <script>
         //<!-- Ajax post test-->
         function loginTest() {
-            var resquest = new Object();
-            resquest.user_name = $('#user_name').val();
-            resquest.password = $('#password').val();
-            sendDataTest(resquest, "Login.php");
+            var request = new Object();
+            request.user_name = $('#user_name').val();
+            request.password = $('#password').val();
+
+            sendDataTest(request, "Login.php");
         }
 
 
         function regTest() {
-            var resquest = new Object();
-            resquest.username = $('#username').val();
-            resquest.pass = $('#pass').val();
-            resquest.email = $('#pass').val();
-            resquest.name = $('#name').val();
-            sendDataTest(resquest, "Register.php");
+            var request = new Object();
+            request.username = $('#username').val();
+            request.pass = $('#pass').val();
+            request.email = $('#pass').val();
+            request.name = $('#name').val();
+            sendDataTest(request, "Register.php");
         }
 
         function sendDataTest(request, urll) {
