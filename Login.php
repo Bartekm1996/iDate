@@ -25,4 +25,5 @@ if (isset($_POST['user_name']) && isset($_POST['password']) ) {
 } else {
     //didn't set username or pass
     echo "Invalid data";
+    echo $_POST['user_name'].$_POST['password'];
 }
