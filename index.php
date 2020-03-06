@@ -31,9 +31,9 @@
         <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
             <span class="login100-form-title p-b-59" id="signUpHeader">Sing In</span>
 
-            <form id="loginForm" class="login100-form validate-form" action="Login.php"  method="post">
+            <form id="loginForm" class="login100-form validate-form" action="Login.php"  method="POST">
 
-                <div class="wrap-input100 validate-input" data-validate="UserName / Email is required">
+                <div class="wrap-input100 validate-input" data-validate="UserName required">
                     <span class="label-input100">User Name</span>
                     <input class="input100" type="text" name="user_name" placeholder="User Name / Email">
                     <span class="focus-input100"></span>
