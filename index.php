@@ -62,7 +62,7 @@
 
 
 
-            <form id="registerForm" class="login100-form validate-form" action="Login.php" style="display: none;">
+            <form id="registerForm" class="login100-form validate-form" style="display: none;">
 
                 <div class="wrap-input100 validate-input" data-validate="Name is required">
                     <span class="label-input100">Full Name</span>
