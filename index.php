@@ -15,24 +15,24 @@
     <link rel="stylesheet" type="text/css" href="vendorv/select2/select2.min.css">
     <link rel="stylesheet" type="text/css" href="vendorv/daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="css/util.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
 
     <script>
         //<!-- Ajax post test-->
         function loginTest() {
-            var request = new Object();
+            var request = {};
             request.user_name = $('#user_name').val();
             request.password = $('#password').val();
-
             sendDataTest(request, "Login.php");
         }
 
 
         function regTest() {
-            var request = new Object();
+            var request = {};
             request.username = $('#username').val();
             request.pass = $('#pass').val();
-            request.email = $('#pass').val();
+            request.email = $('#email').val();
             request.name = $('#name').val();
             sendDataTest(request, "Register.php");
         }
@@ -66,7 +66,7 @@
 
             <span class="login100-form-title p-b-59" id="signUpHeader">Sing In</span>
 
-            <form id="loginForm" class="login100-form validate-form" action="Login.php"  method="post">
+            <form id="loginForm" class="login100-form validate-form" method="post" action="Login.php">
 
                 <div class="wrap-input100 validate-input" data-validate="UserName / Email is required">
                     <span class="label-input100">User Name</span>
@@ -83,13 +83,11 @@
                 <div class="container-login100-form-btn">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn" onclick="">
+                        <button class="login100-form-btn" type="submit">
                             Sign In
                         </button>
                     </div>
                 </div>
-
-
             </form>
 
             <form id="registerForm" class="login100-form validate-form" style="display: none;" action="Register.php"  method="post">

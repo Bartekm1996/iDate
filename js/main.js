@@ -84,18 +84,14 @@
 
         if(isLoginVisible) {
             $('#loginForm').hide();
-            $('#loginForm').css('display', 'none');
             $('#signUpHeader').html("Sign Up");
             $('#signUp').html("Sing In");
             $('#registerForm').show();
-            $('#registerForm').css('display', 'flex');
         } else {
             $('#loginForm').show();
-            $('#loginForm').css('display', 'flex');
             $('#signUpHeader').html("Sign In");
             $('#signUp').html("Sing Up");
             $('#registerForm').hide();
-            $('#registerForm').css('display', 'none');
         }
     })
     

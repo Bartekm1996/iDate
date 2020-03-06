@@ -26,6 +26,8 @@ if (isset($_REQUEST['username']) && isset($_REQUEST['pass'])
             $sql = "INSERT INTO user (email, username, password) VALUES('{$email}','{$uname}','{$upass}');";
             if($conn->query($sql) === TRUE) {
                 echo "User inserted into the database";
+                $email = new Email($email);
+                $email -> sendRegisterEmail();
             } else {
                 echo "Failed to insert user into the database";
             }
