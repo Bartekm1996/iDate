@@ -46,7 +46,8 @@
                 url: $urll,
                 data: JSON.stringify($request),
                 success: function (response) {
-                    swal(response.data);
+                    swal('Testing.....');
+                    alert("testing2....");
                 },
                 failure: function (response) { alert("failure:" + response); },
                 error: function (response) { alert("error:" + response); }
