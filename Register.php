@@ -1,12 +1,14 @@
 <?php
 require("db.php");
+require("Email.php");
 
 if (isset($_REQUEST['username']) && isset($_REQUEST['pass'])
-&& isset($_REQUEST['email'])) {
+&& isset($_REQUEST['email']) && isset($_REQUEST['name'])) {
 
     $uname = $_REQUEST['username'];
     $upass = $_REQUEST['pass'];
     $email = $_REQUEST['email'];
+    $name = $_REQUEST['name'];
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
@@ -26,7 +28,7 @@ if (isset($_REQUEST['username']) && isset($_REQUEST['pass'])
             $sql = "INSERT INTO user (email, username, password) VALUES('{$email}','{$uname}','{$upass}');";
             if($conn->query($sql) === TRUE) {
                 echo "User inserted into the database";
-                $email = new Email($email);
+                $email = new Email($email, $name);
                 $email -> sendRegisterEmail();
             } else {
                 echo "Failed to insert user into the database";

@@ -4,6 +4,8 @@ if (isset($_POST['user_name']) && isset($_POST['password']) ) {
     $uname = $_POST['user_name'];
     $upass = $_POST['password'];
 
+
+
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
@@ -24,6 +26,5 @@ if (isset($_POST['user_name']) && isset($_POST['password']) ) {
     $conn->close();
 } else {
     //didn't set username or pass
-    echo "Invalid data";
     echo $_POST['user_name'].$_POST['password'];
 }

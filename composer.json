@@ -3,6 +3,7 @@
         "ext-bcmath": "*",
         "ext-mongodb": "^1.1.0",
         "sendgrid/sendgrid": "~5.0.9",
-        "ext-mysqli": "*"
+        "ext-mysqli": "*",
+        "ext-openssl": "*"
     }
 }

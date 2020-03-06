@@ -23,7 +23,7 @@
         function loginTest() {
             var request = {};
             request.user_name = $('#user_name').val();
-            request.password = $('#password').val();
+            request.password = $('#login_password').val();
             sendDataTest(request, "Login.php");
         }
 
@@ -40,9 +40,9 @@
         function sendDataTest(request, urll) {
             console.log(request);
             $.ajax({
-                type: "post",
+                method: "POST",
                 url: urll,
-                data: JSON.stringify(request),
+                data: request,
                 success: function (response) {
                     alert("Logged In:" + response);
                 },
@@ -70,13 +70,13 @@
 
                 <div class="wrap-input100 validate-input" data-validate="UserName / Email is required">
                     <span class="label-input100">User Name</span>
-                    <input class="input100" type="text" name="user_name" placeholder="User Name / Email">
+                    <input class="input100" type="text" id="user_name" placeholder="User Name / Email">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate = "Password is required:  Abc123!!">
                     <span class="label-input100">Password</span>
-                    <input class="input100" type="password" name="password" placeholder="Password">
+                    <input class="input100" type="text" id="login_password" placeholder="Password">
                     <span class="focus-input100"></span>
                 </div>
 
@@ -94,31 +94,31 @@
 
                 <div class="wrap-input100 validate-input" data-validate="Name is required">
                     <span class="label-input100">Full Name</span>
-                    <input class="input100" type="text" name="name" placeholder="Name...">
+                    <input class="input100" type="text" id="name" placeholder="Name...">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
                     <span class="label-input100">Email</span>
-                    <input class="input100" type="text" name="email" placeholder="Email addess...">
+                    <input class="input100" type="text" id="email" placeholder="Email addess...">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate="Username is required">
                     <span class="label-input100">Username</span>
-                    <input class="input100" type="text" name="username" placeholder="Username...">
+                    <input class="input100" type="text" id="username" placeholder="Username...">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate = "Password is required">
                     <span class="label-input100">Password</span>
-                    <input class="input100" type="password" name="pass" placeholder="*************">
+                    <input class="input100" type="password" id="pass" placeholder="*************">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate = "Repeat Password is required">
                     <span class="label-input100">Repeat Password</span>
-                    <input class="input100" type="password" name="repeat-pass" placeholder="*************">
+                    <input class="input100" type="password" id="repeat-pass" placeholder="*************">
                     <span class="focus-input100"></span>
                 </div>
 
