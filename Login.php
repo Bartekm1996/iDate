@@ -1,6 +1,6 @@
 <?php
 require("db.php");
-
+print_r($_POST);
 if (isset($_POST['user_name']) && isset($_POST['password']) ) {
     $uname = $_POST['user_name'];
     $upass = $_POST['password'];
