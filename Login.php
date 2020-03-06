@@ -18,7 +18,8 @@ if (isset($_REQUEST['user_name']) && isset($_REQUEST['password']) ) {
         $result = $conn->query($sql);
         if ($result->num_rows > 0)
         {
-            echo "You logged in";
+            $row=mysqli_fetch_row($result);
+            echo $row[0] ? "You logged and registered": "You are logged in but not registered";
         } else {
             echo "Failed to log in";
         }
