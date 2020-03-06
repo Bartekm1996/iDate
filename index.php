@@ -15,7 +15,8 @@
     <link rel="stylesheet" type="text/css" href="vendorv/select2/select2.min.css">
     <link rel="stylesheet" type="text/css" href="vendorv/daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+
 
 </head>
 <body style="background-color: #999999;">
@@ -39,7 +40,7 @@
 
                 <div class="wrap-input100 validate-input" data-validate = "Password is required:  Abc123!!">
                     <span class="label-input100">Password</span>
-                    <input class="input100" type="text" name="password" placeholder="Password">
+                    <input class="input100" type="password" name="password" placeholder="Password">
                     <span class="focus-input100"></span>
                 </div>
 
