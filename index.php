@@ -15,9 +15,7 @@
     <link rel="stylesheet" type="text/css" href="vendorv/select2/select2.min.css">
     <link rel="stylesheet" type="text/css" href="vendorv/daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 </head>
 <body style="background-color: #999999;">
@@ -57,7 +55,7 @@
 
             </form>
 
-            <form id="registerForm" class="login100-form validate-form" style="display: none;">
+            <form id="registerForm" class="login100-form validate-form" style="display: none;" action="Register.php"  method="post">
 
                 <div class="wrap-input100 validate-input" data-validate="Name is required">
                     <span class="label-input100">Full Name</span>
