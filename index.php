@@ -15,9 +15,41 @@
     <link rel="stylesheet" type="text/css" href="vendorv/select2/select2.min.css">
     <link rel="stylesheet" type="text/css" href="vendorv/daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <script>
+        //<!-- Ajax post test-->
+        function loginTest() {
+            var resquest = new Object();
+            resquest.user_name = $('#user_name').val();
+            resquest.password = $('#password').val();
+            sendDataTest(resquest, "Login.php");
+        }
 
 
+        function regTest() {
+            var resquest = new Object();
+            resquest.username = $('#username').val();
+            resquest.pass = $('#pass').val();
+            resquest.email = $('#pass').val();
+            resquest.name = $('#name').val();
+            sendDataTest(resquest, "Register.php");
+        }
+
+        function sendDataTest(request, urll) {
+            $.ajax({
+                type: "post",
+                url: urll,
+                data: JSON.stringify(request),
+                success: function (response) {
+                    swal(response);
+                },
+                failure: function (response) { alert("failure:" + response); },
+                error: function (response) { alert("error:" + response); }
+            });
+        }
+
+    </script>
 </head>
 <body style="background-color: #999999;">
 
@@ -28,6 +60,8 @@
 
 
         <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
+
+
             <span class="login100-form-title p-b-59" id="signUpHeader">Sing In</span>
 
             <form id="loginForm" class="login100-form validate-form" action="Login.php"  method="post">
@@ -40,7 +74,7 @@
 
                 <div class="wrap-input100 validate-input" data-validate = "Password is required:  Abc123!!">
                     <span class="label-input100">Password</span>
-                    <input class="input100" type="password" name="password" placeholder="Password">
+                    <input class="input100" type="text" name="password" placeholder="Password">
                     <span class="focus-input100"></span>
                 </div>
 
