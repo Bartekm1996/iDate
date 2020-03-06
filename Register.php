@@ -1,5 +1,6 @@
 <?php
 require("db.php");
+
 if (isset($_REQUEST['user_name']) && isset($_REQUEST['password']) ) {
     $uname = $_REQUEST['user_name'];
     $upass = $_REQUEST['password'];
