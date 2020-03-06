@@ -29,7 +29,7 @@
 
 
         <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
-            <span class="login100-form-title">iDate</span>
+            <span style="text-align: center" class="login100-form-title">iDate</span>
 
             <span class="login100-form-title p-b-59" id="signUpHeader">Sing In</span>
 
