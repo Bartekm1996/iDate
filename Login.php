@@ -1,8 +1,8 @@
 <?php
 require("db.php");
-if (isset($_REQUEST['user_name']) && isset($_REQUEST['password']) ) {
-    $uname = $_REQUEST['user_name'];
-    $upass = $_REQUEST['password'];
+if (isset($_POST['user_name']) && isset($_POST['password']) ) {
+    $uname = $_POST['user_name'];
+    $upass = $_POST['password'];
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
