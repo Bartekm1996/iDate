@@ -2,6 +2,7 @@
     "require": {
         "ext-bcmath": "*",
         "ext-mongodb": "^1.1.0",
+        "ext-mongo": "*",
         "sendgrid/sendgrid": "~5.0.9"
     }
 }
