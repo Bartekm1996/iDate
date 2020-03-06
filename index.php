@@ -69,7 +69,7 @@
 
             <span class="login100-form-title p-b-59" id="signUpHeader">Sing In</span>
 
-            <form id="loginForm" class="login100-form validate-form" action="Login.php"  method="POST">
+            <div id="loginForm" class="login100-form validate-form">
 
                 <div class="wrap-input100 validate-input" data-validate="UserName required">
                     <span class="label-input100">User Name</span>
@@ -93,9 +93,9 @@
                 </div>
 
 
-            </form>
+            </div>
 
-            <form id="registerForm" class="login100-form validate-form" style="display: none;" action="Register.php"  method="post">
+            <div id="registerForm" class="login100-form validate-form" style="display: none;" >
 
                 <div class="wrap-input100 validate-input" data-validate="Name is required">
                     <span class="label-input100">Full Name</span>
@@ -151,7 +151,7 @@
                         </button>
                     </div>
                 </div>
-            </form>
+            </div>
 
             <a href="#" id="signUp" class="dis-block txt3 hov1 p-r-30 p-t-10 p-b-10 p-l-30">
                 Sign Up
