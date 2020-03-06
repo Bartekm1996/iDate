@@ -17,8 +17,43 @@
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
-    <!-- removed JQuery from header test -->
+    <link href="vendorv/sweetalert/sweetalert.min.css" rel="stylesheet" />
+    <script src="vendorv/sweetalert/sweetalert.min.js"></script>
 
+
+    <script>
+        //<!-- Ajax post test-->
+        function loginTest() {
+            var resquest = new Object();
+            resquest.user_name = $('#user_name').val();
+            resquest.password = $('#password').val();
+            sendDataTest(resquest, "Login.php");
+        }
+
+
+        function regTest() {
+            var resquest = new Object();
+            resquest.username = $('#username').val();
+            resquest.pass = $('#pass').val();
+            resquest.email = $('#pass').val();
+            resquest.name = $('#name').val();
+            sendDataTest(resquest, "Register.php");
+        }
+
+        function sendDataTest($request, $urll) {
+            $.ajax({
+                type: "post",
+                url: $urll,
+                data: JSON.stringify($request),
+                success: function (response) {
+                    swal(response.data);
+                },
+                failure: function (response) { alert("failure:" + response); },
+                error: function (response) { alert("error:" + response); }
+            });
+        }
+
+    </script>
 </head>
 <body style="background-color: #999999;">
 
@@ -38,20 +73,20 @@
 
                 <div class="wrap-input100 validate-input" data-validate="UserName required">
                     <span class="label-input100">User Name</span>
-                    <input class="input100" type="text" name="user_name" placeholder="User Name / Email">
+                    <input id="user_name" class="input100" type="text" name="user_name" placeholder="User Name / Email">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate = "Password is required:  Abc123!!">
                     <span class="label-input100">Password</span>
-                    <input class="input100" type="text" name="password" placeholder="Password">
+                    <input id="password" class="input100" type="text" name="password" placeholder="Password">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="container-login100-form-btn">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn"><!-- remove onclick for test -->
+                        <button class="login100-form-btn" onclick="loginTest()"><!-- remove onclick for test -->
                             Sign In
                         </button>
                     </div>
@@ -64,25 +99,25 @@
 
                 <div class="wrap-input100 validate-input" data-validate="Name is required">
                     <span class="label-input100">Full Name</span>
-                    <input class="input100" type="text" name="name" placeholder="Name...">
+                    <input id="name" class="input100" type="text" name="name" placeholder="Name...">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
                     <span class="label-input100">Email</span>
-                    <input class="input100" type="text" name="email" placeholder="Email addess...">
+                    <input id="email" class="input100" type="text" name="email" placeholder="Email addess...">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate="Username is required">
                     <span class="label-input100">Username</span>
-                    <input class="input100" type="text" name="username" placeholder="Username...">
+                    <input id="username" class="input100" type="text" name="username" placeholder="Username...">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate = "Password is required">
                     <span class="label-input100">Password</span>
-                    <input class="input100" type="text" name="pass" placeholder="*************">
+                    <input id="pass" class="input100" type="text" name="pass" placeholder="*************">
                     <span class="focus-input100"></span>
                 </div>
 
@@ -111,7 +146,7 @@
                 <div class="container-login100-form-btn">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn" onclick="">
+                        <button class="login100-form-btn" onclick="regTest()">
                             Sign Up
                         </button>
                     </div>
