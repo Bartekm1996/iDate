@@ -1,18 +1,15 @@
 <?php
 
-require 'vendor/autoload.php';
-
+require 'vendorv/autoload.php';
 
 class Email
 {
 
 
-    private $from;
-    private $to;
-    private $subject;
+    private String $from;
+    private String $to;
+    private String $subject;
     private $content;
-    private $apiKey;
-    private $sg;
 
     public function __construct($from, $to, $subject, $content)
     {
@@ -27,16 +24,15 @@ class Email
         $emailFrom = new SendGrid\Email(null, $this->getFrom());
         $emailSubject = $this->getSubject();
         $emailTo = new SendGrid\Email(null, $this->getTo());
-        $emailContent = new SendGrid\Content("text/plain", $this->getContent());
+        $emailContent = new SendGrid\Content("text/html", $this->getContent());
         $mail = new SendGrid\Mail($emailFrom, $emailSubject, $emailTo, $emailContent);
 
 
-        $this->apiKey = getenv('SENDGRID_API_KEY');
-        $this->sg = new \SendGrid($this->apiKey);
-
+        $apiKey = "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";
+        $sg = new \SendGrid($apiKey);
 
         try {
-            $response = $this->sg->client->mail()->send()->post($mail);
+            $response = $sg->client->mail()->send()->post($mail);
             print $response->statusCode() . "\n";
             print_r($response->headers());
             print $response->body() . "\n";
