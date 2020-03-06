@@ -29,6 +29,8 @@
 
 
         <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
+            <span class="login100-form-title">iDate</span>
+
             <span class="login100-form-title p-b-59" id="signUpHeader">Sing In</span>
 
             <form id="loginForm" class="login100-form validate-form" action="Login.php"  method="POST">
