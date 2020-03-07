@@ -42,7 +42,7 @@ if (isset($_POST['username']) && isset($_POST['pass'])
 
 
                 try {
-                    $semail = new Email($email, $uname);
+                    $semail = new Email($email, $name);
                     $semail->sendRegisterEmail();
                 } catch (Exception $e) {
                     //do nothing....
