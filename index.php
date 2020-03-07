@@ -18,12 +18,15 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
 
+    <link href="vendorv/sweetalert/sweetalert.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
     <script>
         //<!-- Ajax post test-->
         function loginTest() {
             var request = {};
             request.user_name = $('#user_name').val();
-            request.password = $('#login_password').val();
+            request.login_password = $('#login_password').val();
             sendDataTest(request, "Login.php");
         }
 
@@ -44,10 +47,18 @@
                 url: urll,
                 data: request,
                 success: function (response) {
-                    alert("Logged In:" + response);
+                    console.log(response);
+                    Swal.fire(response.title, response.message, response.type);
+
+                    //https://sweetalert2.github.io/#examples
+
                 },
-                failure: function (response) { alert("failure:" + response); },
-                error: function (response) { alert("error:" + response); }
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                    },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
             });
         }
 
@@ -66,7 +77,7 @@
 
             <span class="login100-form-title p-b-59" id="signUpHeader">Sing In</span>
 
-            <form id="loginForm" class="login100-form validate-form" method="post" >
+            <div id="loginForm" class="login100-form validate-form" >
 
                 <div class="wrap-input100 validate-input" data-validate="UserName / Email is required">
                     <span class="label-input100">User Name</span>
@@ -88,9 +99,9 @@
                         </button>
                     </div>
                 </div>
-            </form>
+            </div>
 
-            <form id="registerForm" class="login100-form validate-form" style="display: none;" method="post">
+            <div id="registerForm" class="login100-form validate-form" style="display: none;">
 
                 <div class="wrap-input100 validate-input" data-validate="Name is required">
                     <span class="label-input100">Full Name</span>
@@ -146,7 +157,7 @@
                         </button>
                     </div>
                 </div>
-            </form>
+            </div>
 
             <a href="#" id="signUp" class="dis-block txt3 hov1 p-r-30 p-t-10 p-b-10 p-l-30">
                 Sign Up
