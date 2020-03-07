@@ -1,11 +1,12 @@
 <?php
 require("db.php");
+require("SweetalertResponse.php");
+$resp = null;
 if (isset($_POST['user_name']) && isset($_POST['login_password']) ) {
     $uname = $_POST['user_name'];
     $upass = $_POST['login_password'];
 
     header('Content-Type: application/json');
-    $data = [];
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
@@ -21,25 +22,31 @@ if (isset($_POST['user_name']) && isset($_POST['login_password']) ) {
             $row=mysqli_fetch_row($result);
             //echo $row[0] ? "You logged and registered": "You are logged in but not registered";
             $reg = $row[0] == 0;
-
-            $data = ['statuscode' => $reg ? 1 : 2,
-                'title' => $reg ? 'Please Verify' : 'Login Success',
-                'type' => $reg ? 'warning' : 'success',
-                'message' => $reg ? "Please verify $uname" : "$uname logged in successfully"
-            ];
+            $resp = new SweetalertResponse($reg ? 1 : 2,
+                $reg ? 'Please Verify' : 'Login Success',
+                $reg ? "Please verify $uname" : "$uname logged in successfully",
+                $reg ? SweetalertResponse::WARNING : SweetalertResponse::SUCCESS
+            );
 
         } else {
-            $data = ['statuscode' => 3,
-                'title' => 'Login Failed',
-                'type' => 'error',
-                'message' => "Failed to login with username $uname"
-            ];
+
+            $resp = new SweetalertResponse(3,
+                'Login Failed',
+                 "Failed to login with username $uname",
+                SweetalertResponse::ERROR
+            );
         }
     }
-    echo json_encode($data);
+
 
     $conn->close();
 } else {
     //didn't set username or pass
-    echo "invalid data";
+    $resp = new SweetalertResponse(4,
+        'Login Failed',
+        "Invalid Parameters set",
+        SweetalertResponse::ERROR,
+    );
 }
+
+echo $resp->jsonSerialize();

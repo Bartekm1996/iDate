@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1485d7c78997924d83909f03924beff9",
+    "content-hash": "43dca6318b180f7d263aed90557f93ff",
     "packages": [
         {
             "name": "sendgrid/php-http-client",
@@ -113,9 +113,9 @@
     "prefer-lowest": false,
     "platform": {
         "ext-bcmath": "*",
-        "ext-mongodb": "^1.1.0",
         "ext-mysqli": "*",
         "ext-openssl": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

@@ -1,6 +1,7 @@
 <?php
 require("db.php");
 require("Email.php");
+$resp = null;
 
 if (isset($_POST['username']) && isset($_POST['pass'])
 && isset($_POST['email']) && isset($_POST['name'])) {
@@ -23,22 +24,22 @@ if (isset($_POST['username']) && isset($_POST['pass'])
         $sql = "SELECT registered FROM user where username='{$uname}' LIMIT 1;";
 
         $result = $conn->query($sql);
-        $data = [];
+
         if ($result->num_rows > 0)
         {
 
-            $data = ['statuscode' => 10,
-                'title' => 'Username is taken',
-                'type' => 'error',
-                'message' => "This username $uname is already taken"];
-
+            $resp = new SweetalertResponse(10,
+                'Username is taken',
+                "This username $uname is already taken",
+                SweetalertResponse::ERROR,
+            );
 
         } else {
             mysqli_free_result($result);
             $sql = "INSERT INTO user (email, username, password) VALUES('{$email}','{$uname}','{$upass}');";
             if($conn->query($sql) === TRUE) {
 
-                /* This isn't working */
+
                 try {
                     $semail = new Email($email, $uname);
                     $semail->sendRegisterEmail();
@@ -46,24 +47,32 @@ if (isset($_POST['username']) && isset($_POST['pass'])
                     //do nothing....
                 }
 
-                $data = ['statuscode' => 11,
-                    'title' => 'Registered',
-                    'type' => 'success',
-                    'message' => "$email Registered successfully. Please check email click link"];
+                $resp = new SweetalertResponse(11,
+                    'Registered',
+                    "$email Registered successfully. Please check email and confirm activation link",
+                    SweetalertResponse::SUCCESS,
+                );
+
 
             } else {
-                $data = ['statuscode' => 12,
-                    'title' => 'Error',
-                    'type' => 'error',
-                    'message' => "Failed to Register user"];
+                $resp = new SweetalertResponse(12,
+                    'Error',
+                    "Failed to Register user",
+                    SweetalertResponse::ERROR,
+                );
             }
         }
 
-        echo json_encode($data);
     }
 
     $conn->close();
 } else {
-    //didn't set username or pass
-    echo "Invalid data";
+    //didn't set username or pass etc...
+    $resp = new SweetalertResponse(4,
+        'Login Failed',
+        "Invalid Parameters set",
+        SweetalertResponse::ERROR,
+    );
 }
+
+echo $resp->jsonSerialize();

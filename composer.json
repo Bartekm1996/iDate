@@ -4,6 +4,7 @@
         "ext-mongodb": "^1.1.0",
         "sendgrid/sendgrid": "~5.0.9",
         "ext-mysqli": "*",
-        "ext-openssl": "*"
+        "ext-openssl": "*",
+        "ext-json": "*"
     }
 }
