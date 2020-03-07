@@ -38,8 +38,9 @@ if (isset($_POST['username']) && isset($_POST['pass'])
             $sql = "INSERT INTO user (email, username, password) VALUES('{$email}','{$uname}','{$upass}');";
             if($conn->query($sql) === TRUE) {
 
-                $email = new Email($email, $name);
-                $email->sendRegisterEmail();
+                /* This isn't working */
+//                $email = new Email($email, $name);
+//                $email->sendRegisterEmail();
 
                 $data = ['statuscode' => 11,
                     'title' => 'Registered',
