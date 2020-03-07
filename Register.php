@@ -39,8 +39,12 @@ if (isset($_POST['username']) && isset($_POST['pass'])
             if($conn->query($sql) === TRUE) {
 
                 /* This isn't working */
-//                $email = new Email($email, $name);
-//                $email->sendRegisterEmail();
+                try {
+                    $semail = new Email($email, $name);
+                    $semail->sendRegisterEmail();
+                } catch (Exception $e) {
+                    //do nothing....
+                }
 
                 $data = ['statuscode' => 11,
                     'title' => 'Registered',
