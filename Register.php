@@ -1,6 +1,7 @@
 <?php
 require("db.php");
 require("Email.php");
+require("SweetalertResponse.php");
 $resp = null;
 
 if (isset($_POST['username']) && isset($_POST['pass'])
