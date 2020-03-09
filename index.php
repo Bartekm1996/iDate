@@ -31,6 +31,18 @@
         }
 
 
+
+        var check = function() {
+            if (document.getElementById('password').value ==
+                document.getElementById('confirm_password').value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerHTML = 'Password is matching';
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'Password is not matching';
+            }
+        }
+
         function regTest() {
             var request = {};
             request.username = $('#username').val();
@@ -101,17 +113,17 @@
                 </div>
             </div>
 
-            <div id="registerForm" class="login100-form validate-form" style="display: none;">
+            <div id="registerForm" class="login100-form validate-form" style="display: none;" >
 
-                <div class="wrap-input100 validate-input" data-validate="Name is required">
+                <div class="wrap-input100 validate-input" data-validate="Name is required" >
                     <span class="label-input100">Full Name</span>
-                    <input class="input100" type="text" id="name" placeholder="Name...">
+                    <input class="input100" type="text" id="name" pattern="^(\w\w+)\s(\w+)$"  placeholder="Name...">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
                     <span class="label-input100">Email</span>
-                    <input class="input100" type="text" id="email" placeholder="Email addess...">
+                    <input class="input100" type="email" id="email" placeholder="user@example.com">
                     <span class="focus-input100"></span>
                 </div>
 
@@ -121,16 +133,16 @@
                     <span class="focus-input100"></span>
                 </div>
 
-                <div class="wrap-input100 validate-input" data-validate = "Password is required">
+                <div class="wrap-input100 " data-validate = "Password is required">
                     <span class="label-input100">Password</span>
-                    <input class="input100" type="password" id="pass" placeholder="*************">
+                    <input class="input100" name="password" type="password" id="password" required onkeyup="check();" placeholder="*************">
                     <span class="focus-input100"></span>
                 </div>
 
-                <div class="wrap-input100 validate-input" data-validate = "Repeat Password is required">
-                    <span class="label-input100">Repeat Password</span>
-                    <input class="input100" type="password" id="repeat-pass" placeholder="*************">
-                    <span class="focus-input100"></span>
+                <div class="wrap-input100 " data-validate = "Confirm Password">
+                    <span class="label-input100">Confirm Password</span>
+                    <input class="input100" name="confirm_password" type="password" id="confirm_password" required  onkeyup="check();" placeholder="*************">
+                    <span  id="message"></span>
                 </div>
 
                 <div class="flex-m w-full p-b-33">
