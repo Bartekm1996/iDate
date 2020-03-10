@@ -21,6 +21,7 @@ if (isset($_POST['username']) && isset($_POST['pass'])
         $upass = $conn->real_escape_string($upass);
         $email = $conn->real_escape_string($email);
 
+
         //check is username is taken
         $sql = "SELECT registered FROM user where username='{$uname}' LIMIT 1;";
 
