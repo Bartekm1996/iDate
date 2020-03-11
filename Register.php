@@ -33,7 +33,7 @@ if (isset($_POST['username']) && isset($_POST['pass'])
             $resp = new SweetalertResponse(10,
                 'Username is taken',
                 "This username $uname is already taken",
-                SweetalertResponse::ERROR,
+                SweetalertResponse::ERROR
             );
 
         } else {
@@ -52,7 +52,7 @@ if (isset($_POST['username']) && isset($_POST['pass'])
                 $resp = new SweetalertResponse(11,
                     'Registered',
                     "$email Registered successfully. Please check email and confirm activation link",
-                    SweetalertResponse::SUCCESS,
+                    SweetalertResponse::SUCCESS
                 );
 
 
@@ -60,7 +60,7 @@ if (isset($_POST['username']) && isset($_POST['pass'])
                 $resp = new SweetalertResponse(12,
                     'Error',
                     "Failed to Register user",
-                    SweetalertResponse::ERROR,
+                    SweetalertResponse::ERROR
                 );
             }
         }
@@ -73,7 +73,7 @@ if (isset($_POST['username']) && isset($_POST['pass'])
     $resp = new SweetalertResponse(4,
         'Login Failed',
         "Invalid Parameters set",
-        SweetalertResponse::ERROR,
+        SweetalertResponse::ERROR
     );
 }
 

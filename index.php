@@ -46,7 +46,7 @@
         function regTest() {
             var request = {};
             request.username = $('#username').val();
-            request.pass = $('#pass').val();
+            request.pass = $('#password').val();
             request.email = $('#email').val();
             request.name = $('#name').val();
             sendDataTest(request, "Register.php");

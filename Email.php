@@ -29,7 +29,7 @@ class Email
         $iv_length = openssl_cipher_iv_length($ciphering);
         $options = 0;
         $encryption_iv = '1234567891011121';
-        $encryption_key = "University_Of_Limerick".time();
+        $encryption_key = "University_Of_Limerick".date("m.d.y");//code only valid for a day
 
         return openssl_encrypt($email,$ciphering, $encryption_key, $options, $encryption_iv);
     }
