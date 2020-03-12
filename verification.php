@@ -30,7 +30,7 @@ if (isset($_GET['verification'])) {
         {
 
             //display success message and redirect
-            echo "$decryptedEmail has been verified. <br/><br>Please return to <a href=\"http://www.idate.ie\">Login Page</a>";
+            echo "<br>$decryptedEmail has been verified. <br/><br>Please return to <a href=\"http://www.idate.ie\">Login Page</a>";
         } else {
             echo "Key is invalid or has expired please try again.";
             //TODO: we need to add text box to let them enter email to send a new generated code
