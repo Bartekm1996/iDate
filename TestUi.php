@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
 
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
 
     <link href="vendorv/sweetalert/sweetalert.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -87,6 +88,28 @@
             border-radius: 5px 5px;
         }
 
+        .matches-msg img {
+            border-radius: 20px 20px;
+        }
+
+        .matches-msg {
+            display: inline-flex;
+            width: 100%;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            padding: 5px 5px 5px 5px;
+        }
+
+        .grid-item {
+            padding: 5px;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .grid-item img { border-radius: 5px 5px; }
     </style>
 
 </head>
@@ -95,17 +118,20 @@
 <div style="background-color: pink">
     <div class="row">
         <div class="col-md-4" >
-            <div style="display: inline-flex">
+            <div class="card">
+                <div class="card-body" style="display: inline-flex">
                     <img src="https://via.placeholder.com/150"/>
                     <h1>Profile</h1>
                 </div>
+            </div>
+
             <div>
                 <div class="panel with-nav-tabs panel-default">
                     <div class="panel-heading">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#tab1default" data-toggle="tab">Matches</a></li>
                             <li><a href="#tab2default" data-toggle="tab">Messages</a></li>
-                            <li><a href="#tab3default" data-toggle="tab">Default 3</a></li>
+                            <li><a href="#tab3default" data-toggle="tab">Search</a></li>
                             <li class="dropdown">
                                 <a href="#" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
@@ -118,21 +144,26 @@
                     <div class="panel-body">
                         <div class="tab-content">
                             <div class="tab-pane fade in active" id="tab1default">
-                                <table class="matches">
+                                <div class="grid-container">
                                     <?php
 
-                                        for($i = 0; $i < 10;$i++) {
-                                            echo "<tr>".
-                                                "<td><img src=\"https://i.pravatar.cc/100\"/><h4>Name</h4></td>".
-                                                "<td><img src=\"https://i.pravatar.cc/100\"/><h4>Name</h4></td>".
-                                                "<td><img src=\"https://i.pravatar.cc/100\"/><h4>Name</h4></td>".
-                                                "<td><img src=\"https://i.pravatar.cc/100\"/><h4>Name</h4></td>".
-                                                "</tr>";
+                                        for($i = 0; $i < 20;$i++) {
+                                            echo"<div class='grid-item'><img src=\"https://i.pravatar.cc/100\"/><h4>Name</h4></div>\n";
                                         }
                                     ?>
-                                </table>
+                                </div>
                             </div>
-                            <div class="tab-pane fade" id="tab2default">Default 2</div>
+                            <div class="tab-pane fade" id="tab2default">
+                                <ul class="list-group">
+                                <?php
+
+                                for($i = 0; $i < 10;$i++) {
+                                    echo "\n<li class='list-group-item matches-msg'><img src='https://i.pravatar.cc/100'/><p>This is some text</p></li>";
+                                }
+                                echo "\n";
+                                ?>
+                                </ul>
+                            </div>
                             <div class="tab-pane fade" id="tab3default">Default 3</div>
                             <div class="tab-pane fade" id="tab4default">Default 4</div>
                             <div class="tab-pane fade" id="tab5default">Default 5</div>
