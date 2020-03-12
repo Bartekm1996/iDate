@@ -1,7 +1,7 @@
 <h1 align="center">Verification Page of</h1>
 <div style="text-align: center;">
     <img src="images/iDtae.png"  width="450" height="150">
-</div>
+
 
 <?php
 require 'vendorv/autoload.php';
@@ -38,3 +38,5 @@ if (isset($_GET['verification'])) {
     }
 
 }
+?>
+</div>
