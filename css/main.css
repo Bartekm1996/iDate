@@ -531,6 +531,7 @@ iframe {
   right: 5px;
 }
 
+
 /*//////////////////////////////////////////////////////////////////
 [ Responsive ]*/
 
@@ -539,4 +540,11 @@ iframe {
     padding-left: 15px;
     padding-right: 15px;
   }
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
 }
