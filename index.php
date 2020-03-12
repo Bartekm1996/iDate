@@ -60,8 +60,17 @@
                 data: request,
                 success: function (response) {
                     console.log(response);
-                    Swal.fire(response.title, response.message, response.type);
 
+
+                    //TODO: use status code to determine what to do next
+                    switch(response.statusCode) {
+                        case 2: //login success full
+                            window.location.href = '/TestUi.php';
+                            break;
+                            default:
+                                Swal.fire(response.title, response.message, response.type);
+                                break;
+                    }
                     //https://sweetalert2.github.io/#examples
 
                 },

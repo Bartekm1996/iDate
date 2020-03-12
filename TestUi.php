@@ -95,6 +95,11 @@
         .matches-msg {
             display: inline-flex;
             width: 100%;
+
+        }
+
+        .matches-msg p {
+            padding-left: 5px;
         }
 
         .grid-container {
@@ -120,7 +125,7 @@
         <div class="col-md-4" >
             <div class="card">
                 <div class="card-body" style="display: inline-flex">
-                    <img src="https://via.placeholder.com/150"/>
+                    <img src='https://placekitten.com/150/150'/>
                     <h1>Profile</h1>
                 </div>
             </div>
@@ -148,7 +153,7 @@
                                     <?php
 
                                         for($i = 0; $i < 20;$i++) {
-                                            echo"<div class='grid-item'><img src=\"https://i.pravatar.cc/100\"/><h4>Name</h4></div>\n";
+                                            echo"<div class='grid-item'><img src='https://placekitten.com/100/100'/><h4>Name</h4></div>\n";
                                         }
                                     ?>
                                 </div>
@@ -158,7 +163,7 @@
                                 <?php
 
                                 for($i = 0; $i < 10;$i++) {
-                                    echo "\n<li class='list-group-item matches-msg'><img src='https://i.pravatar.cc/100'/><p>This is some text</p></li>";
+                                    echo "\n<li class='list-group-item matches-msg'><img src='https://placekitten.com/100/100'/><p>Your last message goes here</p></li>";
                                 }
                                 echo "\n";
                                 ?>
