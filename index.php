@@ -20,6 +20,8 @@
 
     <link href="vendorv/sweetalert/sweetalert.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//geodata.solutions/includes/statecity.js"></script>
 
     <script>
         //<!-- Ajax post test-->
@@ -124,10 +126,29 @@
 
             <div id="registerForm" class="login100-form validate-form" style="display: none;" >
 
-                <div class="wrap-input100 validate-input" data-validate="Name is required" >
-                    <span class="label-input100">Full Name</span>
-                    <input class="input100" type="text" id="name" pattern="^(\w\w+)\s(\w+)$"  placeholder="Name...">
+                <div class="wrap-input100 validate-input" data-validate="First name is required" >
+                    <span class="label-input100">First Name</span>
+                    <input class="input100" type="text" id="firstname" pattern="^(\w\w+)\s(\w+)$"  placeholder="First name">
                     <span class="focus-input100"></span>
+                </div>
+
+                <div class="wrap-input100 validate-input" data-validate="Last name is required" >
+                    <span class="label-input100">Last Name</span>
+                    <input class="input100" type="text" id="lastname" pattern="^(\w\w+)\s(\w+)$"  placeholder="Last name">
+                    <span class="focus-input100"></span>
+                </div>
+
+                <div id="location" class="wrap-input100 validate-input"  >
+                    <span class="label-input100">Select your location<br><br></span>
+                    <input type="hidden" name="country" id="countryId" value="IE"/>
+                    <select name="state" class="states order-alpha" id="stateId"  >
+                        <option value="">Select State</option>
+                    </select>
+                    <select name="city" class="cities order-alpha" id="cityId" style="margin-left: 20px">
+                        <option value="">Select City</option>
+                    </select>
+
+<!--                    <span class="focus-input100"></span>-->
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
