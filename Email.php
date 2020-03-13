@@ -18,7 +18,7 @@ class Email
     public function sendRegisterEmail(){
         $cont = file_get_contents(__DIR__."/emailTemplates/passWordReset.html");
         $res = str_replace("{{user_name}}", $this->name, $cont);
-        $encryt_res = "www.iDate.ie/verification.php?verification=".$this->encrypt($this->getTo());
+        $encryt_res = "http://www.idate.ie/verification.php?verification=".$this->encrypt($this->getTo());
         $res_one = str_replace( "href=\"#replace\"", "href=\"".$encryt_res."\"", $res);
         $res_two = str_replace( "{{Replace}}", $encryt_res, $res_one);
         $this->sendEmail("Email Verification", $res_two, $this->getTo());
