@@ -138,18 +138,20 @@
                     <span class="focus-input100"></span>
                 </div>
 
-                <div id="location" class="wrap-input100 validate-input"  >
-                    <span class="label-input100">Select your location<br><br></span>
-                    <input type="hidden" name="country" id="countryId" value="IE"/>
-                    <select name="state" class="states order-alpha" id="stateId"  >
-                        <option value="">Select State</option>
-                    </select>
-                    <select name="city" class="cities order-alpha" id="cityId" style="margin-left: 20px">
-                        <option value="">Select City</option>
-                    </select>
-
-<!--                    <span class="focus-input100"></span>-->
-                </div>
+                <form>
+                    <div id="location" class="wrap-input100 validate-input">
+                        <span class="label-input100">Select your location<br><br></span>
+                        <input type="hidden" name="country" id="countryId" value="IE"/>
+                        <label for="stateId">Province: &nbsp;</label>
+                        <select name="state" class="states order-alpha" id="stateId">
+                            <option value="">Select State</option>
+                        </select>
+                        <br><label for="cityId">City:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <select name="city" class="cities order-alpha" id="cityId" style="margin-left: 20px">
+                            <option value="">Select City</option>
+                        </select>
+                    </div>
+                </form>
 
                 <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
                     <span class="label-input100">Email</span>
