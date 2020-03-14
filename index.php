@@ -21,7 +21,8 @@
     <link href="vendorv/sweetalert/sweetalert.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="//geodata.solutions/includes/statecity.js"></script>
+<!--    <script src="//geodata.solutions/includes/statecity.js"></script>-->
+    <script src="//geodata.solutions/includes/countrystatecity.js"></script>
 
     <script>
         //<!-- Ajax post test-->
@@ -47,10 +48,16 @@
 
         function regTest() {
             var request = {};
+            request.firstname = $('#firstname').val();
+            request.lastname = $('#lastname').val();
             request.username = $('#username').val();
             request.pass = $('#password').val();
             request.email = $('#email').val();
-            request.name = $('#name').val();
+            request.countryId = $('#countryId').val();
+            request.stateId = $('#stateId').val();
+            request.cityId = $('#cityId').val();
+            request.gender = $('#gender').val();
+            request.seeking = $('#seeking').val();
             sendDataTest(request, "Register.php");
         }
 
@@ -137,21 +144,52 @@
                     <input class="input100" type="text" id="lastname" pattern="^(\w\w+)\s(\w+)$"  placeholder="Last name">
                     <span class="focus-input100"></span>
                 </div>
+                <div id="location" class="wrap-input100 validate-input">
+                    <span class="label-input100">Preference<br><br></span>
+                    <div class="form-inline">
+                        <div class="col-6">
+                            <span class="label-input100">I am </span>
+                            <select name="gender" class="form-control" id="gender">
+                                <option value="0">Male</option>
+                                <option value="1">Female</option>
+                            </select>
+                        </div>
 
-                <form>
+
+                        <div class="col-6">
+                            <span class="label-input100">Seeking </span>
+                            <select name="seeking" class="form-control" id="seeking">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
                     <div id="location" class="wrap-input100 validate-input">
                         <span class="label-input100">Select your location<br><br></span>
-                        <input type="hidden" name="country" id="countryId" value="IE"/>
-                        <label for="stateId">Province: &nbsp;</label>
-                        <select name="state" class="states order-alpha" id="stateId">
-                            <option value="">Select State</option>
-                        </select>
-                        <br><label for="cityId">City:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <select name="city" class="cities order-alpha" id="cityId" style="margin-left: 20px">
-                            <option value="">Select City</option>
+                        <span class="label-input100">Country</span>
+                        <select name="country" class="form-control countries order-alpha include-IE" id="countryId">
+                            <option value="">Select Country</option>
                         </select>
                     </div>
-                </form>
+                <div id="location" class="wrap-input100 validate-input">
+                    <span class="label-input100">State</span>
+                    <select name="state" class="form-control states order-alpha" id="stateId">
+                        <option value="">Select State</option>
+                    </select>
+                </div>
+                <div id="location" class="wrap-input100 validate-input">
+                    <span class="label-input100">City</span>
+                    <select name="city" class="form-control cities order-alpha" id="cityId">
+                        <option value="">Select City</option>
+                    </select>
+                </div>
+
 
                 <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
                     <span class="label-input100">Email</span>
