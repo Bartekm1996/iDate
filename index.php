@@ -36,14 +36,22 @@
 
 
         var check = function() {
-            if (document.getElementById('password').value ==
-                document.getElementById('confirm_password').value) {
-                document.getElementById('message').style.color = 'green';
-                document.getElementById('message').innerHTML = 'Password is matching';
+            var pVal = document.getElementById('password').value.replace(' ', '');//remove spaces
+            var cVal = document.getElementById('confirm_password').value.replace(' ', '');//remove spaces
+
+            if(pVal.length > 7) {
+                if (pVal == cVal) {
+                    document.getElementById('message').style.color = 'green';
+                    document.getElementById('message').innerHTML = 'Password is matching';
+                } else {
+                    document.getElementById('message').style.color = 'red';
+                    document.getElementById('message').innerHTML = 'Password is not matching';
+                }
             } else {
                 document.getElementById('message').style.color = 'red';
-                document.getElementById('message').innerHTML = 'Password is not matching';
+                document.getElementById('message').innerHTML = 'Password must be great than 7 characters';
             }
+
         }
 
         function regTest() {
