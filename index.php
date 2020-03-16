@@ -56,16 +56,16 @@
 
         function regTest() {
             var request = {};
-            request.firstname = $('#firstname').val();
-            request.lastname = $('#lastname').val();
+            // request.firstname = $('#firstname').val();
+            // request.lastname = $('#lastname').val();
             request.username = $('#username').val();
             request.pass = $('#password').val();
             request.email = $('#email').val();
-            request.countryId = $('#countryId').val();
-            request.stateId = $('#stateId').val();
-            request.cityId = $('#cityId').val();
-            request.gender = $('#gender').val();
-            request.seeking = $('#seeking').val();
+            // request.countryId = $('#countryId').val();
+            // request.stateId = $('#stateId').val();
+            // request.cityId = $('#cityId').val();
+            // request.gender = $('#gender').val();
+            // request.seeking = $('#seeking').val();
             sendDataTest(request, "Register.php");
         }
 
