@@ -2,7 +2,36 @@
 require("db.php");
 require("SweetalertResponse.php");
 $resp = null;
-if (isset($_POST['user_name']) && isset($_POST['login_password']) ) {
+if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
+    $rname = $_POST['reset_uname'];
+    $remail = $_POST['reset_email'];
+
+    header('Content-Type: application/json');
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+        $rname = $conn->real_escape_string($rname);
+        $remail = $conn->real_escape_string($remail);
+        $sql = "SELECT registered FROM user where username='{$rname}' AND email='{$remail}' LIMIT 1;";
+
+        $result = $conn->query($sql);
+        $isValid = false;
+        if ($result->num_rows > 0)
+        {
+            $isValid = true;
+
+            //TODO: send reset email here
+        }
+
+        $resp = new SweetalertResponse($isValid ? 100 : 101,
+            $isValid  ? 'Password Reset' : 'Error',
+            $isValid  ? "Please click reset link in email $remail" : "Sorry $rname or $remail is not valid",
+            $isValid  ? SweetalertResponse::SUCCESS : SweetalertResponse::ERROR
+        );
+    }
+
+} else if (isset($_POST['user_name']) && isset($_POST['login_password']) ) {
     $uname = $_POST['user_name'];
     $upass = $_POST['login_password'];
 
@@ -43,7 +72,7 @@ if (isset($_POST['user_name']) && isset($_POST['login_password']) ) {
 } else {
     //didn't set username or pass
     $resp = new SweetalertResponse(4,
-        'Login Failed',
+        'Error',
         "Invalid Parameters set",
         SweetalertResponse::ERROR,
     );

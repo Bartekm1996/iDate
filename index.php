@@ -33,6 +33,13 @@
             sendDataTest(request, "Login.php");
         }
 
+        function resetEmail(username, email, values) {
+            var request = {};
+            request.reset_uname = username;
+            request.reset_email = email;
+            sendDataTest(request, "Login.php");
+        }
+
 
 
         var check = function() {
@@ -83,6 +90,51 @@
                     switch(response.statusCode) {
                         case 2: //login success full
                             window.location.href = '/TestUi.php';
+                            break;
+                            case 3:
+                                Swal.fire({
+                                    title: 'Invalid password',
+                                    text: "Would you like to reset?",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Yes'
+                                }).then((result) => {
+                                    //start
+                                        Swal.mixin({
+                                            input: 'text',
+                                            confirmButtonText: 'Next &rarr;',
+                                            showCancelButton: true,
+                                            progressSteps: ['1', '2']
+                                        }).queue([
+                                            {
+                                                title: 'Question 1',
+                                                text: 'What is your username?'
+                                            },
+                                            {
+                                                title: 'Question 2',
+                                                text: 'What is your email?'
+                                            }
+                                        ]).then((result) => {
+
+                                            var invalid = false;
+                                            for (let i = 0; i < result.value.length; i++) {
+                                                if (result.value[i].trim().length < 6) {
+                                                    invalid = true;
+                                                }
+                                            }
+
+                                            if (invalid) {
+                                                Swal.fire("Error", "username or email is not long enough", "error");
+                                            } else {
+                                                resetEmail(result.value[0], result.value[1]);
+                                            }
+
+                                        });
+                                    //end
+                                });
+
                             break;
                             default:
                                 Swal.fire(response.title, response.message, response.type);
