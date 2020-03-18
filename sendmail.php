@@ -27,7 +27,11 @@ echo "<pre>sent to $email</pre>";
     <link rel="stylesheet" href="css/http_cdnjs.cloudflare.com_ajax_libs_bootstrap-sweetalert_1.0.1_sweetalert.css">
     <link rel="stylesheet" href="css/http_maxcdn.bootstrapcdn.com_bootstrap_3.3.6_css_bootstrap.css">
     <link rel="stylesheet" href="css/http_stackpath.bootstrapcdn.com_font-awesome_4.7.0_css_font-awesome.css">
-
+    <script>
+        function resetPassword() {
+            alert('Working');
+        }
+    </script>
     <title>Hello World</title>
 </head>
 <body>

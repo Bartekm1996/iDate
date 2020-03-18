@@ -8,6 +8,8 @@ class Email
     private String $to;
     private String $name;
 
+    const VERIFY = 0;
+    const RESET_PASSWORD = 1;
 
     public function __construct($to, $name)
     {
@@ -15,13 +17,28 @@ class Email
         $this->name = $name;
     }
 
-    public function sendRegisterEmail(){
-        $cont = file_get_contents(__DIR__."/emailTemplates/passWordReset.html");
+    public function sendRegisterEmail($type){
+        $template = "";
+        $key = "";
+        $message ="";
+        switch ($type) {
+            case self::VERIFY:
+                $template = "/emailTemplates/passWordReset.html";
+                $key = "verification";
+                $message = "Email Verification";
+                break;
+            case self::RESET_PASSWORD:
+                $template = "/emailTemplates/passWordReset2.html";
+                $key = "reset";
+                $message = "Password Reset";
+                break;
+        }
+        $cont = file_get_contents(__DIR__.$template);
         $res = str_replace("{{user_name}}", $this->name, $cont);
-        $encryt_res = "http://www.idate.ie/verification.php?verification=".$this->encrypt($this->getTo());
+        $encryt_res = "http://www.idate.ie/verification.php?$key=".$this->encrypt($this->getTo());
         $res_one = str_replace( "href=\"#replace\"", "href=\"".$encryt_res."\"", $res);
         $res_two = str_replace( "{{Replace}}", $encryt_res, $res_one);
-        $this->sendEmail("Email Verification", $res_two, $this->getTo());
+        $this->sendEmail($message, $res_two, $this->getTo());
     }
 
     private function encrypt($email){

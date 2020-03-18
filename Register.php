@@ -70,7 +70,7 @@ if (isset($_POST['username'])
                 if($conn->query($sql) === TRUE) {
                     try {
                         $semail = new Email($email, $uname);
-                        $semail->sendRegisterEmail();
+                        $semail->sendRegisterEmail(Email::VERIFY);
                     } catch (Exception $e) {
                         //do nothing....
                     }

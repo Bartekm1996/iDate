@@ -1,6 +1,8 @@
 <?php
 require("db.php");
 require("SweetalertResponse.php");
+require("Email.php");
+
 $resp = null;
 if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
     $rname = $_POST['reset_uname'];
@@ -20,8 +22,9 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
         if ($result->num_rows > 0)
         {
             $isValid = true;
-
             //TODO: send reset email here
+            $semail = new Email($remail, $rname);
+            $semail->sendRegisterEmail(Email::RESET_PASSWORD);
         }
 
         $resp = new SweetalertResponse($isValid ? 100 : 101,
