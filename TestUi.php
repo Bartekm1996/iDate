@@ -7,9 +7,10 @@
     <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
 
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" type="text/css" href="vendorv/bootstrap/css/bootstrap.min.css">
+    <script src="vendorv/bootstrap/js/bootstrap.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
+    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 
     <link href="vendorv/sweetalert/sweetalert.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -117,13 +118,46 @@
             text-align: center;
         }
 
+        .matchbtn {
+            position:absolute;
+            top:50%;
+        }
+
+        .matchbtn i {
+            color: #dddddd;
+        }
+
+        .matchbtn i:hover{
+            color: #ddd098;
+        }
         .grid-item img { border-radius: 5px 5px; }
     </style>
 
+    <script>
+        var curPos = 0;
+        var testImgs = [
+        {imgurl:'https://placekitten.com/300/300'},
+        {imgurl:'https://i.pravatar.cc/300'},
+        {imgurl:'https://placedog.net/300'}
+        ];
+
+        function nextImg() {
+            curPos++;
+            if(curPos >= testImgs.length) curPos = 0;
+            $('#imgP').attr("src",testImgs[curPos].imgurl);
+        }
+
+        function prevImg() {
+            curPos--;
+            if(curPos < 0) curPos = testImgs.length -1;
+            $('#imgP').attr("src",testImgs[curPos].imgurl);
+        }
+
+    </script>
 </head>
 <body style="background-color: #999999;">
 
-<div style="background-color: pink">
+<div style="background-color: #edebeb">
     <div class="row">
         <div class="col-md-4" >
             <div class="card">
@@ -294,7 +328,34 @@
             </div>
             <div>list</div>
         </div>
-        <div class="col-md-8" style="background-color: #0056b3">content</div>
+        <div class="col-md-8">
+            <div class="card shadow-lg p-3 mb-5 bg-white rounded" style="width: 25rem;display:block; margin-left: auto;margin-right: auto">
+                <div style="position:relative">
+                    <img id="imgP" width="300px" height="350px" src="https://placekitten.com/300/300" class="card-img-top">
+                    <div class="matchbtn" style="left:2%">
+                        <i class="fa fa-3x fa-arrow-circle-left" onclick="prevImg()"></i>
+                    </div>
+                    <div class="matchbtn" style="right:2%">
+                        <i class="fa fa-3x fa-arrow-circle-right" onclick="nextImg()"></i>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+                    <div style="position:relative;left: 35%;">
+                        <i class="fa fa-4x fa-ban" style="color: rgba(14,0,6,0.87);" onclick="match()"></i>
+                        <i class="fa fa-4x fa-heart" style="color: red;" onclick="nomatch()"></i>
+                    </div>
+                    <h5 class="card-title">Sally <e>23</e></h5>
+                    <h6><i class="fa fa-graduation-cap"></i> University Of Limerick</h6>
+                    <h6><i class="fa fa-suitcase"></i> Software Developer</h6>
+                    <h6><i class="fa fa-map-marker"></i> Co. Limerick</h6>
+                    </div>
+<!--                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
