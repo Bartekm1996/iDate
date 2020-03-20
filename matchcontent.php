@@ -16,7 +16,7 @@
                         <i class="fa fa-4x fa-ban" style="color: rgba(14,0,6,0.87);" onclick="match()"></i>
                         <i class="fa fa-4x fa-heart" style="color: red;" onclick="nomatch()"></i>
                     </div>
-                    <h5 class="card-title">Sally <e>23</e></h5>
+                    <h5 class="card-title"><b>Sally</b> 23</h5>
                     <h6><i class="fa fa-graduation-cap"></i> University Of Limerick</h6>
                     <h6><i class="fa fa-suitcase"></i> Software Developer</h6>
                     <h6><i class="fa fa-map-marker"></i> Co. Limerick</h6>
