@@ -12,7 +12,7 @@
                 </div>
 
                 <div class="card-body">
-                    <div style="position:relative;left: 35%;">
+                    <div class="heartbtn" style="position:relative;left: 35%;">
                         <i class="fa fa-4x fa-ban" style="color: rgba(14,0,6,0.87);" onclick="match()"></i>
                         <i class="fa fa-4x fa-heart" style="color: red;" onclick="nomatch()"></i>
                     </div>

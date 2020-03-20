@@ -8,6 +8,7 @@
 
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="vendorv/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="vendorv/bootstrap/js/bootstrap.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -26,112 +27,6 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!--    <script src="//geodata.solutions/includes/statecity.js"></script>-->
     <script src="//geodata.solutions/includes/countrystatecity.js"></script>
-
-    <style>
-
-        .panel.with-nav-tabs .panel-heading{
-            padding: 5px 5px 0 5px;
-        }
-        .panel.with-nav-tabs .nav-tabs{
-            border-bottom: none;
-        }
-        .panel.with-nav-tabs .nav-justified{
-            margin-bottom: -1px;
-        }
-        /********************************************************************/
-        /*** PANEL DEFAULT ***/
-        .with-nav-tabs.panel-default .nav-tabs > li > a,
-        .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
-            color: #777;
-        }
-        .with-nav-tabs.panel-default .nav-tabs > .open > a,
-        .with-nav-tabs.panel-default .nav-tabs > .open > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > .open > a:focus,
-        .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
-            color: #777;
-            background-color: #ddd;
-            border-color: transparent;
-        }
-        .with-nav-tabs.panel-default .nav-tabs > li.active > a,
-        .with-nav-tabs.panel-default .nav-tabs > li.active > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > li.active > a:focus {
-            color: #555;
-            background-color: #fff;
-            border-color: #ddd;
-            border-bottom-color: transparent;
-        }
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu {
-            background-color: #f5f5f5;
-            border-color: #ddd;
-        }
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a {
-            color: #777;
-        }
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
-            background-color: #ddd;
-        }
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a,
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
-            color: #fff;
-            background-color: #555;
-        }
-
-        .matches td {
-            padding: 5px 5px 5px 5px;
-        }
-
-        .matches h4 {
-            text-align: center;
-        }
-
-        .matches img {
-            border-radius: 5px 5px;
-        }
-
-        .matches-msg img {
-            border-radius: 20px 20px;
-        }
-
-        .matches-msg {
-            display: inline-flex;
-            width: 100%;
-
-        }
-
-        .matches-msg p {
-            padding-left: 5px;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: auto auto auto;
-            padding: 5px 5px 5px 5px;
-        }
-
-        .grid-item {
-            padding: 5px;
-            font-size: 10px;
-            text-align: center;
-        }
-
-        .matchbtn {
-            position:absolute;
-            top:50%;
-        }
-
-        .matchbtn i {
-            color: #dddddd;
-        }
-
-        .matchbtn i:hover{
-            color: #ddd098;
-        }
-        .grid-item img { border-radius: 5px 5px; }
-    </style>
 
     <script>
         var curPos = 0;
@@ -162,7 +57,7 @@
         <div class="col-md-4" >
             <div class="card">
                 <div class="card-body" style="display: inline-flex">
-                    <img src='https://placekitten.com/150/150'/>
+                    <img src='https://placekitten.com/100/100'/>
                     <h1>Profile</h1>
                 </div>
             </div>
