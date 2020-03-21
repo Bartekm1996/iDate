@@ -26,12 +26,27 @@
     <script src="//geodata.solutions/includes/countrystatecity.js"></script>
 
     <script>
+
+        var users = <?php require("usersjson.php"); ?>
         var curPos = 0;
         var testImgs = [
         {imgurl:'https://placekitten.com/300/300'},
         {imgurl:'https://i.pravatar.cc/300'},
         {imgurl:'https://placedog.net/300'}
         ];
+
+        function match() {
+            curPos++;
+            if(curPos >= users.length) curPos = 0;
+            $('#uname').text(users[curPos].name);
+            $('#uage').text(users[curPos].age);
+        }
+
+        // function prevUser() {
+        //     curPos--;
+        //     if(curPos < 0) curPos = users.length -1;
+        //     $('#pname').text(users[curPos].name);
+        // }
 
         function nextImg() {
             curPos++;
