@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +36,30 @@
         {imgurl:'https://placedog.net/300'}
         ];
 
+        function sendDataTest(request, urll) {
+            console.log(request);
+            $.ajax({
+                method: "POST",
+                url: urll,
+                data: request,
+                success: function (response) {
+                    console.log(response);
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+        }
+
+
         function match() {
+            var request = {};
+            request.match_api = true;
+            request.match_id = users[curPos].id;
+            sendDataTest(request, "api.php");
             curPos++;
             if(curPos >= users.length) curPos = 0;
             $('#uname').text(users[curPos].name);

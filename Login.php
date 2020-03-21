@@ -3,6 +3,8 @@ require("db.php");
 require("SweetalertResponse.php");
 require("Email.php");
 
+session_start();
+
 $resp = null;
 if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
     $rname = $_POST['reset_uname'];
@@ -15,14 +17,14 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
     } else {
         $rname = $conn->real_escape_string($rname);
         $remail = $conn->real_escape_string($remail);
-        $sql = "SELECT registered FROM user where username='{$rname}' AND email='{$remail}' LIMIT 1;";
+        $sql = "SELECT id,firstname,registered FROM user where username='{$rname}' AND email='{$remail}' LIMIT 1;";
 
         $result = $conn->query($sql);
         $isValid = false;
         if ($result->num_rows > 0)
         {
             $isValid = true;
-            //TODO: send reset email here
+                //TODO: send reset email here
             $semail = new Email($remail, $rname);
             $semail->sendRegisterEmail(Email::RESET_PASSWORD);
         }
@@ -46,7 +48,7 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
         $uname = $conn->real_escape_string($uname);
         $upass = $conn->real_escape_string($upass);
 
-        $sql = "SELECT registered FROM user where username='{$uname}' AND password='{$upass}' LIMIT 1;";
+        $sql = "SELECT registered, id, firstname FROM user where username='{$uname}' AND password='{$upass}' LIMIT 1;";
 
         $result = $conn->query($sql);
         if ($result->num_rows > 0)
@@ -59,6 +61,9 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
                 $reg ? "Please verify $uname" : "$uname logged in successfully",
                 $reg ? SweetalertResponse::WARNING : SweetalertResponse::SUCCESS
             );
+
+            $_SESSION['userid'] = $row[1];
+            $_SESSION['firstname'] = $row[2];
 
         } else {
 
