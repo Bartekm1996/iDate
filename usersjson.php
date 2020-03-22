@@ -1,7 +1,7 @@
 <?php
 //header('Content-Type: application/json');
 require("db.php");
-require("User.php");
+require("model/User.php");
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);

@@ -60,18 +60,21 @@
             request.create_match_api = true;
             request.match_id = users[curPos].id;
             sendDataTest(request, "api.php");
+            nextUser();
+        }
+
+        function nomatch() {
+            nextUser();
+        }
+
+        function nextUser() {
             curPos++;
             if(curPos >= users.length) curPos = 0;
             $('#uname').text(users[curPos].name);
             $('#uage').text(users[curPos].age);
         }
 
-        // function prevUser() {
-        //     curPos--;
-        //     if(curPos < 0) curPos = users.length -1;
-        //     $('#pname').text(users[curPos].name);
-        // }
-
+        
         function nextImg() {
             curPos++;
             if(curPos >= testImgs.length) curPos = 0;
