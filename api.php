@@ -3,7 +3,8 @@
 require("db.php");
 
 session_start();
-if(isset($_POST['match_api']) && isset($_POST['match_id'])) {
+/* Create a match with current logged in user and match_id user */
+if(isset($_POST['create_match_api']) && isset($_POST['match_id'])) {
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
