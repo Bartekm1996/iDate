@@ -2292,7 +2292,10 @@
 .pos-relative {position: relative;}
 .pos-absolute {position: absolute;}
 .pos-fixed {position: fixed;}
-
+.pos-justify{
+    align-items: center;
+    justify-content: center;
+}
 /*[ float ]
 -----------------------------------------------------------
 */
@@ -2983,8 +2986,10 @@
 	bottom: 0px;
 }
 
-
-
+hr.rounder {
+    border-top: 8px solid #bbb;
+    border-radius: 5px;
+}
 
 
 

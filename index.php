@@ -27,56 +27,106 @@
 <!--    <script src="//geodata.solutions/includes/statecity.js"></script>-->
 <!--    <script src="//geodata.solutions/includes/countrystatecity.js"></script>-->
 
-    <script>
+    <script type="text/javascript">
         //<!-- Ajax post test-->
         function loginTest() {
-            var request = {};
+            const request = {};
             request.user_name = $('#user_name').val();
             request.login_password = $('#login_password').val();
             sendDataTest(request, "Login.php");
         }
 
         function resetEmail(username, email, values) {
-            var request = {};
+            const request = {};
             request.reset_uname = username;
             request.reset_email = email;
             sendDataTest(request, "Login.php");
         }
 
 
-
-        var check = function() {
-            var pVal = document.getElementById('password').value.replace(' ', '');//remove spaces
-            var cVal = document.getElementById('confirm_password').value.replace(' ', '');//remove spaces
-
-            if(pVal.length > 7) {
-                if (pVal == cVal) {
-                    document.getElementById('message').style.color = 'green';
-                    document.getElementById('message').innerHTML = 'Password is matching';
-                } else {
-                    document.getElementById('message').style.color = 'red';
-                    document.getElementById('message').innerHTML = 'Password is not matching';
+        async function acceptTermsAndCons(request) {
+            const {value: accept} = await Swal.fire({
+                title: 'Terms and conditions',
+                input: 'checkbox',
+                inputValue: 1,
+                inputPlaceholder:
+                    'I agree with the <a href="#">terms and conditions</a>',
+                confirmButtonText:
+                    'Continue<i class="fa fa-arrow-right"></i>',
+                inputValidator: (result) => {
+                    return !result && 'You need to agree with T&C to continue'
                 }
-            } else {
-                document.getElementById('message').style.color = 'red';
-                document.getElementById('message').innerHTML = 'Password must be great than 7 characters';
+            })
+            if (accept) {
+                sendDataTest(request, "Register.php");
             }
+        }
 
+        function errorMessage(tittle, message) {
+            Swal.fire({
+                icon: 'error',
+                title: tittle,
+                text: message,
+            })
+        }
+
+        function passWordInfo(){
+            let colorOne = parseInt($('#passWordId').attr('data-password-digit')) !== 1 ? 'red' : 'green';
+            let colorTwo =  parseInt($('#passWordId').attr('data-password-special-case')) !== 1 ? 'red' : 'green';
+            let colorThree =  parseInt($('#passWordId').attr('data-password-upper-case')) !== 1 ? 'red' : 'green';
+            let colorFour =  parseInt($('#passWordId').attr('data-password-lower-case')) !== 1 ? 'red' : 'green';
+
+            console.log(colorOne);
+            Swal.fire({
+                icon: 'info',
+                html:
+                    '<div class="d-flex"><ul class="my-auto flex-grow-1"><li style="color: '+ colorOne + ';" >Contains 1 digit</li' +
+                    '><li style="color: ' + colorTwo + ';" >Contains 1 Special Char</li></ul>' +
+                    '<ul class="my-auto flex-grow-1"><li style="color: ' + colorThree + ';">' +
+                    'Contains 2 upper case</li><li style="color: ' + colorFour + ';">Contains 2 lower case</li>'+
+                    '</ul></div>',
+                focusConfirm: false,
+                confirmButtonText:'Ok',
+            })
+        }
+
+        function emailReqs() {
+            if($('#email').val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) !== null){
+                return true;
+            }else{
+                if($('#email').val().trim().length > 0) {
+                    errorMessage("Email Error", "Email doesn't meet criteria");
+                }
+                return false;
+            }
+        }
+
+        function passWordReqs() {
+            if(parseInt($('#passwordId').attr('aria-valuenow')) === 100 && $('#passWordId').val().trim() === $('#confirm_password').val().trim()){
+                return true;
+            }else{
+                if($('#passWordId').val().trim() !== $('#confirm_password').val().trim()){
+                    errorMessage("PassWord Error", "Passwords don't match");
+                }else {
+                    errorMessage("PassWord Error", "Password doesn't meet criteria");
+                }
+                return false;
+            }
         }
 
         function regTest() {
-            var request = {};
-            // request.firstname = $('#firstname').val();
-            // request.lastname = $('#lastname').val();
+            const request = {};
             request.username = $('#username').val();
             request.pass = $('#password').val();
             request.email = $('#email').val();
-            // request.countryId = $('#countryId').val();
-            // request.stateId = $('#stateId').val();
-            // request.cityId = $('#cityId').val();
-            // request.gender = $('#gender').val();
-            // request.seeking = $('#seeking').val();
-            sendDataTest(request, "Register.php");
+
+            if(request.username !== "" && request.pass !== "" && request.email !== ""){
+                if(passWordReqs() && emailReqs()){
+                    acceptTermsAndCons(request);
+                }
+            }else{
+                Swal.fire("Fill In All Required Fields");
+            }
         }
 
         function sendDataTest(request, urll) {
@@ -86,11 +136,13 @@
                 url: urll,
                 data: request,
                 success: function (response) {
-                    console.log(response);
 
+                console.log(response.title);
 
-                    //TODO: use status code to determine what to do next
                     switch(response.statusCode) {
+                        case 11:
+                            Swal.fire(response.title, response.message, response.type);
+                            break
                         case 2: //login success full
                             window.location.href = '/TestUi.php';
                             break;
@@ -172,22 +224,23 @@
 
             <div id="loginForm" class="login100-form validate-form" >
 
-                <div class="wrap-input100 validate-input" data-validate="UserName / Email is required">
+
+                <div class="wrap-input100 validate-input m-b-23" data-validate="UserName / Email is required">
                     <span class="label-input100">User Name</span>
                     <input class="input100" type="text" id="user_name" placeholder="User Name / Email">
-                    <span class="focus-input100"></span>
+                    <span class="focus-input100" data-symbol="&#xf206;"></span>
                 </div>
 
-                <div class="wrap-input100 validate-input" data-validate = "Password is required:  Abc123!!">
+                <div class="wrap-input100 validate-input m-b-23" data-validate = "Password is required:  Abc123!!">
                     <span class="label-input100">Password</span>
                     <input class="input100" type="text" id="login_password" placeholder="Password">
-                    <span class="focus-input100"></span>
+                    <span class="focus-input100" data-symbol="&#xf190;"></span>
                 </div>
 
                 <div class="container-login100-form-btn">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn" onclick="loginTest()">
+                        <button class="login100-form-btn txt4" onclick="loginTest()">
                             Sign In
                         </button>
                     </div>
@@ -195,121 +248,62 @@
             </div>
 
             <div id="registerForm" class="login100-form validate-form" style="display: none;" >
-
-<!--                <div class="wrap-input100 validate-input" data-validate="First name is required" >-->
-<!--                    <span class="label-input100">First Name</span>-->
-<!--                    <input class="input100" type="text" id="firstname" pattern="^(\w\w+)\s(\w+)$"  placeholder="First name">-->
-<!--                    <span class="focus-input100"></span>-->
-<!--                </div>-->
-<!---->
-<!--                <div class="wrap-input100 validate-input" data-validate="Last name is required" >-->
-<!--                    <span class="label-input100">Last Name</span>-->
-<!--                    <input class="input100" type="text" id="lastname" pattern="^(\w\w+)\s(\w+)$"  placeholder="Last name">-->
-<!--                    <span class="focus-input100"></span>-->
-<!--                </div>-->
-<!--                <div id="location" class="wrap-input100 validate-input">-->
-<!--                    <span class="label-input100">Preference<br><br></span>-->
-<!--                    <div class="form-inline">-->
-<!--                        <div class="col-6">-->
-<!--                            <span class="label-input100">I am </span>-->
-<!--                            <select name="gender" class="form-control" id="gender">-->
-<!--                                <option value="0">Male</option>-->
-<!--                                <option value="1">Female</option>-->
-<!--                            </select>-->
-<!--                        </div>-->
-<!---->
-<!---->
-<!--                        <div class="col-6">-->
-<!--                            <span class="label-input100">Seeking </span>-->
-<!--                            <select name="seeking" class="form-control" id="seeking">-->
-<!--                                <option value="male">Male</option>-->
-<!--                                <option value="female">Female</option>-->
-<!--                                <option value="other">Other</option>-->
-<!--                            </select>-->
-<!--                        </div>-->
-<!---->
-<!---->
-<!--                    </div>-->
-<!---->
-<!--                </div>-->
-<!---->
-<!--                    <div id="location" class="wrap-input100 validate-input">-->
-<!--                        <span class="label-input100">Select your location<br><br></span>-->
-<!--                        <span class="label-input100">Country</span>-->
-<!--                        <select name="country" class="form-control countries order-alpha include-IE" id="countryId">-->
-<!--                            <option value="">Select Country</option>-->
-<!--                        </select>-->
-<!--                    </div>-->
-<!--                <div id="location" class="wrap-input100 validate-input">-->
-<!--                    <span class="label-input100">State</span>-->
-<!--                    <select name="state" class="form-control states order-alpha" id="stateId">-->
-<!--                        <option value="">Select State</option>-->
-<!--                    </select>-->
-<!--                </div>-->
-<!--                <div id="location" class="wrap-input100 validate-input">-->
-<!--                    <span class="label-input100">City</span>-->
-<!--                    <select name="city" class="form-control cities order-alpha" id="cityId">-->
-<!--                        <option value="">Select City</option>-->
-<!--                    </select>-->
-<!--                </div>-->
-
-
-                <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+                <div class="wrap-input100 validate-input m-b-25" data-validate = "Valid email is required: ex@abc.xyz">
                     <span class="label-input100">Email</span>
                     <input class="input100" type="email" id="email" placeholder="user@example.com">
-                    <span class="focus-input100"></span>
+                    <span class="focus-input100" data-symbol="&#xf15a;"></span>
                 </div>
 
-                <div class="wrap-input100 validate-input" data-validate="Username is required">
+                <div class="wrap-input100 validate-input m-b-25" data-validate="Username is required">
                     <span class="label-input100">Username</span>
-                    <input class="input100" type="text" id="username" placeholder="Username...">
-                    <span class="focus-input100"></span>
+                    <input class="input100" type="text" id="username" onclick="emailReqs()" placeholder="Username...">
+                    <span class="focus-input100" data-symbol="&#xf206;"></span>
                 </div>
 
-                <div class="wrap-input100 " data-validate = "Password is required">
+                <div class="wrap-input100-password validate-input m-b-25" data-validate = "Password is required">
                     <span class="label-input100">Password</span>
-                    <input class="input100" name="password" type="password" id="password" required onkeyup="check();" placeholder="*************">
-                    <span class="focus-input100"></span>
-                </div>
-
-                <div class="wrap-input100 " data-validate = "Confirm Password">
-                    <span class="label-input100">Confirm Password</span>
-                    <input class="input100" name="confirm_password" type="password" id="confirm_password" required  onkeyup="check();" placeholder="*************">
+                    <input class="input100" name="password" type="password" id="password" onclick="passWordInfo()" required placeholder="*************">
                     <span  id="message"></span>
-                </div>
-
-                <div class="flex-m w-full p-b-33">
-                    <div class="contact100-form-checkbox">
-                        <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-                        <label class="label-checkbox100" for="ckb1">
-								<span class="txt1">
-									I agree to the
-									<a href="#" class="txt2 hov1">
-										Terms of User
-									</a>
-								</span>
-                        </label>
+                    <span class="focus-input100" data-symbol="&#xf190;"></span>
+                    <div class="progress">
+                        <div id="passWordId" role="progressbar" style="width: 100%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-
-
                 </div>
+
+                <div class="wrap-input100-password validate-input m-b-25" data-validate = "Confirm Password">
+                    <span class="label-input100">Confirm Password</span>
+                    <input class="input100" name="confirm_password" type="password" id="confirm_password" onclick="passWordInfo()" required placeholder="*************">
+                    <span  id="message"></span>
+                    <span class="focus-input100" data-symbol="&#xf190;"></span>
+                    <div class="progress">
+                        <div id="confirmPassWordBar" role="progressbar"  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+
 
                 <div class="container-login100-form-btn">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn" onclick="regTest()">
+                        <button class="login100-form-btn txt4" onclick="regTest()">
                             Sign Up
                         </button>
                     </div>
                 </div>
             </div>
 
-            <a href="#" id="signUp" class="dis-block txt3 hov1 p-r-30 p-t-10 p-b-10 p-l-30">
+
+            <div class="d-flex m-t-30">
+                <hr class="my-auto flex-grow-1">
+                <div class="px-4">Or</div>
+                <hr class="my-auto flex-grow-1">
+            </div>
+
+            <!--dis-flex txt3 hov1 pos-justify m-t-50-->
+            <a href="#" id="signUp" class="login100-form-btn m-t-20 txt3">
                 Sign Up
-                <i class="fa fa-long-arrow-right m-l-5"></i>
             </a>
 
-            <p style="margin: auto;" align="middle">IDate</p>
+            <p class="dis-flex pos-justify m-t-25">IDate</p>
         </div>
     </div>
 </div>
