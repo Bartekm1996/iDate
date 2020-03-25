@@ -102,10 +102,11 @@
         }
 
         function passWordReqs() {
-            if(parseInt($('#passwordId').attr('aria-valuenow')) === 100 && $('#passWordId').val().trim() === $('#confirm_password').val().trim()){
+            if(parseInt($('#passWordId').attr('aria-valuenow')) === 100 && $('#password').val() === $('#confirm_password').val()){
                 return true;
             }else{
-                if($('#passWordId').val().trim() !== $('#confirm_password').val().trim()){
+
+                if($('#password').val() !== $('#confirm_password').val()){
                     errorMessage("PassWord Error", "Passwords don't match");
                 }else {
                     errorMessage("PassWord Error", "Password doesn't meet criteria");

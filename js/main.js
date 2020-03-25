@@ -20,7 +20,7 @@
 
         console.log($('#passWordId').attr('aria-valuenow'));
 
-        if($(this).val().trim() === ""){
+        if($(this).val().length === 0){
             strength = 0;
         }
 
