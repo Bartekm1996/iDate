@@ -205,13 +205,57 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
+                <h5 class="modal-title"><b>Information about this person</b></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeUserProfile()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Display the user profile here</p>
+                <table>
+                    <tr>
+                        <td><p class='grid-item'><img src='https://placekitten.com/100/100'/></p></td>
+                        <td>
+                            <style type="text/css">
+                                td
+                                {
+                                    padding:0 15px 0 15px;
+                                }
+                            </style>
+                            <table >
+                                <tr>
+                                    <td></td>
+                                    <td>Name:</td>
+                                    <td>Full name</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Age:</td>
+                                    <td>100</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Gender:</td>
+                                    <td>Male</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Location:</td>
+                                    <td>City</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Smoker:</td>
+                                    <td>Yes/No</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Drinker:</td>
+                                    <td>Yes/No</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeUserProfile()">Close</button>
