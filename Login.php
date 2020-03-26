@@ -63,8 +63,8 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
                 $reg ? SweetalertResponse::WARNING : SweetalertResponse::SUCCESS
             );
 
-            $mongo = new MongoConnect();
-            $mongo->historyUpdate("User Logged In", "Log In");
+//            $mongo = new MongoConnect();
+//            $mongo->historyUpdate("User Logged In", "Log In");
 
             $_SESSION['userid'] = $row[1];
             $_SESSION['firstname'] = $row[2];
@@ -77,8 +77,8 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
                 SweetalertResponse::ERROR
             );
 
-            $mongo = new MongoConnect();
-            $mongo->historyUpdate("User Logged In", "Log In");
+//            $mongo = new MongoConnect();
+//            $mongo->historyUpdate("User Logged In", "Log In");
         }
     }
 

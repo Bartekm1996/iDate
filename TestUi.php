@@ -34,6 +34,11 @@
         });
     </script>
     <script>
+
+        function  openUserProfile(event) {
+            alert("Do something with this id:" + JSON.stringify(event));
+        }
+
         function getUserMatches() {
             var request = {};
             request.get_user_matches_api = true;
@@ -48,7 +53,7 @@
                     //TODO: where are the images going to be stored
                     if(obj != null) {
                         for(var i = 0; i < obj.length;i++) {
-                            let test = "<div class='grid-item'><img src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
+                            let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
                             document.getElementById("mymatches").innerHTML += test;
                         }
                     }
@@ -148,13 +153,13 @@
             </div>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#matches">Matches</a>
+                    <a class="nav-link btn-primary active" href="#matches">Matches</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#messages">Messages</a>
+                    <a class="nav-link btn-primary" href="#messages">Messages</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#search">Search</a>
+                    <a class="nav-link btn-primary" href="#search">Search</a>
                 </li>
             </ul>
 
