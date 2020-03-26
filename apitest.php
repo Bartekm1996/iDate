@@ -64,6 +64,13 @@
             sendDataTest(request, "api.php");
         }
 
+        function getUserMatches() {
+            var request = {};
+            request.get_user_matches_api = true;
+            request.user_id = $('#user_id').val();
+            sendDataTest(request, "api.php");
+        }
+
         function getAvailableInterests() {
             var request = {};
             request.get_available_interests_api = true;
@@ -145,7 +152,7 @@
             <button class="btn btn-success" onclick="loadUserImages()">loadUserImages()</button>
             <button class="btn btn-info" onclick="getAvailableInterests()">getAvailableInterests()</button>
             <button class="btn btn-danger" onclick="getUserConnections()">getUserConnections()</button>
-            <button class="btn btn-warning" onclick="getAllUsers()">Get all users</button>
+            <button class="btn btn-warning" onclick="getUserMatches()">getUserMatches()</button>
             <button class="btn btn-primary" onclick="getAllUsers()">Get all users</button>
             <button class="btn btn-success" onclick="getAllUsers()">Get all users</button>
 

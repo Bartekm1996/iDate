@@ -1,4 +1,4 @@
-
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,8 +16,8 @@
 <!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
+        <?php echo "var userID = '{$_SESSION['userid']}';"; ?>
         $(document).ready(function() {
-
             $(".btn-pref .btn").click(function () {
                 $(".btn-pref .btn").removeClass("btn-primary").addClass("btn-default");
                 // $(".tab").addClass("active"); // instead of this do the below
@@ -28,9 +28,40 @@
                 e.preventDefault()
                 $(this).tab('show')
             })
+
+            getUserMatches();
+
         });
     </script>
     <script>
+        function getUserMatches() {
+            var request = {};
+            request.get_user_matches_api = true;
+            request.user_id = userID;
+            $.ajax({
+                method: "POST",
+                url: "api.php",
+                data: request,
+                success: function (response) {
+                    console.log(response);
+                    let obj = JSON.parse(response);
+                    //TODO: where are the images going to be stored
+                    if(obj != null) {
+                        for(var i = 0; i < obj.length;i++) {
+                            let test = "<div class='grid-item'><img src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
+                            document.getElementById("mymatches").innerHTML += test;
+                        }
+                    }
+
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+        }
 
         var users = <?php require("usersjson.php"); ?>
         var curPos = 0;
@@ -129,13 +160,8 @@
 
             <div class="tab-content">
                 <div class="tab-pane active" id="matches" role="tabpanel" aria-labelledby="home-tab">
-                    <div class="grid-container scroll scrollbar" id="style-5">
-                        <?php
-
-                        for($i = 0; $i < 20;$i++) {
-                            echo"<div class='grid-item'><img src='https://placekitten.com/100/100'/><h4>Name</h4></div>\n";
-                        }
-                        ?>
+                    <div class="grid-container scroll scrollbar" id="mymatches">
+                        <!-- Matches will be generated here via JS -->
                     </div>
                 </div>
                 <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="profile-tab">
