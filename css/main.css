@@ -457,7 +457,6 @@ iframe {
   background: -o-linear-gradient(top, #e8519e, #c77ff2, #e8519e, #c77ff2);
   background: -moz-linear-gradient(top, #e8519e, #c77ff2, #e8519e, #c77ff2);
   background: linear-gradient(top, #e8519e, #c77ff2, #e8519e, #c77ff2);
-
   -webkit-transition: all 0.4s;
   -o-transition: all 0.4s;
   -moz-transition: all 0.4s;

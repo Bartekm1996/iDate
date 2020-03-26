@@ -294,14 +294,15 @@
                 </div>
 
 
-                <div class="container-login100-form-btn m-t-10">
-                    <div class="wrap-login100-form-btn">
-                        <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn txt4" onclick="regTest()">
-                            Sign Up
-                        </button>
+                    <div class="container-login100-form-btn m-t-10">
+                        <div class="wrap-login100-form-btn">
+                            <div class="login100-form-bgbtn"></div>
+                            <button class="login100-form-btn txt4" onclick="regTest()">
+                                Sign Up
+                            </button>
+                        </div>
                     </div>
-                </div>
+
             </div>
 
 
@@ -318,8 +319,8 @@
             <!--dis-flex txt3 hov1 pos-justify m-t-50-->
 
             <div class="flex-w  m-t-20 ">
-                <a href="#" onclick="passWordReset('Password Rest', 'question')" id="forgotPassWord" style="text-align: left;" class="my-auto flex-grow-1 txt3 m-l-10">
-                    Forgot Password
+                <a href="#" onclick="passWordReset('Password Rest', 'question')" id="forgotPassWord" style="text-align: center;" class="flex-grow-1 txt3 m-r-50">
+                    Forgot<br>Password
                 </a>
                 <a href="#" id="signUp" style="text-align: center;" class="my-auto flex-grow-1 txt3 m-r-10">
                     Sign Up
