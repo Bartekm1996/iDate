@@ -36,7 +36,7 @@
     <script>
 
         function  openUserProfile(event) {
-            alert("Do something with this id:" + JSON.stringify(event));
+            alert("Load user profile in context view:" + JSON.stringify(event));
         }
 
         function getUserMatches() {
@@ -53,7 +53,7 @@
                     //TODO: where are the images going to be stored
                     if(obj != null) {
                         for(var i = 0; i < obj.length;i++) {
-                            let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
+                            let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
                             document.getElementById("mymatches").innerHTML += test;
                         }
                     }

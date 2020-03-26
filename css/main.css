@@ -694,7 +694,9 @@ iframe {
   animation: shake 0.5s;
   animation-iteration-count: 1;
 }
-
+.popimg:hover {
+  transform: scale(1.1); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
 .heartbtn i:hover{
   color: #ddd098;
   animation: shake 0.5s;
