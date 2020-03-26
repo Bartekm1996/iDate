@@ -50,7 +50,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table>
+                <table id="popup_user_info">
                     <tr>
                         <td><p class='grid-item'><img src='https://placekitten.com/100/100'/></p></td>
                         <td>
@@ -64,32 +64,32 @@
                                 <tr>
                                     <td></td>
                                     <td>Name:</td>
-                                    <td>Full name</td>
+                                    <td id="person_fullname">Full name</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Age:</td>
-                                    <td>100</td>
+                                    <td id="person_age">100</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Gender:</td>
-                                    <td>Male</td>
+                                    <td id="person_gender">Male</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Location:</td>
-                                    <td>City</td>
+                                    <td id="person_location">City</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Smoker:</td>
-                                    <td>Yes/No</td>
+                                    <td id="person_is_smoker">Yes/No</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Drinker:</td>
-                                    <td>Yes/No</td>
+                                    <td id="person_is_drinker">Yes/No</td>
                                 </tr>
                             </table>
                         </td>
@@ -97,7 +97,11 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeUserProfile()">Close</button>
+                <button type="button" class="btn btn-outline-info" data-dismiss="modal" onclick="showChat(), closeUserProfile()">Start Chat</button>
+                <button type="button" class="btn btn-outline-success pull-right" data-dismiss="modal" onclick="match()">Match</button>
+                <button type="button" class="btn btn-outline-danger pull-right" data-dismiss="modal" onclick="unlink()">Unlink</button>
+                <span style="width: 100px"></span>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="closeUserProfile()">Close</button>
             </div>
         </div>
     </div>

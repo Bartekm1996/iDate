@@ -112,6 +112,14 @@ function match() {
     nextUser();
 }
 
+function unlink() {
+    // var request = {};
+    // request.create_match_api = true;
+    // request.match_id = users[curPos].id;
+    // sendDataTest(request, "api.php");
+    // nextUser();
+}
+
 function nomatch() {
     nextUser();
 }
