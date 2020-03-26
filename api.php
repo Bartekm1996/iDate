@@ -129,7 +129,32 @@ WHERE id IN (SELECT userID2 FROM connections WHERE userID1='{$_POST['user_id']}'
         $res = $res."]";
         echo $res;
     }
-}else if(isset($_POST['upload_files_api'])) {
+} else if(isset($_POST['get_profiles_api']) && isset($_POST['filter'])) { //add gender search
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+
+        //SELECT * FROM user WHERE id IN (SELECT userID2 FROM connections WHERE userID1='66')
+        $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.age,
+ profile.photoId, profile.location, profile.Description  FROM user
+inner join profile
+on user.id = profile.userID) AS res
+WHERE firstname LIKE '%{$_POST['filter']}%';";
+
+        $result = $conn->query($sql);
+        $res = "[";
+        if ($result->num_rows > 0) {
+            while ($row = mysqli_fetch_row($result)) {
+                $user = new Match($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]);
+                $res = $res.$user->jsonSerialize().",";
+            }
+
+            $res = substr($res, 0,strlen($res)-1);
+        }
+        $res = $res."]";
+        echo $res;
+    }
+} else if(isset($_POST['upload_files_api'])) {
     $arr = $_POST["formData"];
 
     echo json_encode($_FILES['files']);

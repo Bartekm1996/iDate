@@ -48,6 +48,45 @@
             $('#profileModal').hide();
         }
 
+        function getAllProfiles() {
+
+            let filter = $('#searchFilter').val();
+
+            console.log(filter);
+
+            if(filter.length == 0) {
+                document.getElementById("searchResults").innerHTML = '<h4>No Results Found</h4>';
+                return;
+            }
+
+            var request = {};
+            request.get_profiles_api = true;
+            request.filter = filter;
+            $.ajax({
+                method: "POST",
+                url: "api.php",
+                data: request,
+                success: function (response) {
+                    console.log(response);
+                    let obj = JSON.parse(response);
+                    document.getElementById("searchResults").innerHTML = '';
+                    //TODO: where are the images going to be stored
+                    if(obj != null) {
+                        for(var i = 0; i < obj.length;i++) {
+                            let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
+                            document.getElementById("searchResults").innerHTML += test;
+                        }
+                    }
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+        }
+
         function getUserMatches() {
             var request = {};
             request.get_user_matches_api = true;
@@ -66,7 +105,6 @@
                             document.getElementById("mymatches").innerHTML += test;
                         }
                     }
-
                 },
                 failure: function (response) {
                     console.log('failure:' + JSON.stringify(response));
@@ -208,7 +246,13 @@
                         </div>
                     </ul>
                 </div>
-                <div class="tab-pane" id="search" role="tabpanel" aria-labelledby="messages-tab">...</div>
+                <div class="tab-pane" id="search" role="tabpanel" aria-labelledby="messages-tab" style="margin: 3%">
+                    <!-- add search bar -->
+                    <input id="searchFilter" type="text" class="form-control" placeholder="Search...." onkeyup="getAllProfiles()"/>
+                    <div class="grid-container scroll scrollbar" id="searchResults">
+                        <!-- Matches will be generated here via JS -->
+                    </div>
+                </div>
             </div>
         </div>
 
