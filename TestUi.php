@@ -10,6 +10,7 @@
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="vendorv/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/chat.css">
     <link rel="stylesheet" type="text/css" href="css/scroll.css">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -40,6 +41,17 @@
     </script>
     <script>
 
+        function showChat() {
+            console.log('showChat');
+            $('#matcharea').prop('hidden', true);
+            $('#chatarea').prop('hidden', false);
+        }
+
+        function showSearch() {
+            console.log('showSearch');
+            $('#matcharea').prop('hidden', false);
+            $('#chatarea').prop('hidden', true);
+        }
         function  openUserProfile(event) {
             $('#profileModal').show();
         }
@@ -217,10 +229,10 @@
             </div>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link btn-primary active" href="#matches">Matches</a>
+                    <a class="nav-link btn-primary active" href="#matches" onclick="showSearch()">Matches</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link btn-primary" href="#messages">Messages</a>
+                    <a class="nav-link btn-primary" href="#messages" onclick="showChat()">Messages</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link btn-primary" href="#search">Search</a>
@@ -256,7 +268,46 @@
             </div>
         </div>
 
+    <div class="col-8">
+        <div id="chatarea"  class="chatarea" hidden>
+            <div class="card" >
+                <div class="card-body" style="display: inline-flex" >
+                    <img src='https://placekitten.com/50/50'/>
+                    <h3>You match Name on 01/01/2020</h3>
+                </div>
+            </div>
+        <h1>Messages Example</h1>
+        <p>We need to make this a fixed height and have search bar at the bottom</p>
+        <!-- Chat content goes here -->
+
+            <div class="bubble">
+                Blue text bubble
+            </div>
+
+            <div class="bubble bubble--alt">
+                Green text bubble
+            </div>
+
+            <div class="bubble">
+                A bubble containing lots and lots and lots and lots of content on multiple lines
+            </div>
+
+            <div class="bubble bubble--alt">
+                Bubble with image
+                <img src="http://placekitten.com/300/300" alt="" />
+            </div>
+
+            <div class="bubble">
+                Bubblewitharidiculouslylongwordwhichwrapseffortlesslyontotwolines
+            </div>
+
+            <!-- Chat content goes here -->
+            <input class="form-control" type="text" placeholder="Type a message...."/>
+        </div>
+
         <?php require("matchcontent.php"); ?>
+    </div>
+
     </div>
 </div>
 
