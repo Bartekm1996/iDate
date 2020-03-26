@@ -33,7 +33,14 @@
             const request = {};
             request.user_name = $('#user_name').val();
             request.login_password = $('#login_password').val();
-            sendDataTest(request, "Login.php");
+            if(request.user_name.length === 0 || request.login_password.length === 0){
+                Swal.fire({
+                    icon: 'warning',
+                    text: "Fill In All Required Fields"
+                });
+            }else {
+                sendDataTest(request, "Login.php");
+            }
         }
 
         function resetEmail(username, email, values) {
@@ -75,14 +82,15 @@
             let colorTwo =  parseInt($('#passWordId').attr('data-password-special-case')) !== 1 ? 'red' : 'green';
             let colorThree =  parseInt($('#passWordId').attr('data-password-upper-case')) !== 1 ? 'red' : 'green';
             let colorFour =  parseInt($('#passWordId').attr('data-password-lower-case')) !== 1 ? 'red' : 'green';
+            let colorFive = $('#password').val().length < 7 ? 'red' : 'green';
 
             console.log(colorOne);
             Swal.fire({
                 icon: 'info',
                 html:
-                    '<div class="d-flex"><ul class="my-auto flex-grow-1"><li style="color: '+ colorOne + ';" >Contains 1 digit</li' +
-                    '><li style="color: ' + colorTwo + ';" >Contains 1 Special Char</li></ul>' +
-                    '<ul class="my-auto flex-grow-1"><li style="color: ' + colorThree + ';">' +
+                    '<div class="d-flex pos-justify"><ul class="m-r-50" style="text-align: left;"><li style="color: '+ colorOne + ';" class="m-b-20" >Contains 1 digit</li' +
+                    '><li style="color: ' + colorTwo + ';" class="m-b-20" >Contains 1 Special Char</li><li style="color: ' + colorFive + ';">7 Charchters Long</li></ul>' +
+                    '<ul style="text-align: left;"><li style="color: ' + colorThree + ';" class="m-b-20">' +
                     'Contains 2 upper case</li><li style="color: ' + colorFour + ';">Contains 2 lower case</li>'+
                     '</ul></div>',
                 focusConfirm: false,
@@ -126,8 +134,56 @@
                     acceptTermsAndCons(request);
                 }
             }else{
-                Swal.fire("Fill In All Required Fields");
+                Swal.fire({
+                    icon: 'warning',
+                    text: "Fill In All Required Fields"
+                });
             }
+        }
+
+        function passWordReset(title, icon) {
+            Swal.fire({
+                title: title,
+                text: "Would you like to reset?",
+                icon: icon,
+                showCancelButton: true,
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if(result.value) {
+                    Swal.mixin({
+                        input: 'text',
+                        confirmButtonText: 'Next &rarr;',
+                        showCancelButton: true,
+                        progressSteps: ['1', '2']
+                    }).queue([
+                        {
+                            title: 'Question 1',
+                            text: 'What is your username?'
+                        },
+                        {
+                            title: 'Question 2',
+                            text: 'What is your email?'
+                        }
+
+
+                    ]).then((result) => {
+                        var invalid = false;
+                        for (let i = 0; i < result.value.length; i++) {
+                            if (result.value[i].trim().length < 6) {
+                                invalid = true;
+                            }
+                        }
+
+                        if (invalid) {
+                            Swal.fire("Error", "username or email is not long enough", "error");
+                        } else {
+                            resetEmail(result.value[0], result.value[1]);
+                        }
+
+                    });
+                }
+                //end
+            });
         }
 
         function sendDataTest(request, urll) {
@@ -141,56 +197,11 @@
                 console.log(response.title);
 
                     switch(response.statusCode) {
-                        case 11:
-                            Swal.fire(response.title, response.message, response.type);
-                            break
                         case 2: //login success full
                             window.location.href = '/TestUi.php';
                             break;
                             case 3:
-                                Swal.fire({
-                                    title: 'Invalid password',
-                                    text: "Would you like to reset?",
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Yes'
-                                }).then((result) => {
-                                    //start
-                                        Swal.mixin({
-                                            input: 'text',
-                                            confirmButtonText: 'Next &rarr;',
-                                            showCancelButton: true,
-                                            progressSteps: ['1', '2']
-                                        }).queue([
-                                            {
-                                                title: 'Question 1',
-                                                text: 'What is your username?'
-                                            },
-                                            {
-                                                title: 'Question 2',
-                                                text: 'What is your email?'
-                                            }
-                                        ]).then((result) => {
-
-                                            var invalid = false;
-                                            for (let i = 0; i < result.value.length; i++) {
-                                                if (result.value[i].trim().length < 6) {
-                                                    invalid = true;
-                                                }
-                                            }
-
-                                            if (invalid) {
-                                                Swal.fire("Error", "username or email is not long enough", "error");
-                                            } else {
-                                                resetEmail(result.value[0], result.value[1]);
-                                            }
-
-                                        });
-                                    //end
-                                });
-
+                                passWordReset('Invalid Password', 'warning')
                             break;
                             default:
                                 Swal.fire(response.title, response.message, response.type);
@@ -232,13 +243,13 @@
                     <span class="focus-input100" data-symbol="&#xf206;"></span>
                 </div>
 
-                <div class="wrap-input100 validate-input m-b-23" data-validate = "Password is required:  Abc123!!">
+                <div class="wrap-input100 validate-input m-b-23" data-validate = "Password is required">
                     <span class="label-input100">Password</span>
-                    <input class="input100" type="text" id="login_password" placeholder="Password">
+                    <input class="input100" type="text" id="login_password" placeholder="*******************">
                     <span class="focus-input100" data-symbol="&#xf190;"></span>
                 </div>
 
-                <div class="container-login100-form-btn">
+                <div class="container-login100-form-btn m-t-10">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
                         <button class="login100-form-btn txt4" onclick="loginTest()">
@@ -246,6 +257,7 @@
                         </button>
                     </div>
                 </div>
+
             </div>
 
             <div id="registerForm" class="login100-form validate-form" style="display: none;" >
@@ -261,9 +273,9 @@
                     <span class="focus-input100" data-symbol="&#xf206;"></span>
                 </div>
 
-                <div class="wrap-input100-password validate-input m-b-25" data-validate = "Password is required">
+                <div class="wrap-input100-password validate-input m-b-25" data-validate = "Password is requiredClick Box For Info">
                     <span class="label-input100">Password</span>
-                    <input class="input100" name="password" type="password" id="password" onclick="passWordInfo()" required placeholder="*************">
+                    <input class="input100" name="password" type="password" id="password" onclick="passWordInfo()" required placeholder="Enter Password">
                     <span  id="message"></span>
                     <span class="focus-input100" data-symbol="&#xf190;"></span>
                     <div class="progress">
@@ -273,7 +285,7 @@
 
                 <div class="wrap-input100-password validate-input m-b-25" data-validate = "Confirm Password">
                     <span class="label-input100">Confirm Password</span>
-                    <input class="input100" name="confirm_password" type="password" id="confirm_password" onclick="passWordInfo()" required placeholder="*************">
+                    <input class="input100" name="confirm_password" type="password" id="confirm_password" onclick="passWordInfo()" required placeholder="Confirm Password">
                     <span  id="message"></span>
                     <span class="focus-input100" data-symbol="&#xf190;"></span>
                     <div class="progress">
@@ -282,29 +294,41 @@
                 </div>
 
 
-                <div class="container-login100-form-btn">
-                    <div class="wrap-login100-form-btn">
-                        <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn txt4" onclick="regTest()">
-                            Sign Up
-                        </button>
+                    <div class="container-login100-form-btn m-t-10">
+                        <div class="wrap-login100-form-btn">
+                            <div class="login100-form-bgbtn"></div>
+                            <button class="login100-form-btn txt4" onclick="regTest()">
+                                Sign Up
+                            </button>
+                        </div>
                     </div>
-                </div>
+
             </div>
 
 
-            <div class="d-flex m-t-30">
+
+
+
+
+            <div class="flex-w m-t-30">
                 <hr class="my-auto flex-grow-1">
                 <div class="px-4">Or</div>
                 <hr class="my-auto flex-grow-1">
             </div>
 
             <!--dis-flex txt3 hov1 pos-justify m-t-50-->
-            <a href="#" id="signUp" class="login100-form-btn m-t-20 txt3">
-                Sign Up
-            </a>
 
-            <p class="dis-flex pos-justify m-t-25">IDate</p>
+            <div class="flex-w  m-t-20 ">
+                <a href="#" onclick="passWordReset('Password Rest', 'question')" id="forgotPassWord" style="text-align: center;" class="flex-grow-1 txt3 m-r-50">
+                    Forgot<br>Password
+                </a>
+                <a href="#" id="signUp" style="text-align: center;" class="my-auto flex-grow-1 txt3 m-r-10">
+                    Sign Up
+                </a>
+            </div>
+
+
+            <p class="dis-flex pos-justify m-t-45">IDate</p>
         </div>
     </div>
 </div>

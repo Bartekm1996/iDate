@@ -159,7 +159,7 @@ iframe {
 
 .txt3 {
   font-family: Poppins-Regular;
-  font-size: 24px;
+  font-size: 20px;
   color: #666666;
   line-height: 1.4;
 }
@@ -457,7 +457,6 @@ iframe {
   background: -o-linear-gradient(top, #e8519e, #c77ff2, #e8519e, #c77ff2);
   background: -moz-linear-gradient(top, #e8519e, #c77ff2, #e8519e, #c77ff2);
   background: linear-gradient(top, #e8519e, #c77ff2, #e8519e, #c77ff2);
-
   -webkit-transition: all 0.4s;
   -o-transition: all 0.4s;
   -moz-transition: all 0.4s;
