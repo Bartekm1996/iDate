@@ -2,13 +2,12 @@
 <project version="4">
   <component name="PhpIncludePathManager">
     <include_path>
-      <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/sendgrid/sendgrid" />
+      <path value="$PROJECT_DIR$/vendorv/sendgrid/php-http-client" />
+      <path value="$PROJECT_DIR$/vendorv/sendgrid/sendgrid" />
+      <path value="$PROJECT_DIR$/vendorv/composer" />
       <path value="$PROJECT_DIR$/vendor/sendgrid/php-http-client" />
-      <path value="$PROJECT_DIR$/vendor/bootstrap/js" />
-      <path value="$PROJECT_DIR$/vendor/bootstrap/css" />
-      <path value="$PROJECT_DIR$/vendor/animsition/js" />
-      <path value="$PROJECT_DIR$/vendor/animsition/css" />
+      <path value="$PROJECT_DIR$/vendor/sendgrid/sendgrid" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

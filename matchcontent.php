@@ -1,8 +1,8 @@
 
 <div class="col-md-8">
-            <div class="card shadow-lg p-3 mb-5 bg-white rounded" style="width: 25rem;display:block; margin-left: auto;margin-right: auto">
+            <div class="card shadow-lg p-3 mb-5 bg-white rounded" style="width: 22rem; margin-left: auto;margin-right: auto">
                 <div style="position:relative">
-                    <img id="imgP" width="300px" height="350px" src="https://placekitten.com/300/300" class="card-img-top">
+                    <img id="imgP" width="200px" height="250px" src="https://placekitten.com/300/300" class="card-img-top">
                     <div class="matchbtn" style="left:2%">
                         <i class="fa fa-3x fa-arrow-circle-left" onclick="prevImg()"></i>
                     </div>
@@ -24,6 +24,4 @@
                     </div>
 <!--                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
 
-                </div>
             </div>
-        </div>
