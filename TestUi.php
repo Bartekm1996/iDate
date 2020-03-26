@@ -36,6 +36,7 @@
             })
 
             getUserMatches();
+            showSearch();
 
         });
     </script>
