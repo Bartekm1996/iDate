@@ -17,7 +17,12 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
         <?php echo "var userID = '{$_SESSION['userid']}';"; ?>
+        $('#profileModal').on('shown.bs.modal', function () {
+            $('#profileModal').trigger('focus')
+        })
+
         $(document).ready(function() {
+
             $(".btn-pref .btn").click(function () {
                 $(".btn-pref .btn").removeClass("btn-primary").addClass("btn-default");
                 // $(".tab").addClass("active"); // instead of this do the below
@@ -36,7 +41,11 @@
     <script>
 
         function  openUserProfile(event) {
-            alert("Load user profile in context view:" + JSON.stringify(event));
+            $('#profileModal').show();
+        }
+
+        function  closeUserProfile() {
+            $('#profileModal').hide();
         }
 
         function getUserMatches() {
@@ -141,7 +150,24 @@
     </style>
 </head>
 <body style="background-color: #999999;">
-
+<div id="profileModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeUserProfile()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Display the user profile here</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeUserProfile()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div style="background-color: #edebeb">
     <div class="row">
         <div class="col-md-4" >
