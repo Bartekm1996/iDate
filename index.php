@@ -245,7 +245,7 @@
 
                 <div class="wrap-input100 validate-input m-b-23" data-validate = "Password is required">
                     <span class="label-input100">Password</span>
-                    <input class="input100" name="password" type="password" required placeholder="*******************">
+                    <input class="input100" name="password" id="login_password" type="password" required placeholder="*******************">
                     <span class="focus-input100" data-symbol="&#xf190;"></span>
                 </div>
 

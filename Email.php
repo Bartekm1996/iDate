@@ -35,20 +35,20 @@ class Email
         }
         $cont = file_get_contents(__DIR__.$template);
         $res = str_replace("{{user_name}}", $this->name, $cont);
-        $encryt_res = "http://www.idate.ie/verification.php?$key=".$this->encrypt($this->getTo());
+        $encryt_res = "http://www.idate.ie/verification.php?$key=".$this->encrypt($this->getName());
         $res_one = str_replace( "href=\"#replace\"", "href=\"".$encryt_res."\"", $res);
         $res_two = str_replace( "{{Replace}}", $encryt_res, $res_one);
         $this->sendEmail($message, $res_two, $this->getTo());
     }
 
-    private function encrypt($email){
+    private function encrypt($username){
         $ciphering = "AES-128-CTR";
         $iv_length = openssl_cipher_iv_length($ciphering);
         $options = 0;
         $encryption_iv = '1234567891011121';
         $encryption_key = "University_Of_Limerick".date("m.d.y");//code only valid for a day
 
-        return openssl_encrypt($email,$ciphering, $encryption_key, $options, $encryption_iv);
+        return openssl_encrypt($username, $ciphering, $encryption_key, $options, $encryption_iv);
     }
 
 
@@ -72,6 +72,14 @@ class Email
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
 
+    }
+
+    /**
+     * @return String
+     */
+    public function getName(): String
+    {
+        return $this->name;
     }
 
     /**

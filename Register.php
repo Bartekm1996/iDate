@@ -3,6 +3,7 @@ ob_start();
 require("db.php");
 require("Email.php");
 require("SweetalertResponse.php");
+require("MongoConnect.php");
 $resp = null;
 
 if (isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['email'])) {
@@ -59,6 +60,7 @@ if (isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['email'])
 
                     $mongo = new MongoConnect();
                     $mongo->initHistory($uname);
+                    $mongo->initConversations($uname);
 
                 } else {
                     $resp = new SweetalertResponse(12,
