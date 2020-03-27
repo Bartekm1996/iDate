@@ -56,6 +56,10 @@ if (isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['email'])
                         "$email Registered successfully. Please check email and confirm activation link",
                         SweetalertResponse::SUCCESS
                     );
+
+                    $mongo = new MongoConnect();
+                    $mongo->initHistory($uname);
+
                 } else {
                     $resp = new SweetalertResponse(12,
                         'Error',
