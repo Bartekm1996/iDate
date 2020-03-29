@@ -5,6 +5,7 @@
         "sendgrid/sendgrid": "~5.0.9",
         "ext-mysqli": "*",
         "ext-openssl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "kreait/firebase-php": "^4.41"
     }
 }

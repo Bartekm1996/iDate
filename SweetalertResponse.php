@@ -13,6 +13,7 @@ class SweetalertResponse implements \JsonSerializable
     private $title;
     private $message;
     private $type;
+    private $img;
 
     public function __construct($statusCode, $title, $message, $type)
     {
@@ -25,6 +26,15 @@ class SweetalertResponse implements \JsonSerializable
     /**
      * @inheritDoc
      */
+
+    /**
+     * @param mixed $img
+     */
+    public function setImg($img): void
+    {
+        $this->img = $img;
+    }
+
     public function jsonSerialize()
     {
         return json_encode(get_object_vars($this));

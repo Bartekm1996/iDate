@@ -197,7 +197,22 @@
                 console.log(response.title);
 
                     switch(response.statusCode) {
-                        case 2: //login success full
+                        case 2:
+                            Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                onOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            }).fire({
+                                icon: 'success',
+                                title: 'Signed in successfully'
+                            })
+
                             window.location.href = '/TestUi.php';
                             break;
                             case 3:
@@ -212,7 +227,7 @@
                 },
                 failure: function (response) {
                     console.log('failure:' + JSON.stringify(response));
-                    },
+                },
                 error: function (response) {
                     console.log('error:' + JSON.stringify(response));
                 }

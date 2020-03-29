@@ -1,12 +1,10 @@
 
 function showChat() {
-    console.log('showChat');
     $('#matcharea').prop('hidden', true);
     $('#chatarea').prop('hidden', false);
 }
 
 function showSearch() {
-    console.log('showSearch');
     $('#matcharea').prop('hidden', false);
     $('#chatarea').prop('hidden', true);
 }
@@ -21,6 +19,7 @@ function  closeUserProfile() {
 function getAllProfiles() {
 
     let filter = $('#searchFilter').val();
+
 
     console.log(filter);
 
@@ -58,6 +57,7 @@ function getAllProfiles() {
 }
 
 function getUserMatches() {
+    /*
     var request = {};
     request.get_user_matches_api = true;
     request.user_id = userID;
@@ -83,6 +83,8 @@ function getUserMatches() {
             console.log('error:' + JSON.stringify(response));
         }
     });
+
+     */
 }
 
 function sendDataTest(request, urll) {

@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'SendGrid' => array($vendorDir . '/sendgrid/php-http-client/lib'),
+    'Rize\\UriTemplate' => array($vendorDir . '/rize/uri-template/src'),
 );

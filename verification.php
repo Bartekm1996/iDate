@@ -79,12 +79,13 @@ if (isset($_GET['verification'])) {
         die("Connection failed: " . $conn->connect_error);
     } else {
 
-        $decryptedEmail = decrypt($_GET['verification']);
-        $sql = "UPDATE user SET registered = 1 WHERE userName='{$decryptedEmail}'";
+        $decryptedUserName = decrypt($_GET['verification']);
+        $userName = $conn->real_escape_string($decryptedUserName);
+        $sql = "UPDATE user SET registered = 1 WHERE userName='{$userName}'";
 
         if ($conn->query($sql) === TRUE)
         {
-            echo "<br><br><br><br><br>$decryptedEmail has been verified. <br/><br>Please return to <a href=\"http://www.idate.ie\">Login Page</a>";
+            echo "<br><br><br><br><br>$decryptedUserName has been verified. <br/><br>Please return to <a href=\"http://www.idate.ie\">Login Page</a>";
         } else {
             echo "Key is invalid or has expired please try again.";
         }
@@ -96,8 +97,11 @@ else if (isset($_GET['reset'])) {
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
-        $decryptedEmail = decrypt($_GET['reset']);
-        $sql = "SELECT registered FROM user where email='{$decryptedEmail}' LIMIT 1;";
+
+        $decryptedUserName = decrypt($_GET['reset']);
+        $userName = $conn->real_escape_string($decryptedUserName);
+        $sql = "SELECT registered FROM user where email='{$decryptedUserName}' LIMIT 1;";
+
 
         $result = $conn->query($sql);
         if ($result->num_rows > 0)
@@ -106,7 +110,7 @@ else if (isset($_GET['reset'])) {
             echo "<div class='form-group' style='padding-top:50px'>".
                 "<input id='updateemail' type='hidden' value='{$_GET['reset']}'/>".
                 "<label class='form-control btn-warning'>Reset Password for</label>".
-                "<label class='form-control'>$decryptedEmail</label>".
+                "<label class='form-control'>$decryptedUserName</label>".
                 "<input id='updatepass' class='form-control' type='text' onkeyup='updateButton()' placeholder='New password' style='padding-bottom:10px'/>".
                 "<button id='resetbtn' class='btn btn-success' onclick='resetPassword()' disabled>Reset</button></div>";
         } else {
