@@ -58,6 +58,11 @@ class MongoConnect
         $this->getConnection()->executeBulkWrite('iDate.history', $bulk);
     }
 
+    public function getConversations(String $user){
+        $bulk = new MongoDB\Driver\Query();
+
+    }
+
 
 
     public function __destruct()

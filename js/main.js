@@ -61,7 +61,7 @@
         }
 
 
-        if(/[a-z]{2,}/.test($(this).val())){
+        if(/[a-z]+/.test($(this).val())){
             if(parseInt($('#passWordId').attr('data-password-lower-case')) !== 1){
                 $('#passWordId').attr('data-password-lower-case', 1);
                 strength += 20;
@@ -89,7 +89,7 @@
             }
         }
 
-        if(/[!@#$%&*?]+/.test($(this).val().trim())){
+        if(/[!@#$%&*?\/]+/.test($(this).val().trim())){
             if(parseInt($('#passWordId').attr('data-password-special-case')) !== 1){
                 $('#passWordId').attr('data-password-special-case', 1);
                 strength += 20;
