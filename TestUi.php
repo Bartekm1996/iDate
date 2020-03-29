@@ -188,7 +188,7 @@
                                         if ($conn->connect_error) {
                                             die("Connection failed: " . $conn->connect_error);
                                         }else{
-                                            $sql = "SELECT userName FROM user";
+                                            $sql = "SELECT firstname,lastname FROM user";
                                             $result = $conn->query($sql);
                                             if($result->num_rows > 0) {
                                                 for ($x = 0; $x < $result->num_rows; $x++) {
@@ -197,7 +197,7 @@
                                                   .'<div class="wrap">'
                                                   .'<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />'
                                                   .'<div class="meta">'
-                                                  .'<p class="name">'.$result->fetch_row()[0].'</p>'
+                                                  .'<p class="name">'.implode(" ",$result->fetch_row()).'</p>'
                                                   .'</div>'
                                                   .'</div>'
                                                   .'</li>';
@@ -244,7 +244,7 @@
 
 
 
-        <!--
+
         <div id="profileModal" class="modal" tabindex="-1" role="dialog">
               <div class="modal-dialog" role="document">
                   <div class="modal-content">
@@ -313,7 +313,7 @@
           </div>
         <div>
 
-        -->
+        
 
     </div>
 </div>

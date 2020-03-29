@@ -57,7 +57,7 @@ function getAllProfiles() {
 }
 
 function getUserMatches() {
-    /*
+
     var request = {};
     request.get_user_matches_api = true;
     request.user_id = userID;
@@ -84,7 +84,7 @@ function getUserMatches() {
         }
     });
 
-     */
+
 }
 
 function sendDataTest(request, urll) {
