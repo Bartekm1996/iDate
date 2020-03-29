@@ -15,21 +15,6 @@
         })    
     })
 
-    $('#password').on('keydown', function () {
-        if($(this).val().length === 0){
-            if($('#passWordId').classList.contains('bg-danger')){
-                $('#confirmPassWordBar').removeClass('bg-danger');
-                $('#passWordId').removeClass('bg-danger');
-            }else if($('#passWordId').classList.contains('bg-success')){
-                $('#confirmPassWordBar').removeClass('bg-success');
-                $('#passWordId').removeClass('bg-success');
-            }else if($('#passWordId').classList.contains('bg-warning')){
-                $('#confirmPassWordBar').removeClass('bg-warning');
-                $('#passWordId').removeClass('bg-warning');
-            }
-
-        }
-    });
 
     $('#password').on('input', function(){
         let strength = parseInt($('#passWordId').attr('aria-valuenow'));
