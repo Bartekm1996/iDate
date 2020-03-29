@@ -15,6 +15,22 @@
         })    
     })
 
+    $('#password').on('keydown', function () {
+        if($(this).val().length === 0){
+            if($('#passWordId').classList.contains('bg-danger')){
+                $('#confirmPassWordBar').removeClass('bg-danger');
+                $('#passWordId').removeClass('bg-danger');
+            }else if($('#passWordId').classList.contains('bg-success')){
+                $('#confirmPassWordBar').removeClass('bg-success');
+                $('#passWordId').removeClass('bg-success');
+            }else if($('#passWordId').classList.contains('bg-warning')){
+                $('#confirmPassWordBar').removeClass('bg-warning');
+                $('#passWordId').removeClass('bg-warning');
+            }
+
+        }
+    });
+
     $('#password').on('input', function(){
         let strength = parseInt($('#passWordId').attr('aria-valuenow'));
 
@@ -22,7 +38,14 @@
 
         if($(this).val().length === 0){
             strength = 0;
+            $('#passWordId').attr('data-password-length', 0);
+            $('#passWordId').attr('data-password-digit', 0);
+            $('#passWordId').attr('data-password-lower-case', 0);
+            $('#passWordId').attr('data-password-upper-case', 0);
+            $('#passWordId').attr('data-password-special-case', 0);
+
         }
+
 
         if($(this).val().length > 7){
             if(parseInt( $('#passWordId').attr('data-password-length')) !== 1) {
