@@ -19,7 +19,9 @@
     $('#password').on('input', function(){
         let strength = parseInt($('#passWordId').attr('aria-valuenow'));
 
-        console.log($('#passWordId').attr('aria-valuenow'));
+        if(document.getElementById('passWordInfo').getAttribute('hidden') !== null) {
+            document.getElementById('passWordInfo').removeAttribute('hidden');
+        }
 
         if($(this).val().length === 0){
             strength = 0;
@@ -28,19 +30,25 @@
             $('#passWordId').attr('data-password-lower-case', 0);
             $('#passWordId').attr('data-password-upper-case', 0);
             $('#passWordId').attr('data-password-special-case', 0);
+            $('#digit').css({'color': 'red'});
+            $('#upperCase').css({'color': 'red'});
+            $('#lowerCase').css({'color': 'red'});
+            $('#passLength').css({'color': 'red'});
+            $('#specialChar').css({'color': 'red'});
+
 
         }
-
 
         if($(this).val().length > 7){
             if(parseInt( $('#passWordId').attr('data-password-length')) !== 1) {
                 $('#passWordId').attr('data-password-length', 1);
+                $('#passLength').css({'color': 'green'});
                 strength += 20;
-                console.log("Password length");
             }
         }else{
             if(parseInt( $('#passWordId').attr('data-password-length')) === 1) {
                 $('#passWordId').attr('data-password-length', 0);
+                $('#passLength').css({'color': 'red'});
                 strength -= 20;
             }
         }
@@ -50,12 +58,12 @@
             if(parseInt($('#passWordId').attr('data-password-digit')) !== 1){
                 $('#passWordId').attr('data-password-digit', 1);
                 strength += 20;
-                console.log("Contians digit")
+                $('#digit').css({'color': 'green'});
             }
         }else {
-            console.log("Doesnt Contians digit")
             if(parseInt($('#passWordId').attr('data-password-digit')) === 1){
                 $('#passWordId').attr('data-password-digit', 0);
+                $('#digit').css({'color': 'red'});
                 strength -= 20;
             }
         }
@@ -64,13 +72,13 @@
         if(/[a-z]+/.test($(this).val())){
             if(parseInt($('#passWordId').attr('data-password-lower-case')) !== 1){
                 $('#passWordId').attr('data-password-lower-case', 1);
+                $('#lowerCase').css({'color': 'green'});
                 strength += 20;
-                console.log("Contians lower case")
             }
         }else {
-            console.log("Doesnt Contians lower case")
             if(parseInt($('#passWordId').attr('data-password-lower-case')) === 1){
                 $('#passWordId').attr('data-password-lower-case', 0);
+                $('#lowerCase').css({'color': 'red'});
                 strength -= 20;
             }
         }
@@ -78,32 +86,31 @@
         if(/[A-Z]+/.test($(this).val().trim())){
             if(parseInt($('#passWordId').attr('data-password-upper-case')) !== 1){
                 $('#passWordId').attr('data-password-upper-case', 1);
+                $('#upperCase').css({'color': 'green'});
                 strength += 20;
-                console.log("Contians upper case")
             }
         }else {
-            console.log("Doesnt Contians upper case")
             if(parseInt($('#passWordId').attr('data-password-upper-case')) === 1){
                 $('#passWordId').attr('data-password-upper-case', 0);
+                $('#upperCase').css({'color': 'red'});
                 strength -= 20;
             }
         }
 
-        if(/[!@#$%&*?\/]+/.test($(this).val().trim())){
+        if(/[!@#$%()&*?{}\[\]\/]+/.test($(this).val().trim())){
             if(parseInt($('#passWordId').attr('data-password-special-case')) !== 1){
                 $('#passWordId').attr('data-password-special-case', 1);
+                $('#specialChar').css({'color': 'green'});
                 strength += 20;
-                console.log("Contians special case")
             }
         }else {
-            console.log("Doesnt Contians special case")
             if(parseInt($('#passWordId').attr('data-password-special-case')) === 1){
                 $('#passWordId').attr('data-password-special-case', 0);
+                $('#specialChar').css({'color': 'red'});
                 strength -= 20;
             }
         }
 
-        console.log(strength);
 
         switch (strength) {
             case 0:{

@@ -1,4 +1,5 @@
-<?php session_start(); ?>
+<?php
+session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +20,18 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
 
+
+
+        /*
+        {"messages":[{"username":"Jenny Ruiz","message":"Hello","timestamp":"2020-03-27 14:19:29"}]}
+               <li class="sent">
+                   <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+                   <p>How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!</p>
+               </li>
+        */
         function toggleClass(elem) {
+
+            $('.messages ul').empty();
 
             if(!elem.classList.contains('active')){
                 let act = $('ul#contactsList').find('li.active');
@@ -28,17 +40,79 @@
                     $(elem).toggleClass('active');
                 }
             }
+
+            $('#contact_name').text($('ul#contactsList').find('li.active').attr("data-username"));
+
+            const intervalID = window.setInterval(getMessage, 2000);
+
         };
 
-        async function loadConversation(){
+        function getMessage(){
+            $('.messages ul').empty();
+
+            const request = {};
+            request.messages = $('ul#contactsList').find('li.active').attr("data-id");
+            request.userId = 'Bartekm1999';
             $.ajax({
                 method: "GET",
-                url: "messaging.php",
+                url: "Mongo.php",
                 data: request,
                 success: function (response) {
-                    Swal.fire(response.title, response.message, response.type);
-                    console.log('success' + JSON.stringify(response));
-                    document.getElementById('profilePicture').src = response.img;
+                    console.log('success ' + response + " length ");
+                    let res = JSON.parse(response);
+                    if(res["messages"].length >  $('.messages ul').length) {
+                        for (let i = 0; i < res["messages"].length; i++) {
+                            $('<li class="' + (res['messages'][i]['username'] === 'Bartekm1999' ? "sent" : "replies") + '"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + res['messages'][i]["message"] + '</p><p>' + res['messages'][i]["timestamp"] + '</p></li>').appendTo($('.messages ul'));
+                        }
+                    }
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+        }
+
+        /*
+          	<div class="wrap">
+						<img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
+						<div class="meta">
+							<p class="name">Louis Litt</p>
+							<p class="preview">You just got LITT up, Mike.</p>
+						</div>
+					</div>
+         */
+
+        async function loadConversations(){
+
+            showChat();
+
+            $('#contactsList').empty();
+
+            const request = {};
+            request.userId = 'Bartekm1999';
+            $.ajax({
+                method: "GET",
+                url: "Mongo.php",
+                data: request,
+                success: function (response) {
+
+                    let res = JSON.parse(response);
+                    console.log('success ' + response + " length " + res["contacts"].length);
+
+                    for (let i = 0; i < res["contacts"].length; i++) {
+
+                        $('<li class="contact" onclick="toggleClass(this)" data-id='+res['contacts'][i]["id"]+' data-username='+res['contacts'][i]["username"]+'>'
+                            + '<div class="wrap">'
+                            + '<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="">'
+                            + '<div class="meta">'
+                            + '<p class="name">' +res['contacts'][i]["username"]+'</p>'
+                            + '<p class="preview">'+res['contacts'][i]["message"]+'</p>'
+                            + '</div></div></li>').appendTo($('#contactsList'))
+
+                    }
                 },
                 failure: function (response) {
                     console.log('failure:' + JSON.stringify(response));
@@ -107,6 +181,92 @@
             }
         }
 
+        $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+
+
+
+        $(".expand-button").click(function() {
+            $("#profile").toggleClass("expanded");
+            $("#contacts").toggleClass("expanded");
+        });
+
+
+
+        function newMessage() {
+            message = $(".message-input input").val();
+            if($.trim(message) == '') {
+                return false;
+            }
+
+            const request = {};
+
+            request.userOne = 'Bartekm1999';
+            request.userTwoId = $('ul#contactsList').find('li.active').attr("data-id");
+            request.userTwoName = $('ul#contactsList').find('li.active').attr("data-username");
+            request.messages = message;
+
+            console.log(request.userTwoId + " username " + request.userTwoName + " message " + message);
+            $.ajax({
+                method: "GET",
+                url: "Mongo.php",
+                data: request,
+                success: function (response) {
+                    console.log('success' + response);
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+
+            $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+            $('.message-input input').val(null);
+            $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+        };
+
+
+        $(window).on('keydown', function(e) {
+            if (e.which == 13) {
+                newMessage();
+                return false;
+            }
+        });
+
+    </script>
+    <!-- Import the Stitch JS SDK at the top of the file -->
+    <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4/stitch.js"></script>
+    <script>
+        // Destructure Stitch JS SDK Components
+        const { Stitch, RemoteMongoClient, BSON } = stitch;
+        const stitchApp = Stitch.initializeDefaultAppClient("<Your App ID>");
+        const mongodb = stitchApp.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        const itemsCollection = mongodb.db("store").collection("items");
+        const purchasesCollection = mongodb.db("store").collection("purchases");
+
+        async function watcher() {
+            // Create a change stream that watches the collection
+            // for when any document's 'status' field is changed
+            // to the string 'blocked'.
+            const stream = await myCollection.watch({
+                "updateDescription.updatedFields": {
+                    "status": "blocked",
+                }
+            });
+            // Set up a change event handler function for the stream
+            stream.onNext((event) => {
+                // Handle the change events for all specified documents here
+                console.log(event.fullDocument);
+            });
+
+            // Insert a document with status set to 'blocked'
+            // to trigger the stream onNext handler
+            await myCollection.insertOne({
+                "name": "test",
+                "status": "blocked",
+            });
+        }
     </script>
 
 
@@ -165,7 +325,7 @@
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-matches-tab" data-toggle="tab" href="#matches" role="tab" aria-controls="nav-matches" aria-selected="true" onclick="showSearch()">Matches</a>
-                            <a class="nav-item nav-link" id="nav-messages-tab" data-toggle="tab" href="#messages" role="tab" aria-controls="nav-messages" aria-selected="false" onclick="showChat()">Messages</a>
+                            <a class="nav-item nav-link" id="nav-messages-tab" data-toggle="tab" href="#messages" role="tab" aria-controls="nav-messages" aria-selected="false" onclick="loadConversations()">Messages</a>
                             <a class="nav-item nav-link" id="nav-search-tab" data-toggle="tab" href="#search" role="tab" aria-controls="nav-search" aria-selected="false">Search</a>
                         </div>
                     </nav>
@@ -179,46 +339,6 @@
                             <div class="grid-container scroll scrollbar" >
                                 <div id="contacts">
                                     <ul id="contactsList">
-                                        <?php
-
-                                        require __DIR__.'/vendor/autoload.php';
-                                        require ("db.php");
-                                        $resp = "";
-
-                                        if ($conn->connect_error) {
-                                            die("Connection failed: " . $conn->connect_error);
-                                        }else{
-                                            $sql = "SELECT firstname,lastname FROM user";
-                                            $result = $conn->query($sql);
-                                            if($result->num_rows > 0) {
-                                                for ($x = 0; $x < $result->num_rows; $x++) {
-                                                  echo
-                                                      '<li class="contact" onclick="toggleClass(this)">'
-                                                  .'<div class="wrap">'
-                                                  .'<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />'
-                                                  .'<div class="meta">'
-                                                  .'<p class="name">'.implode(" ",$result->fetch_row()).'</p>'
-                                                  .'</div>'
-                                                  .'</div>'
-                                                  .'</li>';
-
-                                                }
-                                            }
-                                            $conn->close();
-                                        }
-
-                                        ?>
-
-                                        <li class="contact" onclick="toggleClass(this)">
-                                            <div class="wrap">
-                                                <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                                                <div class="meta">
-                                                    <p class="name">Harvey Specter</p>
-                                                    <p class="preview">Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and forty six other things.</p>
-                                                </div>
-                                            </div>
-                                        </li>
-
                                     </ul>
                                 </div>
                             </div>
@@ -236,7 +356,60 @@
                 </div>
 
                 <?php require("matchcontent.php"); ?>
-                <?php require ("messaging.php");?>
+                <div id="chatarea" style="width: 65%;" class="mt-lg-2" hidden>
+                    <div class="content">
+                        <div class="contact-profile">
+                            <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+                            <p id="contact_name"></p>
+                        </div>
+                        <div class="messages">
+                            <ul>
+
+                                <!--
+                                <li class="sent">
+                                    <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+                                    <p>How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!</p>
+                                </li>
+                                <li class="replies">
+                                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+                                    <p>When you're backed against the wall, break the god damn thing down.</p>
+                                </li>
+                                <li class="replies">
+                                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+                                    <p>Excuses don't win championships.</p>
+                                </li>
+                                <li class="sent">
+                                    <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+                                    <p>Oh yeah, did Michael Jordan tell you that?</p>
+                                </li>
+                                <li class="replies">
+                                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+                                    <p>No, I told him that.</p>
+                                </li>
+                                <li class="replies">
+                                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+                                    <p>What are your choices when someone puts a gun to your head?</p>
+                                </li>
+                                <li class="sent">
+                                    <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+                                    <p>What are you talking about? You do what they say or they shoot you.</p>
+                                </li>
+                                <li class="replies">
+                                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+                                    <p>Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and forty six other things.</p>
+                                </li>
+                                -->
+                            </ul>
+                        </div>
+                        <div class="message-input">
+                            <div class="wrap">
+                                <input type="text" placeholder="Write your message..." />
+                                <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+                                <button onclick="newMessage()"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 
@@ -313,7 +486,7 @@
           </div>
         <div>
 
-        
+
 
     </div>
 </div>
