@@ -156,7 +156,8 @@ session_start(); ?>
                     });
 
                     console.log(e.target.result);
-                    request.userId = '170';
+                    request.userId = userID;
+                    console.log('photo user id:', request.userId );
                     request.photoUrl = e.target.result;
 
                     $.ajax({
