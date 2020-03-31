@@ -45,11 +45,18 @@ class MongoConnect
         $this->getConnection()->executeBulkWrite('iDate.conversations', $bulk);
     }
 
-    public function updateConversations(String $user, String $userTwo, String $message){
+    /*
+     * $answers->update(array('userId' => 1, 'questions.questionId' => '1'), array('$push' => array('questions.$.ans' => 'try2')));
+     */
+
+    public function updateConversations(String $user,String $recievingUser, String $userTwoName,  String $message){
         $bulk = new MongoDB\Driver\BulkWrite;
-        $bulk->update(array('_id'=>$user),array('$push'=> array('conversations'.$user => ['timestamp' => date('Y-m-d H:i:s', time()),'message' => $message,'user'=> $user])));
-        $bulk->update(array('_id'=>$userTwo),array('$push'=> array('conversations'.$userTwo => ['timestamp' => date('Y-m-d H:i:s', time()),'message' => $message,'user'=> $user])));
-        $this->getConnection()->executeBulkWrite('iDate.conversations', $bulk);
+        //Sending User
+        $bulk->update(array('_id'=>$user, '_conversations.username' => $userTwoName ),array('$push'=>array('_conversations.$.messages' => ['username'=> $user, 'message' => $message,'timestamp' => date('Y-m-d H:i:s', time())])));
+        //Receiving User
+        $bulk->update(array('_id'=>$userTwoName,), array('$push' => array('_conversations' => ["username" => $user, "messages" => ['username'=> $user, 'message' => $message,'timestamp' => date('Y-m-d H:i:s', time())]])));
+        return $this->getConnection()->executeBulkWrite('iDate.conversations', $bulk);
+
     }
 
     public function historyUpdate(String $user, String $description, String $type){
@@ -58,9 +65,15 @@ class MongoConnect
         $this->getConnection()->executeBulkWrite('iDate.history', $bulk);
     }
 
-    public function getConversations(String $user){
-        $bulk = new MongoDB\Driver\Query();
+    public function getConversations(){
+        $filter = ['_id' => 'Bartekm1999'];
+        $options = [];
+        $query = new MongoDB\Driver\Query($filter, $options);
+        try {
+            return $this->getConnection()->executeQuery('iDate.conversations', $query);
+        } catch (\MongoDB\Driver\Exception\Exception $e) {
 
+        } // $mongo contains the connection object to MongoDB
     }
 
 

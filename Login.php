@@ -46,10 +46,18 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
+
         $uname = $conn->real_escape_string($uname);
         $upass = $conn->real_escape_string($upass);
 
-        $sql = "SELECT registered, id, firstname FROM user where username='{$uname}' AND password='{$upass}' LIMIT 1;";
+        $sql = "";
+
+        if(strpos($uname, "@") !== false){
+            $sql = "SELECT registered, id, firstname, userName FROM user where email='{$uname}' AND password='{$upass}' LIMIT 1;";
+        }else{
+            $sql = "SELECT registered, id, firstname FROM user where userName='{$uname}' AND password='{$upass}' LIMIT 1;";
+        }
+
 
         $result = $conn->query($sql);
         if ($result->num_rows > 0)
@@ -63,22 +71,19 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
                 $reg ? SweetalertResponse::WARNING : SweetalertResponse::SUCCESS
             );
 
-              $mongo = new MongoConnect();
-              $mongo->historyUpdate($uname, "User Logged In", "Log In");
-
             $_SESSION['userid'] = $row[1];
             $_SESSION['firstname'] = $row[2];
+            $uname = sizeof($row) === 2 ? $row[3] : $uname;
+
+            $mongo = new MongoConnect();
+            $mongo->historyUpdate($uname, "User Logged In", "Log In");
 
         } else {
-
             $resp = new SweetalertResponse(3,
                 'Login Failed',
                  "Failed to login with username $uname",
                 SweetalertResponse::ERROR
             );
-
-//            $mongo = new MongoConnect();
-//            $mongo->historyUpdate("User Logged In", "Log In");
         }
     }
 

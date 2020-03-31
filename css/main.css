@@ -266,6 +266,10 @@ iframe {
   text-align: left;
 }
 
+/*
+Tooltip
+--------------------------------------------------------------------
+ */
 
 
 /*------------------------------------------------------------------
@@ -279,6 +283,10 @@ iframe {
 .wrap-input100-password {
   width: 100%;
   position: relative;
+}
+
+.generate-password{
+  float: right;
 }
 
 .label-input100 {
@@ -319,11 +327,11 @@ iframe {
 .focus-input100 {
   position: absolute;
   display: block;
-  width: 100%;
+  width: auto;
   height: 100%;
   top: 0;
   left: 0;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .focus-input100::after {
@@ -361,6 +369,24 @@ iframe {
   transition: all 0.4s;
 }
 
+.focus-input100 .tooltiptext {
+  visibility: hidden;
+  width: 150px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  /* Position the tooltip */
+  position: absolute;
+  left: -150px;
+  z-index: 1;
+}
+
+.focus-input100:hover .tooltiptext {
+  visibility: visible;
+}
+
 
 .input100:focus + .focus-input100::before {
   width: 100%;
@@ -377,6 +403,7 @@ iframe {
 .has-val.input100 + .focus-input100::after {
   color: #a64bf4;
 }
+
 
 
 /*==================================================================

@@ -144,6 +144,7 @@
      height: 100vh;
      overflow-y: scroll;
      overflow-x: hidden;
+     width: 100vh;
  }
 
    #contacts.expanded {
@@ -161,6 +162,7 @@
      padding: 10px 0 15px 0;
      font-size: 0.9em;
      cursor: pointer;
+     width: 100%;
  }
 
    #contacts ul li.contact:hover {
@@ -224,7 +226,7 @@
      -webkit-transition: 1s all ease;
      transition: 1s all ease;
  }
-   #contacts ul li.contact .wrap .meta .preview span {
+   #contacts ul li .contact .wrap .meta .preview span {
      position: initial;
      border-radius: initial;
      background: none;
