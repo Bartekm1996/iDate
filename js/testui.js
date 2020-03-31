@@ -67,7 +67,7 @@ function getUserMatches() {
         url: "api.php",
         data: request,
         success: function (response) {
-            console.log(response);
+            console.log('getUserMatches', response);
             let obj = JSON.parse(response);
             //TODO: where are the images going to be stored
             if(obj != null) {

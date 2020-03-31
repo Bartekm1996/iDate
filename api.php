@@ -108,14 +108,6 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         die("Connection failed: " . $conn->connect_error);
     } else {
 
-//        //SELECT * FROM user WHERE id IN (SELECT userID2 FROM connections WHERE userID1='66')
-//        $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.age,
-// profile.photoId, profile.location, profile.Description  FROM user
-//inner join profile
-//on user.id = profile.userID)
-//as res
-//WHERE id IN (SELECT userID2 FROM connections WHERE userID1='{$_POST['user_id']}')";
-
         /* In english this query would be:
             Select all for connections where userID1 has matched with userID2
             AND and store in results. (Both have to like eachother so there would be 2 inserts)

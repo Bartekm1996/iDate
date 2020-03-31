@@ -23,6 +23,7 @@ session_start(); ?>
         var users = <?php require("usersjson.php") ?>
 
             var curPos = 0;
+            var testImgs = [];
 
 
 
