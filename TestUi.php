@@ -18,6 +18,10 @@
     <!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
+        var userID = <?php echo "'{$_SESSION['userid']}';" ?>
+        var users = <?php require("usersjson.php") ?>
+
+            var curPos = 0;
 
         function toggleClass(elem) {
 
@@ -230,8 +234,6 @@
                             </div>
                         </div>
                     </div>
-
-
 
                 </div>
 

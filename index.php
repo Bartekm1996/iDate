@@ -28,6 +28,7 @@
 <!--    <script src="//geodata.solutions/includes/countrystatecity.js"></script>-->
 
     <script type="text/javascript">
+        
         //<!-- Ajax post test-->
         function loginTest() {
             const request = {};
@@ -187,15 +188,13 @@
         }
 
         function sendDataTest(request, urll) {
-            console.log(request);
+            console.log('sendDataTest:', request);
             $.ajax({
                 method: "POST",
                 url: urll,
                 data: request,
                 success: function (response) {
-
-                console.log(response.title);
-
+                    console.log('Status code =',response.statusCode);
                     switch(response.statusCode) {
                         case 2:
                             Swal.mixin({
@@ -211,12 +210,12 @@
                             }).fire({
                                 icon: 'success',
                                 title: 'Signed in successfully'
-                            })
+                            });
 
                             window.location.href = '/TestUi.php';
                             break;
                             case 3:
-                                passWordReset('Invalid Password', 'warning')
+                                passWordReset('Invalid Password', 'warning');
                             break;
                             default:
                                 Swal.fire(response.title, response.message, response.type);

@@ -1,3 +1,4 @@
+var testImgs = [];
 
 function showChat() {
     $('#matcharea').prop('hidden', true);
