@@ -86,7 +86,29 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         $res = $res."]";
         echo $res;
     }
-}else if(isset($_POST['update_available_interests_api']) && isset($_POST['userid'])
+}else if(isset($_POST['get_my_interests_api']) && isset($_POST['userid'])) {
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+
+        $sql = "select availableInterests.id, availableInterests.name from interests as a1
+                inner join availableInterests on a1.interestID = availableInterests.id
+                where a1.userID ={$_POST['userid']}";
+
+        $result = $conn->query($sql);
+        $res = "[";
+        if ($result->num_rows > 0) {
+            while ($row = mysqli_fetch_row($result)) {
+                $user = new AvailableInterests($row[0], $row[1]);
+                $res = $res.$user->jsonSerialize().",";
+            }
+
+            $res = substr($res, 0,strlen($res)-1);
+        }
+        $res = $res."]";
+        echo $res;
+    }
+}  else if(isset($_POST['update_available_interests_api']) && isset($_POST['userid'])
 && isset($_POST['interest']) && isset($_POST['add'])){
 
     if ($conn->connect_error) {

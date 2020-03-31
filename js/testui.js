@@ -34,7 +34,47 @@ function updateInterest(event) {
     });
 }
 
-function createInterests() {
+function loadMyInterests() {
+    var request = {};
+    request.get_my_interests_api = true;
+    request.userid = userID;
+
+    $.ajax({
+        method: "POST",
+        url: "api.php",
+        data: request,
+        success: function (response) {
+            console.log(response);
+            let obj = JSON.parse(response);
+            if(obj != null) {
+                document.getElementById('interests').innerHTML ='';
+                let al = availableInterests;
+                for(let i = 0; i < al.length;i++) {
+
+                    var checked = containsInterest(obj, al[i].name) ? 'checked' : '';
+                    var option = "<div class='dropdown-item checkbox'><label><input onclick='updateInterest(this)' type='checkbox' value='" + al[i].name +"'  " + checked + "> " + al[i].name  + "</label></div>";
+                    document.getElementById('interests').innerHTML += option;
+                }
+            }
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+
+}
+
+function containsInterest(arr, value) {
+    for(let i = 0; i < arr.length; i++) {
+        if(arr[i].name == value) return true;
+    }
+
+    return false;
+}
+function loadAllInterests() {
 
     var request = {};
     request.get_available_interests_api = true;
@@ -47,14 +87,6 @@ function createInterests() {
             let obj = JSON.parse(response);
             if(obj != null) {
                 availableInterests = obj;
-                document.getElementById('interests').innerHTML ='';
-
-                for(let i = 0; i < obj.length;i++) {
-
-                    var option = "<div class='dropdown-item checkbox'><label><input onclick='updateInterest(this)' type='checkbox' value='" + obj[i].name +"'> " + obj[i].name  + "</label></div>";
-                    document.getElementById('interests').innerHTML += option;
-                }
-
             }
         },
         failure: function (response) {
@@ -102,7 +134,7 @@ function  openUserProfile(event) {
     var res = getMatchData(event);
     clearProfileModal();
     hideModalButtons();
-    createInterests();
+    loadMyInterests();
 
     if(res != null) {
         console.log(res);
@@ -340,5 +372,6 @@ $(document).ready(function() {
 
     getUserMatches();
     showSearch();
+    loadAllInterests();
 
 });
