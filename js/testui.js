@@ -2,6 +2,8 @@ var testImgs = [];
 var myMatches = [];
 var searchUsers = [];
 var availableInterests = [];
+var curPos = 0;
+var curImgPos = 0;
 
 function showChat() {
     $('#matcharea').prop('hidden', true);
@@ -114,7 +116,6 @@ function showSearch() {
 function  openSearchProfile(uid) {
     getUserProfileData(uid, true, false, false);//disabled checkboxes and is not matched
 }
-
 
 function getUserProfileData(uid, disableCheck, isMatched, isOwn) {
     //get_userprofiles_api
@@ -315,6 +316,7 @@ function hideModalButtons() {
     $('#btnModalMatch').hide();
     $('#btnModalUnMatch').hide();
 }
+
 function sendDataTest(request, urll) {
     console.log(request);
     $.ajax({
@@ -338,7 +340,7 @@ function match() {
     var request = {};
     request.create_match_api = true;
     request.match_id = users[curPos].id;
-    sendDataTest(request, "api.php");
+    //sendDataTest(request, "api.php");
     nextUser();
 }
 
@@ -356,21 +358,51 @@ function nomatch() {
 
 function nextUser() {
     curPos++;
+    curImgPos = 0;
     if(curPos >= users.length) curPos = 0;
     $('#uname').text(users[curPos].name);
     $('#uage').text(users[curPos].age);
+
+    var request = {};
+    request.get_user_images_api = true;
+    request.userid = users[curPos].id;
+    $.ajax({
+        method: "POST",
+        url: "api.php",
+        data: request,
+        success: function (response) {
+            console.log(response);
+            let obj = JSON.parse(response);
+            if(obj != null && obj.length > 0) {
+                testImgs = obj;
+                $('#imgP').attr('src', testImgs[curImgPos].url);
+            } else {
+                $('#imgP').attr('src', 'images/default.png');
+            }
+
+
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+
+
 }
 
 function nextImg() {
-    curPos++;
-    if(curPos >= testImgs.length) curPos = 0;
-    $('#imgP').attr("src",testImgs[curPos].imgurl);
+    curImgPos++;
+    if(curImgPos >= testImgs.length) curImgPos = 0;
+    $('#imgP').attr("src",testImgs[curImgPos].url);
 }
 
 function prevImg() {
-    curPos--;
-    if(curPos < 0) curPos = testImgs.length -1;
-    $('#imgP').attr("src",testImgs[curPos].imgurl);
+    curImgPos--;
+    if(curImgPos < 0) curImgPos = testImgs.length -1;
+    $('#imgP').attr("src",testImgs[curImgPos].url);
 }
 
 $('#profileModal').on('shown.bs.modal', function () {

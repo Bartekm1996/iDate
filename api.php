@@ -44,13 +44,13 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         }
 
     }
-} else if(isset($_POST['get_user_images_api']) && isset($_POST['user_id'])) {
+} else if(isset($_POST['get_user_images_api']) && isset($_POST['userid'])) {
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
         //check is username is taken
-        $sql = "SELECT * FROM photo WHERE user_id = '{$_POST['user_id']}';";
+        $sql = "SELECT * FROM photo WHERE user_id = '{$_POST['userid']}';";
 
         $result = $conn->query($sql);
 
@@ -60,8 +60,9 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
                 $user = new Photo($row[0], $row[1], $row[2], $row[3]);
                 $res = $res.$user->jsonSerialize().",";
             }
+            $res = substr($res, 0,strlen($res)-1);
         }
-        $res = $res."];";
+        $res = $res."]";
         echo $res;
     }
 }  else if(isset($_POST['get_available_interests_api'])) {
