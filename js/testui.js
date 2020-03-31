@@ -139,7 +139,13 @@ function getUserProfileData(uid, disableCheck, isMatched, isOwn) {
                 var defImage = res.photoId.length == 0 ? genImage: res.photoId;
                 $('#person_image').attr('src', defImage);
 
-                document.getElementById('profile_modal_title').innerHTML = "<b>Profile Information</b>";
+                if(isMatched) {
+                    let res = getMatchData(uid);
+                    document.getElementById('profile_modal_title').innerHTML = '<b>Matched on: </b> ' + res.connectionDate;
+                } else {
+                    document.getElementById('profile_modal_title').innerHTML = "<b>Profile Information</b>";
+                }
+
                 $('#person_age').text(res.age);
                 $('#person_gender').text(res.gender);
                 $('#person_location').text(res.location.length == 0 ? 'N/A': res.location);
@@ -173,7 +179,6 @@ function openMyProfile(uid) {
 
 function  openMatchProfile(uid) {
     getUserProfileData(uid, true, true, false);
-    //Set connection date
 }
 
 function clearProfileModal() {
