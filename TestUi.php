@@ -14,10 +14,20 @@ session_start(); ?>
     <link rel="stylesheet" type="text/css" href="css/chat.css">
     <link rel="stylesheet" type="text/css" href="css/scroll.css">
     <link rel="stylesheet" type="text/css" href="css/profile.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/chatv2.css">
+    <link rel="stylesheet" href="css/matches.css">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/profileCard.css">
     <!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
     <script>
 
 
@@ -29,6 +39,57 @@ session_start(); ?>
                    <p>How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!</p>
                </li>
         */
+        jQuery(function ($) {
+
+            $(".sidebar-dropdown > a").click(function() {
+                $(".sidebar-submenu").slideUp(200);
+                if (
+                    $(this)
+                        .parent()
+                        .hasClass("active")
+                ) {
+                    $(".sidebar-dropdown").removeClass("active");
+                    $(this)
+                        .parent()
+                        .removeClass("active");
+                } else {
+                    $(".sidebar-dropdown").removeClass("active");
+                    $(this)
+                        .next(".sidebar-submenu")
+                        .slideDown(200);
+                    $(this)
+                        .parent()
+                        .addClass("active");
+                }
+            });
+
+            $("#close-sidebar").click(function() {
+                $(".page-wrapper").removeClass("toggled");
+            });
+            $("#show-sidebar").click(function() {
+                $(".page-wrapper").addClass("toggled");
+            });
+
+            $("#search input").on('input', function () {
+                let ul = document.getElementById("contactsList");
+                let items = ul.getElementsByTagName("li");
+                for (let i = 0; i < items.length; ++i) {
+                    console.log($('#search input').val());
+                    if(!items[i].getAttribute('data-username').toLowerCase().includes($('#search input').val().toLowerCase(), 0)) {
+                        items[i].style.display = "none";
+                    }else{
+                        items[i].style.display = "block";
+                    }
+                }
+            })
+
+        });
+
+        function search() {
+
+        }
+
+
         function toggleClass(elem) {
 
             $('.messages ul').empty();
@@ -43,12 +104,17 @@ session_start(); ?>
 
             $('#contact_name').text($('ul#contactsList').find('li.active').attr("data-username"));
 
-            const intervalID = window.setInterval(getMessage, 2000);
+            getMessage()
 
         };
 
         function getMessage(){
-            $('.messages ul').empty();
+
+            $('#placeholder').css({"display": 'none'});
+            $('.contact-profile').css({"display": 'block'});
+            $('.messages').css({"display": 'block'});
+            $('.message-input').css({"display": 'block'});
+
 
             const request = {};
             request.messages = $('ul#contactsList').find('li.active').attr("data-id");
@@ -60,11 +126,30 @@ session_start(); ?>
                 success: function (response) {
                     console.log('success ' + response + " length ");
                     let res = JSON.parse(response);
-                    if(res["messages"].length >  $('.messages ul').length) {
-                        for (let i = 0; i < res["messages"].length; i++) {
-                            $('<li class="' + (res['messages'][i]['username'] === 'Bartekm1999' ? "sent" : "replies") + '"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + res['messages'][i]["message"] + '</p><p>' + res['messages'][i]["timestamp"] + '</p></li>').appendTo($('.messages ul'));
+
+
+
+                        let length = 0;
+                        if($('.messages ul').attr('data-length') !== undefined){
+                            $('.messages ul').attr('data-length', $('.messages ul li').length);
+                            length =  $('.messages ul').attr('data-length');
+                        }else{
+                            length = $('.messages ul li').length;
                         }
-                    }
+
+                        console.log(length);
+                        for (let i = length; i < res["messages"].length; i++) {
+                            $(  '<li>' +
+                                '<div class="' + (res['messages'][i]['username'] === 'Bartekm1999' ? "outgoing_msg" : "incoming_msg") + '">' +
+                                '<div class="' + (res['messages'][i]['username'] === 'Bartekm1999' ? "outgoing_msg_img" : "incoming_msg_img") + '"> <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /></div>' +
+                                '<div class="' + (res['messages'][i]['username'] === 'Bartekm1999' ? "sent_msg" : "received_msg") + '">' +
+                                '<p>' + res['messages'][i]["message"] + '</p>' +
+                                '<span class="time_date">' + res['messages'][i]["timestamp"] + '</span>' +
+                                '</div>' +
+                                '</div>' +
+                                '</li>').appendTo($('.messages ul'));
+                        }
+
                 },
                 failure: function (response) {
                     console.log('failure:' + JSON.stringify(response));
@@ -75,20 +160,11 @@ session_start(); ?>
             });
         }
 
-        /*
-          	<div class="wrap">
-						<img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
-						<div class="meta">
-							<p class="name">Louis Litt</p>
-							<p class="preview">You just got LITT up, Mike.</p>
-						</div>
-					</div>
-         */
+
 
         async function loadConversations(){
 
             showChat();
-
             $('#contactsList').empty();
 
             const request = {};
@@ -103,6 +179,8 @@ session_start(); ?>
                     console.log('success ' + response + " length " + res["contacts"].length);
 
                     for (let i = 0; i < res["contacts"].length; i++) {
+
+                        console.log(res['contacts'][i]["username"]);
 
                         $('<li class="contact" onclick="toggleClass(this)" data-id='+res['contacts'][i]["id"]+' data-username='+res['contacts'][i]["username"]+'>'
                             + '<div class="wrap">'
@@ -141,6 +219,7 @@ session_start(); ?>
                     }
                 }
             });
+
 
             if (file) {
 
@@ -205,7 +284,8 @@ session_start(); ?>
             request.userTwoName = $('ul#contactsList').find('li.active').attr("data-username");
             request.messages = message;
 
-            console.log(request.userTwoId + " username " + request.userTwoName + " message " + message);
+            $('.messages ul').attr('data-length', ($('.messages ul li').length));
+
             $.ajax({
                 method: "GET",
                 url: "Mongo.php",
@@ -221,7 +301,7 @@ session_start(); ?>
                 }
             });
 
-            $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+            //$('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
             $('.message-input input').val(null);
             $(".messages").animate({ scrollTop: $(document).height() }, "fast");
         };
@@ -271,40 +351,46 @@ session_start(); ?>
 
 
     <style>
-        div.scroll {
-            margin:4px 4px;
-            padding:4px;
-            width: 100%;
-            height: 65vh;
-            overflow-x: hidden;
-            overflow-x: auto;
-        }
+        div
     </style>
 </head>
 <body style="background-color: #999999;">
-<div class="limiter">
-    <div style="background-color: #edebeb">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card mt-lg-2">
-                        <div class="card-horizontal" style="padding: 20px">
-                            <div class="card-img">
+<div>
+  <div class="page-wrapper chiller-theme toggled">
+                <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+                    <i class="fas fa-bars"></i>
+                </a>
+                <nav id="sidebar" class="sidebar-wrapper">
+                    <div class="sidebar-content">
+
+                        <div class="sidebar-header">
+                            <div class="user-pic">
+                               <!-- <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
+                                     alt="User picture">
+                                     -->
                                 <div class="img__wrap">
                                     <?php
 
                                     require __DIR__.'/vendor/autoload.php';
                                     require ("db.php");
-                                    $resp = "";
+                                    $resp = ""; $respAdmin = "";
 
                                     if ($conn->connect_error) {
                                         die("Connection failed: " . $conn->connect_error);
                                     }else{
                                         $id = $conn->real_escape_string('170');
-                                        $sql = "SELECT url FROM photo WHERE user_id='{$id}' & name='userProfilePhoto';";
+                                        $sql = "SELECT url FROM photo WHERE user_id='{$id}' && name='userProfilePhoto';";
+                                        $sqlUserAdmin = "SELECT user_id FROM admin";
+
                                         $result = $conn->query($sql);
                                         if($result->num_rows > 0) {
                                             $resp = $result->fetch_row()[0];
+                                        }
+
+                                        $result->free_result();
+                                        $result = $conn->query($sqlUserAdmin);
+                                        if($result->num_rows > 0){
+                                            $respAdmin = $result->fetch_row()[0];
                                         }
                                         $conn->close();
                                     }
@@ -315,105 +401,125 @@ session_start(); ?>
                                         <button class="img__description"  onclick="changeProfilePicture()">Change Profile Picture</button>
                                     </div>
                                 </div>
-                                <a href="#" class="btn btn-primary" style="margin-top: 10px; margin-left: 5px;">View Profile</a>
                             </div>
-                            <div class="card-body">
-                            </div>
-                        </div>
-                    </div>
-
-                    <nav>
-                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active" id="nav-matches-tab" data-toggle="tab" href="#matches" role="tab" aria-controls="nav-matches" aria-selected="true" onclick="showSearch()">Matches</a>
-                            <a class="nav-item nav-link" id="nav-messages-tab" data-toggle="tab" href="#messages" role="tab" aria-controls="nav-messages" aria-selected="false" onclick="loadConversations()">Messages</a>
-                            <a class="nav-item nav-link" id="nav-search-tab" data-toggle="tab" href="#search" role="tab" aria-controls="nav-search" aria-selected="false">Search</a>
-                        </div>
-                    </nav>
-
-                    <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="matches" role="tabpanel" aria-labelledby="nav-matches-tab">
-                            <div class="grid-container scroll scrollbar" id="mymatches">
+                            <div class="user-info mt-lg-4">
+                              <span class="user-name">Jhon
+                                <strong>Smith</strong>
+                              </span>
+                              <span class="user-role"><?php if($respAdmin === "Administrator")echo "Administrator"; ?></span>
+                              <span class="user-status">
+                              <i class="fa fa-circle"></i>
+                              <span>Online</span>
+                              </span>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="messages" role="tabpanel" aria-labelledby="nav-messages-tab">
-                            <div class="grid-container scroll scrollbar" >
-                                <div id="contacts">
-                                    <ul id="contactsList">
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="nav-search-tab" >
-                            <input id="searchFilter" type="text" class="form-control" placeholder="Search...." onkeyup="getAllProfiles()"/>
-                            <div class="grid-container scroll scrollbar" id="searchResults">
-                                <!-- Matches will be generated here via JS -->
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                </div>
-
-                <?php require("matchcontent.php"); ?>
-                <div id="chatarea" style="width: 65%;" class="mt-lg-2" hidden>
-                    <div class="content">
-                        <div class="contact-profile">
-                            <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                            <p id="contact_name"></p>
-                        </div>
-                        <div class="messages">
+                        <!-- sidebar-header  -->
+                        <!-- sidebar-search  -->
+                        <div class="sidebar-menu">
                             <ul>
-
-                                <!--
-                                <li class="sent">
-                                    <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
-                                    <p>How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!</p>
+                                <li class="header-menu">
+                                    <span>General</span>
                                 </li>
-                                <li class="replies">
-                                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                                    <p>When you're backed against the wall, break the god damn thing down.</p>
+                                <li>
+                                    <a href="#">
+                                        <i class="fas fa-user"></i>
+                                        <span>Profile</span>
+                                    </a>
                                 </li>
-                                <li class="replies">
-                                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                                    <p>Excuses don't win championships.</p>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <i class="fas fa-users"></i>
+                                        <span>Users</span>
+                                        <span class="badge badge-pill badge-warning">New</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li>
+                                                <a href="#" onclick="showSearch()">All users</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">New Users</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Unverified users</a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </li>
-                                <li class="sent">
-                                    <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
-                                    <p>Oh yeah, did Michael Jordan tell you that?</p>
+                                <li>
+                                    <a onclick="loadConversations()">
+                                        <i class="fas fa-envelope"></i>
+                                        <span >Messages</span>
+                                    </a>
                                 </li>
-                                <li class="replies">
-                                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                                    <p>No, I told him that.</p>
-                                </li>
-                                <li class="replies">
-                                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                                    <p>What are your choices when someone puts a gun to your head?</p>
-                                </li>
-                                <li class="sent">
-                                    <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
-                                    <p>What are you talking about? You do what they say or they shoot you.</p>
-                                </li>
-                                <li class="replies">
-                                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                                    <p>Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and forty six other things.</p>
-                                </li>
-                                -->
                             </ul>
                         </div>
-                        <div class="message-input">
-                            <div class="wrap">
-                                <input type="text" placeholder="Write your message..." />
-                                <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-                                <button onclick="newMessage()"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                            </div>
-                        </div>
+                        <!-- sidebar-menu  -->
                     </div>
-                </div>
+                    <!-- sidebar-content  -->
+                    <div class="sidebar-footer">
+                        <a href="#">
+                            <i class="fa fa-bell"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fa fa-power-off"></i>
+                        </a>
+                    </div>
+                </nav>
+      <main>
+          <div class="matches" id="matcharea">
+              <div class="container h-100 mb-5">
+                  <div class="d-flex justify-content-center h-100">
+                      <div class="searchbar">
+                          <input class="search_input" id="searchFilter" type="text" name="" placeholder="Search..." onkeyup="getAllProfiles()">
+                      </div>
+                  </div>
+              </div>
+              <div class="grid-container scroll scrollbar" id="searchResults">
+                  <!-- Matches will be generated here via JS -->
+             </div>
+          </div>
 
-            </div>
+          <div id="frame" hidden>
+              <div id="sidepanel">
+                  <div id="search">
+                      <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
+                      <input type="text" placeholder="Search contacts..." />
+                  </div>
+                  <div id="contacts">
+                      <ul id="contactsList">
 
-        </div>
+                      </ul>
+                  </div>
+              </div>
+
+              <div class="content">
+                  <div id="placeholder">
+                      <h3 style="position: absolute; top: 50%; left: 35%;">Select User To Start Chat</h3>
+                  </div>
+                  <div class="contact-profile" id="contact-profile" style="display: none;">
+                      <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+                      <p class="mt-3" id="contact_name"></p>
+                  </div>
+                  <div class="messages" id="messages" style="display: none;">
+                      <ul id="messages">
+                      </ul>
+                  </div>
+                  <div class="message-input" id="message-input" style="display: none;">
+                      <div class="wrap">
+                          <input type="text" placeholder="Write your message..." />
+                          <button class="submit" onclick="newMessage()"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </main>
+  </div>
+
+</div>
 
 
 
@@ -488,8 +594,7 @@ session_start(); ?>
 
 
 
-    </div>
-</div>
+
 
 <script src="vendorv/jquery/jquery-3.2.1.min.js"></script>
 <script src="vendorv/animsition/js/animsition.min.js"></script>

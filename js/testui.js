@@ -1,12 +1,14 @@
 
+
+
 function showChat() {
     $('#matcharea').prop('hidden', true);
-    $('#chatarea').prop('hidden', false);
+    $('#frame').prop('hidden', false);
 }
 
 function showSearch() {
     $('#matcharea').prop('hidden', false);
-    $('#chatarea').prop('hidden', true);
+    $('#frame').prop('hidden', true);
 }
 function  openUserProfile(event) {
     $('#profileModal').show();
@@ -15,6 +17,37 @@ function  openUserProfile(event) {
 function  closeUserProfile() {
     $('#profileModal').hide();
 }
+
+
+function epxand (elem) {
+    let card = $(elem).parent('.material-card');
+    let icon = $(elem).children('i');
+    icon.addClass('fa-spin-fast');
+
+    if (card.hasClass('mc-active')) {
+        card.removeClass('mc-active');
+
+        window.setTimeout(function () {
+            icon
+                .removeClass('fa-arrow-left')
+                .removeClass('fa-spin-fast')
+                .addClass('fa-bars');
+
+        }, 800);
+    } else {
+        card.addClass('mc-active');
+
+        window.setTimeout(function () {
+            icon
+                .removeClass('fa-bars')
+                .removeClass('fa-spin-fast')
+                .addClass('fa-arrow-left');
+
+        }, 800);
+    }
+}
+
+
 
 function getAllProfiles() {
 
@@ -42,7 +75,35 @@ function getAllProfiles() {
             //TODO: where are the images going to be stored
             if(obj != null) {
                 for(var i = 0; i < obj.length;i++) {
-                    let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
+                    let test = '<section class="container"' +
+                        '<div class="row active-with-click">' +
+                        '<div class="col-xs-12">' +
+                        '<article class="material-card Red">' +
+                        '<h2><span>'+obj[i].name+'</span><strong ><i class="fas fa-birthday-cake"></i>' +obj[i].age+ '<i class="fas fa-map-pin"></i>'  + (obj[i].location > 0 ?  obj[i].location : "Unknown" )   + '</strong></h2>' +
+                        '<div class="mc-content">' +
+                        '<div class="img-container">' +
+                        '<img class="img-responsive" id="person_image" src="https://scontent.fcgp2-1.fna.fbcdn.net/v/t1.0-9/64622894_10157744391564026_2243513133849116672_o.jpg?_nc_cat=103&_nc_ohc=3LqOQPKa3LAAQkhNs6IycYd_UEZkq70P1ODj1pCG2E1SdYBAURRB9C5Rg&_nc_ht=scontent.fcgp2-1.fna&oh=64f4a0143ea114c3583a7d0be3114df5&oe=5EAB9485">' +
+                        '</div>' +
+                        '<div class="mc-description">' +
+                        '<div class="modal-body">' +
+                        '<table id="popup_user_info">' +
+                        '<tr><td></td><td>Name</td><td id="person_fullname">'+obj[i].name+'</td>' +
+                        '<tr><td><td>Age :'+obj[i].age+'</td><td></td></td></tr>' +
+                        '<tr><td><td>Gender : Male</td></td></tr>' +
+                        '<tr><td><td>Gender : Male</td></td></tr>' +
+                        '<tr><td><td>Gender : Male</td></td></tr>' +
+                        '</table>' +
+                        '</div>' +
+                        '</div></div>' +
+                        '<a class="mc-btn-action" onclick="epxand(this)">' +
+                        '<i class="fa fa-bars"></i>' +
+                        '</a>' +
+                        '<div class="mc-footer">'+
+                        '<button target=_parent type="button" class="btn btn-danger mt-2"><i class="fas fa-user-plus"></i> Match User</button>'+
+                        '<button target=_parent type="button" class="ml-3 btn btn-success mt-2"><i class="fas fa-comments"></i> Messages ' + obj[i].name +'</button>'+
+                        '</article></div></div></section>';
+
+                   // let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
                     document.getElementById("searchResults").innerHTML += test;
                 }
             }
@@ -55,6 +116,39 @@ function getAllProfiles() {
         }
     });
 }
+
+/*
+<section class="container">
+
+    <div class="row active-with-click">
+        <div class="col-md-4 col-sm-6 col-xs-12">
+            <article class="material-card Red">
+                <h2>
+                    <span>Shahnur Alam</span>
+                    <strong>
+                        <i class="fa fa-fw fa-magic"></i>
+                        Qui Maleficus
+                    </strong>
+                </h2>
+                <div class="mc-content">
+                    <div class="img-container">
+                        <img class="img-responsive" src="https://scontent.fcgp2-1.fna.fbcdn.net/v/t1.0-9/64622894_10157744391564026_2243513133849116672_o.jpg?_nc_cat=103&_nc_ohc=3LqOQPKa3LAAQkhNs6IycYd_UEZkq70P1ODj1pCG2E1SdYBAURRB9C5Rg&_nc_ht=scontent.fcgp2-1.fna&oh=64f4a0143ea114c3583a7d0be3114df5&oe=5EAB9485">
+                    </div>
+                    <div class="mc-description">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ...
+                    </div>
+                </div>
+                <a class="mc-btn-action">
+                    <i class="fa fa-bars"></i>
+                </a>
+
+            </article>
+        </div>
+
+    </div>
+</section>
+
+ */
 
 function getUserMatches() {
 
@@ -71,7 +165,8 @@ function getUserMatches() {
             //TODO: where are the images going to be stored
             if(obj != null) {
                 for(var i = 0; i < obj.length;i++) {
-                    let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
+
+                    //let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
                     document.getElementById("mymatches").innerHTML += test;
                 }
             }

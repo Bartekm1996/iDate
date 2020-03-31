@@ -1,0 +1,16 @@
+.matches{
+    position: absolute;
+    padding-right: 10px;
+    left: 20%;
+    top: 25px;
+    width: 80%;
+    overflow: hidden;
+}
+
+.matches .scroll {
+    margin:4px 4px;
+    padding:4px;
+    width: 100%;
+    height: 80vh;
+}
+

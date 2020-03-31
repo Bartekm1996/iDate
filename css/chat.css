@@ -1,40 +1,325 @@
 
- .content {
-     width: 100%;
-     height: 105vh;
-     overflow: hidden;
-     position: relative;
+#frame {
+    width: 80%;
+    min-width: 360px;
+    height: 100vh;
+    min-height: 300px;
+    background: #E6EAEA;
+    position: absolute;
+    left: 20%;
 }
 
- .content .contact-profile {
+#frame #sidepanel {
+    float: left;
+    min-width: 280px;
+    max-width: 340px;
+    width: 20%;
+    height: 100%;
+    background: #2c3e50;
+    color: #f5f5f5;
+    overflow: hidden;
+    position: relative;
+}
+
+
+#frame #sidepanel #profile .wrap #status-options.active {
+    opacity: 1;
+    visibility: visible;
+    margin: 75px 0 0 0;
+}
+
+#frame #sidepanel #profile .wrap #status-options:before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 8px solid #435f7a;
+    margin: -8px 0 0 24px;
+}
+
+#frame #sidepanel #profile .wrap #status-options ul {
+    overflow: hidden;
+    border-radius: 6px;
+}
+#frame #sidepanel #profile .wrap #status-options ul li {
+    padding: 15px 0 30px 18px;
+    display: block;
+    cursor: pointer;
+}
+
+#frame #sidepanel #profile .wrap #status-options ul li:hover {
+    background: #496886;
+}
+#frame #sidepanel #profile .wrap #status-options ul li span.status-circle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 5px 0 0 0;
+}
+
+#frame #sidepanel #profile .wrap #status-options ul li span.status-circle:before {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    margin: -3px 0 0 -3px;
+    background: transparent;
+    border-radius: 50%;
+    z-index: 0;
+}
+
+#frame #sidepanel #profile .wrap #status-options ul li p {
+    padding-left: 12px;
+}
+
+#frame #sidepanel #profile .wrap #status-options ul li#status-online span.status-circle {
+    background: #2ecc71;
+}
+#frame #sidepanel #profile .wrap #status-options ul li#status-online.active span.status-circle:before {
+    border: 1px solid #2ecc71;
+}
+#frame #sidepanel #profile .wrap #status-options ul li#status-away span.status-circle {
+    background: #f1c40f;
+}
+#frame #sidepanel #profile .wrap #status-options ul li#status-away.active span.status-circle:before {
+    border: 1px solid #f1c40f;
+}
+#frame #sidepanel #profile .wrap #status-options ul li#status-busy span.status-circle {
+    background: #e74c3c;
+}
+#frame #sidepanel #profile .wrap #status-options ul li#status-busy.active span.status-circle:before {
+    border: 1px solid #e74c3c;
+}
+#frame #sidepanel #profile .wrap #status-options ul li#status-offline span.status-circle {
+    background: #95a5a6;
+}
+#frame #sidepanel #profile .wrap #status-options ul li#status-offline.active span.status-circle:before {
+    border: 1px solid #95a5a6;
+}
+#frame #sidepanel #profile .wrap #expanded {
+    padding: 100px 0 0 0;
+    display: block;
+    line-height: initial !important;
+}
+#frame #sidepanel #profile .wrap #expanded label {
+    float: left;
+    clear: both;
+    margin: 0 8px 5px 0;
+    padding: 5px 0;
+}
+#frame #sidepanel #profile .wrap #expanded input {
+    border: none;
+    margin-bottom: 6px;
+    background: #32465a;
+    border-radius: 3px;
+    color: #f5f5f5;
+    padding: 7px;
+    width: calc(100% - 43px);
+}
+#frame #sidepanel #profile .wrap #expanded input:focus {
+    outline: none;
+    background: #435f7a;
+}
+#frame #sidepanel #search {
+    width: 100vh;
+    border-top: 1px solid #32465a;
+    border-bottom: 1px solid #32465a;
+    font-weight: 300;
+}
+
+#frame #sidepanel #search label {
+    position: absolute;
+    margin: 10px 0 0 20px;
+}
+#frame #sidepanel #search input {
+    font-family: "proxima-nova",  "Source Sans Pro", sans-serif;
+    padding: 10px 0 10px 46px;
+    width: calc(100% - 25px);
+    border: none;
+    background: #32465a;
+    color: #f5f5f5;
+}
+#frame #sidepanel #search input:focus {
+    outline: none;
+    background: #435f7a;
+}
+#frame #sidepanel #search input::-webkit-input-placeholder {
+    color: #f5f5f5;
+}
+#frame #sidepanel #search input::-moz-placeholder {
+    color: #f5f5f5;
+}
+#frame #sidepanel #search input:-ms-input-placeholder {
+    color: #f5f5f5;
+}
+#frame #sidepanel #search input:-moz-placeholder {
+    color: #f5f5f5;
+}
+#frame #sidepanel #contacts {
+    width: 100%;
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#frame #sidepanel #contacts.expanded {
+    height: calc(100% - 334px);
+}
+#frame #sidepanel #contacts::-webkit-scrollbar {
+    width: 8px;
+    background: #2c3e50;
+}
+#frame #sidepanel #contacts::-webkit-scrollbar-thumb {
+    background-color: #243140;
+}
+#frame #sidepanel #contacts ul li.contact {
+    position: relative;
+    padding: 10px 0 15px 0;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+#frame #sidepanel #contacts ul li.contact:hover {
+    background: #32465a;
+}
+#frame #sidepanel #contacts ul li.contact.active {
+    background: #32465a;
+    border-right: 5px solid #435f7a;
+}
+#frame #sidepanel #contacts ul li.contact.active span.contact-status {
+    border: 2px solid #32465a !important;
+}
+#frame #sidepanel #contacts ul li.contact .wrap {
+    width: 88%;
+    margin: 0 auto;
+    position: relative;
+}
+
+#frame #sidepanel #contacts ul li.contact .wrap span {
+    position: absolute;
+    left: 0;
+    margin: -2px 0 0 -2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #2c3e50;
+    background: #95a5a6;
+}
+#frame #sidepanel #contacts ul li.contact .wrap span.online {
+    background: #2ecc71;
+}
+#frame #sidepanel #contacts ul li.contact .wrap span.away {
+    background: #f1c40f;
+}
+#frame #sidepanel #contacts ul li.contact .wrap span.busy {
+    background: #e74c3c;
+}
+#frame #sidepanel #contacts ul li.contact .wrap img {
+    width: 40px;
+    border-radius: 50%;
+    float: left;
+    margin-right: 10px;
+}
+
+#frame #sidepanel #contacts ul li.contact .wrap .meta {
+    padding: 5px 0 0 0;
+}
+
+#frame #sidepanel #contacts ul li.contact .wrap .meta .name {
+    font-weight: 600;
+}
+#frame #sidepanel #contacts ul li.contact .wrap .meta .preview {
+    margin: 5px 0 0 0;
+    padding: 0 0 1px;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -moz-transition: 1s all ease;
+    -o-transition: 1s all ease;
+    -webkit-transition: 1s all ease;
+    transition: 1s all ease;
+}
+#frame #sidepanel #contacts ul li.contact .wrap .meta .preview span {
+    position: initial;
+    border-radius: initial;
+    background: none;
+    border: none;
+    padding: 0 2px 0 0;
+    margin: 0 0 0 1px;
+    opacity: .5;
+}
+#frame #sidepanel #bottom-bar {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+#frame #sidepanel #bottom-bar button {
+    float: left;
+    border: none;
+    width: 50%;
+    padding: 10px 0;
+    background: #32465a;
+    color: #f5f5f5;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-family: "proxima-nova",  "Source Sans Pro", sans-serif;
+}
+
+#frame #sidepanel #bottom-bar button:focus {
+    outline: none;
+}
+#frame #sidepanel #bottom-bar button:nth-child(1) {
+    border-right: 1px solid #2c3e50;
+}
+
+#frame #sidepanel #bottom-bar button:hover {
+    background: #435f7a;
+}
+#frame #sidepanel #bottom-bar button i {
+    margin-right: 3px;
+    font-size: 1em;
+}
+
+#frame .content {
+    width: auto;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+#frame .content .contact-profile {
     width: 100%;
     height: 60px;
     line-height: 60px;
     background: #f5f5f5;
 }
- .content .contact-profile img {
+#frame .content .contact-profile img {
     width: 40px;
     border-radius: 50%;
     float: left;
     margin: 9px 12px 0 9px;
 }
- .content .contact-profile p {
+#frame .content .contact-profile p {
     float: left;
 }
- .content .contact-profile .social-media {
+#frame .content .contact-profile .social-media {
     float: right;
 }
- .content .contact-profile .social-media i {
+#frame .content .contact-profile .social-media i {
     margin-left: 14px;
     cursor: pointer;
 }
- .content .contact-profile .social-media i:nth-last-child(1) {
+#frame .content .contact-profile .social-media i:nth-last-child(1) {
     margin-right: 20px;
 }
- .content .contact-profile .social-media i:hover {
+#frame .content .contact-profile .social-media i:hover {
     color: #435f7a;
 }
- .content .messages {
+#frame .content .messages {
     height: auto;
     min-height: calc(100% - 93px);
     max-height: calc(100% - 93px);
@@ -42,14 +327,14 @@
     overflow-x: hidden;
 }
 
- .content .messages::-webkit-scrollbar {
+#frame .content .messages::-webkit-scrollbar {
     width: 8px;
     background: transparent;
 }
- .content .messages::-webkit-scrollbar-thumb {
+#frame .content .messages::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.3);
 }
- .content .messages ul li {
+#frame .content .messages ul li {
     display: inline-block;
     clear: both;
     float: left;
@@ -57,47 +342,47 @@
     width: calc(100% - 25px);
     font-size: 0.9em;
 }
- .content .messages ul li:nth-last-child(1) {
+#frame .content .messages ul li:nth-last-child(1) {
     margin-bottom: 20px;
 }
- .content .messages ul li.sent img {
+#frame .content .messages ul li.sent img {
     margin: 6px 8px 0 0;
 }
- .content .messages ul li.sent p {
+#frame .content .messages ul li.sent p {
     background: #435f7a;
     color: #f5f5f5;
 }
- .content .messages ul li.replies img {
+#frame .content .messages ul li.replies img {
     float: right;
     margin: 6px 0 0 8px;
 }
- .content .messages ul li.replies p {
+#frame .content .messages ul li.replies p {
     background: #f5f5f5;
     float: right;
 }
- .content .messages ul li img {
+#frame .content .messages ul li img {
     width: 22px;
     border-radius: 50%;
     float: left;
 }
- .content .messages ul li p {
+#frame .content .messages ul li p {
     display: inline-block;
     padding: 10px 15px;
     border-radius: 20px;
     max-width: 205px;
     line-height: 130%;
 }
-
- .content .message-input {
+.content .message-input {
     position: absolute;
     bottom: 0;
+    left: 20px;
     width: 100%;
-    z-index: 100;
+    z-index: 99;
 }
- .content .message-input .wrap {
+#frame .content .message-input .wrap {
     position: relative;
 }
- .content .message-input .wrap input {
+#frame .content .message-input .wrap input {
     font-family: "proxima-nova",  "Source Sans Pro", sans-serif;
     float: left;
     border: none;
@@ -107,24 +392,13 @@
     color: #32465a;
 }
 
- .content .message-input .wrap input:focus {
+#frame .content .message-input .wrap input:focus {
     outline: none;
 }
- .content .message-input .wrap .attachment {
-    position: absolute;
-    right: 60px;
-    z-index: 4;
-    margin-top: 10px;
-    font-size: 1.1em;
-    color: #435f7a;
-    opacity: .5;
-    cursor: pointer;
-}
- .content .message-input .wrap .attachment:hover {
-    opacity: 1;
-}
- .content .message-input .wrap button {
+
+#frame .content .message-input .wrap button {
     float: right;
+    position: absolute;
     border: none;
     width: 50px;
     padding: 12px 0;
@@ -133,105 +407,9 @@
     color: #f5f5f5;
 }
 
- .content .message-input .wrap button:hover {
+#frame .content .message-input .wrap button:hover {
     background: #435f7a;
 }
- .content .message-input .wrap button:focus {
+#frame .content .message-input .wrap button:focus {
     outline: none;
 }
-
- #contacts {
-     height: 100vh;
-     overflow-y: scroll;
-     overflow-x: hidden;
-     width: 100vh;
- }
-
-   #contacts.expanded {
-     height: calc(100% - 334px);
- }
-   #contacts::-webkit-scrollbar {
-     width: 8px;
-     background: #2c3e50;
- }
-   #contacts::-webkit-scrollbar-thumb {
-     background-color: #243140;
- }
-   #contacts ul li.contact {
-     position: relative;
-     padding: 10px 0 15px 0;
-     font-size: 0.9em;
-     cursor: pointer;
-     width: 100%;
- }
-
-   #contacts ul li.contact:hover {
-     background: #32465a;
- }
-   #contacts ul li.contact.active {
-     background: #32465a;
-     border-right: 5px solid #435f7a;
- }
-   #contacts ul li.contact.active span.contact-status {
-     border: 2px solid #32465a !important;
- }
-   #contacts ul li.contact .wrap {
-      width: 88%;
-      margin: 0 auto;
-      position: relative;
-  }
-
-   #contacts ul li.contact .wrap span {
-     position: absolute;
-     left: 0;
-     margin: -2px 0 0 -2px;
-     width: 10px;
-     height: 10px;
-     border-radius: 50%;
-     border: 2px solid #2c3e50;
-     background: #95a5a6;
- }
-   #contacts ul li.contact .wrap span.online {
-     background: #2ecc71;
- }
-   #contacts ul li.contact .wrap span.away {
-     background: #f1c40f;
- }
-   #contacts ul li.contact .wrap span.busy {
-     background: #e74c3c;
- }
-   #contacts ul li.contact .wrap img {
-     width: 40px;
-     border-radius: 50%;
-     float: left;
-     margin-right: 10px;
- }
-
-   #contacts ul li.contact .wrap .meta {
-     padding: 5px 0 0 0;
- }
-
-   #contacts ul li.contact .wrap .meta .name {
-     font-weight: 600;
- }
-   #contacts ul li.contact .wrap .meta .preview {
-     margin: 5px 0 0 0;
-     padding: 0 0 1px;
-     font-weight: 400;
-     white-space: nowrap;
-     overflow: hidden;
-     text-overflow: ellipsis;
-     -moz-transition: 1s all ease;
-     -o-transition: 1s all ease;
-     -webkit-transition: 1s all ease;
-     transition: 1s all ease;
- }
-   #contacts ul li .contact .wrap .meta .preview span {
-     position: initial;
-     border-radius: initial;
-     background: none;
-     border: none;
-     padding: 0 2px 0 0;
-     margin: 0 0 0 1px;
-     opacity: .5;
- }

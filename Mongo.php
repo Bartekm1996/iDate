@@ -26,7 +26,7 @@ if(isset($_GET['userId'])){
             for ($x = 0; $x < sizeof($document->_conversations); $x++) {
                 array_push($myObj, array(
                     "username" => $document->_conversations[$x]->username,
-                    "message" => $document->_conversations[$x]->messages[0]->message,
+                    "message" => $document->_conversations[$x]->messages[sizeof($document->_conversations[$x]->messages)-1]->message,
                     "id" => $x
                     ));
             }
