@@ -131,7 +131,8 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         }
 
     }
-} else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
+}
+else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
@@ -222,10 +223,39 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         $res = $res."]";
         echo $res;
     }
-} else if(isset($_POST['upload_files_api'])) {
+}
+else if(isset($_POST['upload_files_api'])) {
     $arr = $_POST["formData"];
 
     echo json_encode($_FILES['files']);
+} else if(isset($_POST['get_userprofiles_api']) && isset($_POST['userid'])) { //add gender search
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+
+        $sql = "SELECT user.id, user.firstname, user.age,
+                 profile.photoId, profile.location, profile.Description,
+                 profile.Smoker, profile.Drinker, profile.Seeking,
+                 user.lastname, user.gender
+                 FROM user
+                 inner join profile
+                 on user.id = profile.userID
+                 WHERE user.id = {$_POST['userid']}";
+
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            $row = mysqli_fetch_row($result);
+                $i = 0;
+                $user = new SearchUser($row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++],
+                    $row[$i++], $row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
+                echo  $user->jsonSerialize();
+        } else {
+            echo "{}";
+        }
+
+
+    }
 }
 
 

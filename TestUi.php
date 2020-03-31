@@ -317,7 +317,7 @@ session_start(); ?>
                                     </div>
 
                                 </div>
-                                <a href="#" class="btn btn-primary" style="margin-top: 10px; margin-left: 5px;">View Profile <?php echo $_SESSION['userid'];?></a>
+                                <button onclick="openMyProfile(<?php echo $_SESSION['userid'];?>)"  class="btn btn-primary" style="margin-top: 10px; margin-left: 5px;">View Profile <?php echo $_SESSION['userid'];?></button>
                             </div>
                             <div class="card-body">
                             </div>

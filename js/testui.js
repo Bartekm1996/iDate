@@ -34,10 +34,10 @@ function updateInterest(event) {
     });
 }
 
-function loadMyInterests() {
+function loadUserInterests(uid, disabledCheck) {
     var request = {};
     request.get_my_interests_api = true;
-    request.userid = userID;
+    request.userid = uid;
 
     $.ajax({
         method: "POST",
@@ -52,7 +52,10 @@ function loadMyInterests() {
                 for(let i = 0; i < al.length;i++) {
 
                     var checked = containsInterest(obj, al[i].name) ? 'checked' : '';
-                    var option = "<div class='dropdown-item checkbox'><label><input onclick='updateInterest(this)' type='checkbox' value='" + al[i].name +"'  " + checked + "> " + al[i].name  + "</label></div>";
+
+                    var disabled = disabledCheck ? 'disabled' : '';
+
+                    var option = "<div class='dropdown-item checkbox'><label><input onclick='updateInterest(this)' type='checkbox' value='" + al[i].name +"'  " + checked + " " +disabled +" > " + al[i].name  + "</label></div>";
                     document.getElementById('interests').innerHTML += option;
                 }
             }
@@ -74,6 +77,7 @@ function containsInterest(arr, value) {
 
     return false;
 }
+//Download all interest on start
 function loadAllInterests() {
 
     var request = {};
@@ -106,56 +110,70 @@ function showSearch() {
     $('#chatarea').prop('hidden', true);
 }
 
-function  openSearchProfile(event) {
-    var res = getSearchData(event);
-    clearProfileModal();
-    hideModalButtons();
-    if(res != null) {
-        console.log(res);
 
-        var genImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
-        var defImage = res.photoId.length == 0 ? genImage: res.photoId;
-        $('#person_image').attr('src', defImage);
-
-        document.getElementById('profile_modal_title').innerHTML = "<b>Profile Information</b>";
-        $('#person_age').text(res.age);
-        $('#person_gender').text(res.gender);
-        $('#person_location').text(res.location.length == 0 ? 'N/A': res.location);
-        $('#person_is_smoker').text(res.smoker);
-        $('#person_is_drinker').text(res.drinker);
-        $('#person_fullname').text(res.name + ' ' + res.lastname);
-        $('#btnModalMatch').show();
-        $('#profileModal').show();
-    }
-
+function  openSearchProfile(uid) {
+    getUserProfileData(uid, true, false, false);//disabled checkboxes and is not matched
 }
 
-function  openUserProfile(event) {
-    var res = getMatchData(event);
-    clearProfileModal();
-    hideModalButtons();
-    loadMyInterests();
+function getUserProfileData(uid, disableCheck, isMatched, isOwn) {
+    //get_userprofiles_api
+    var request = {};
+    request.get_userprofiles_api = true;
+    request.userid = uid;
+    $.ajax({
+        method: "POST",
+        url: "api.php",
+        data: request,
+        success: function (response) {
+            console.log(response);
+            let res = JSON.parse(response);
 
-    if(res != null) {
-        console.log(res);
+            clearProfileModal();
+            hideModalButtons();
+            loadUserInterests(uid, disableCheck);
 
-        var genImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
-        var defImage = res.photoId.length == 0 ? genImage: res.photoId;
-        $('#person_image').attr('src', defImage);
+            if(res != null) {
+                console.log(res);
 
-        document.getElementById('profile_modal_title').innerHTML = "<b>Connection Date:</b> " + res.connectionDate;
+                var genImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
+                var defImage = res.photoId.length == 0 ? genImage: res.photoId;
+                $('#person_image').attr('src', defImage);
 
-        $('#person_age').text(res.age);
-        $('#person_gender').text(res.gender);
-        $('#person_location').text(res.location.length == 0 ? 'N/A': res.location);
-        $('#person_is_smoker').text(res.smoker);
-        $('#person_is_drinker').text(res.drinker);
-        $('#person_fullname').text(res.name + ' ' + res.lastname);
-        $('#btnModalChat').show();
-        $('#btnModalUnMatch').show();
-        $('#profileModal').show();
-    }
+                document.getElementById('profile_modal_title').innerHTML = "<b>Profile Information</b>";
+                $('#person_age').text(res.age);
+                $('#person_gender').text(res.gender);
+                $('#person_location').text(res.location.length == 0 ? 'N/A': res.location);
+                $('#person_is_smoker').text(res.smoker);
+                $('#person_is_drinker').text(res.drinker);
+                $('#person_fullname').text(res.name + ' ' + res.lastname);
 
+                if(isMatched) {
+                    $('#btnModalChat').show();
+                    $('#btnModalMatch').show();
+                } else if(!isMatched && !isOwn){
+                    $('#btnModalMatch').show();
+                }
+
+                $('#profileModal').show();
+            }
+
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+}
+
+function openMyProfile(uid) {
+    getUserProfileData(uid, false, false, true);
+}
+
+function  openMatchProfile(uid) {
+    getUserProfileData(uid, true, true, false);
+    //Set connection date
 }
 
 function clearProfileModal() {
@@ -184,6 +202,8 @@ function getMatchData(uid) {
     return res;
 }
 
+
+//TODO: remove after testing
 function getSearchData(uid) {
     var res;
 
@@ -267,7 +287,7 @@ function getUserMatches() {
                 for(var i = 0; i < obj.length;i++) {
                     var genImage = obj[i].gender == 'Male' ? 'images/male.png' : 'images/female.png';
                     var defImage = obj[i].photoId.length == 0 ? genImage: obj[i].photoId;
-                    let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='"+  defImage +"'/><h4>" + obj[i].name + "</h4></div>\n";
+                    let test = "<div onclick='openMatchProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='"+  defImage +"'/><h4>" + obj[i].name + "</h4></div>\n";
                     document.getElementById("mymatches").innerHTML += test;
                 }
 
