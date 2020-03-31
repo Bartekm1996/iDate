@@ -15,6 +15,6 @@ class AvailableInterests implements JsonSerializable {
 
     public function jsonSerialize()
     {
-        return  "{id:\"".$this->id."\",name:\"".$this->name."\"}";
+        return  "{\"id\":\"".$this->id."\",\"name\":\"".$this->name."\"}";
     }
 }

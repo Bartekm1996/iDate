@@ -80,8 +80,10 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
                 $user = new AvailableInterests($row[0], $row[1]);
                 $res = $res.$user->jsonSerialize().",";
             }
+
+            $res = substr($res, 0,strlen($res)-1);
         }
-        $res = $res."];";
+        $res = $res."]";
         echo $res;
     }
 } else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
@@ -100,6 +102,7 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
                 $user = new Connection($row[0], $row[1], $row[2], $row[3]);
                 $res = $res.$user->jsonSerialize().",";
             }
+
         }
         $res = $res."];";
         echo $res;

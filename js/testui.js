@@ -1,12 +1,49 @@
 var testImgs = [];
 var myMatches = [];
 var searchUsers = [];
+var availableInterests = [];
 
 function showChat() {
     $('#matcharea').prop('hidden', true);
     $('#chatarea').prop('hidden', false);
 }
 
+function updateInterest(event) {
+    console.log(event.value);
+}
+
+function createInterests() {
+
+    var request = {};
+    request.get_available_interests_api = true;
+    $.ajax({
+        method: "POST",
+        url: "api.php",
+        data: request,
+        success: function (response) {
+            console.log(response);
+            let obj = JSON.parse(response);
+            if(obj != null) {
+                availableInterests = obj;
+                document.getElementById('interests').innerHTML ='';
+
+                for(let i = 0; i < obj.length;i++) {
+
+                    var option = "<div class='dropdown-item checkbox'><label><input onclick='updateInterest(this)' type='checkbox' value='" + obj[i].name +"'> " + obj[i].name  + "</label></div>";
+                    document.getElementById('interests').innerHTML += option;
+                }
+
+            }
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+
+}
 function showSearch() {
     $('#searchFilter').val('');
     searchUsers = [];
@@ -43,6 +80,7 @@ function  openUserProfile(event) {
     var res = getMatchData(event);
     clearProfileModal();
     hideModalButtons();
+    createInterests();
 
     if(res != null) {
         console.log(res);
@@ -270,7 +308,13 @@ $(document).ready(function() {
     $('#myTab a').on('click', function (e) {
         e.preventDefault()
         $(this).tab('show')
-    })
+    });
+
+    $('.dropdown-toggle').dropdown();
+    $('a[data-toggle="list"]').on('shown.bs.tab', function (e) {
+        e.target // newly activated tab
+        e.relatedTarget // previous active tab
+    });
 
     getUserMatches();
     showSearch();

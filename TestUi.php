@@ -473,7 +473,18 @@ session_start(); ?>
                                   </td>
                               </tr>
                           </table>
+
+                          <div class="dropdown">
+                              <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Interests
+                              </button>
+                              <div  id="interests" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                              </div>
+                          </div>
                       </div>
+
+
                       <div class="modal-footer">
                           <button id="btnModalChat" type="button" class="btn btn-outline-info" data-dismiss="modal" onclick="showChat(), closeUserProfile()">Start Chat</button>
                           <button id="btnModalMatch" type="button" class="btn btn-outline-success pull-right" data-dismiss="modal" onclick="match()">Match</button>
