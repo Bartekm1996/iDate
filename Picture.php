@@ -25,7 +25,7 @@ if(isset($_POST['userId']) && isset($_POST['photoUrl'])) {
 
         $sqlUpdate = "UPDATE photo SET url = '{$url}' WHERE id = {$userId} AND name = '{$name}'";
 
-        $sql = "SELECT name FROM photo WHERE id='{$userId}' AND name = '{$name}'";
+        $sql = "SELECT name FROM photo WHERE id='{$userId}'";
 
         $sqlSmnt = $conn->query($sql)->num_rows > 0 ? $sqlUpdate : $sqlInsert;
 

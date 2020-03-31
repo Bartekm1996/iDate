@@ -302,7 +302,7 @@ session_start(); ?>
                                         die("Connection failed: " . $conn->connect_error);
                                     }else{
                                         $id = $conn->real_escape_string($_SESSION['userid']);
-                                        $sql = "SELECT url FROM photo WHERE user_id='{$id}' & name='userProfilePhoto';";
+                                        $sql = "SELECT url FROM photo WHERE user_id='{$id}';";
                                         $result = $conn->query($sql);
                                         if($result->num_rows > 0) {
                                             $resp = $result->fetch_row()[0];
