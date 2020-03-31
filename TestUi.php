@@ -301,7 +301,7 @@ session_start(); ?>
                                     if ($conn->connect_error) {
                                         die("Connection failed: " . $conn->connect_error);
                                     }else{
-                                        $id = $conn->real_escape_string('170');
+                                        $id = $conn->real_escape_string($_SESSION['userid']);
                                         $sql = "SELECT url FROM photo WHERE user_id='{$id}' & name='userProfilePhoto';";
                                         $result = $conn->query($sql);
                                         if($result->num_rows > 0) {
@@ -315,8 +315,9 @@ session_start(); ?>
                                     <div class="img__description_layer">
                                         <button class="img__description"  onclick="changeProfilePicture()">Change Profile Picture</button>
                                     </div>
+
                                 </div>
-                                <a href="#" class="btn btn-primary" style="margin-top: 10px; margin-left: 5px;">View Profile</a>
+                                <a href="#" class="btn btn-primary" style="margin-top: 10px; margin-left: 5px;">View Profile <?php echo $_SESSION['userid'];?></a>
                             </div>
                             <div class="card-body">
                             </div>
