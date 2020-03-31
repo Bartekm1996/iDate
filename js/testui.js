@@ -9,7 +9,29 @@ function showChat() {
 }
 
 function updateInterest(event) {
-    console.log(event.value);
+
+    var request = {};
+    request.update_available_interests_api = true;
+    request.interest = event.value;
+    request.userid = userID;
+    request.add = event.checked;
+
+    console.log(event);
+
+    $.ajax({
+        method: "POST",
+        url: "api.php",
+        data: request,
+        success: function (response) {
+            console.log(response);
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
 }
 
 function createInterests() {

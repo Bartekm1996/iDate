@@ -86,6 +86,29 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         $res = $res."]";
         echo $res;
     }
+}else if(isset($_POST['update_available_interests_api']) && isset($_POST['userid'])
+&& isset($_POST['interest']) && isset($_POST['add'])){
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+        //we need the id of the item to link FK
+        $sql = "SELECT * FROM availableInterests where name='{$_POST['interest']}' LIMIT 1";
+
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            $row = mysqli_fetch_row($result);
+
+            //check that we have this item item
+            $sql = "SELECT interestID FROM interests where userID='{$_POST['userid']}' AND interestID={$row[0]}  LIMIT 1";
+            //delete up insert
+            $insertOrDelete = $_POST['add'] == 'true' ? "insert into interests (userID, interestID) VALUES ({$_POST['userid']}, {$row[0]});"
+                : "DELETE FROM interests WHERE userID={$_POST['userid']} AND interestID = {$row[0]};";
+            $result = $conn->query($insertOrDelete);
+            echo "success";
+        }
+
+    }
 } else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
