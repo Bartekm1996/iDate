@@ -4,6 +4,7 @@ require("db.php");
 require("model/User.php");
 require("model/Photo.php");
 require("model/Match.php");
+require("model/SearchUser.php");
 require("model/AvailableInterests.php");
 require("model/Connection.php");
 /* Create a match with current logged in user and match_id user */
@@ -116,7 +117,9 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
             the person we have matched with
         */
         $sql = "select user.id, user.firstname, user.age, 
-                profile.photoId, profile.location, profile.Description
+                profile.photoId, profile.location, profile.Description,
+                profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender,
+                results.connectionDate
                 from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
                 from connections as c1, connections as c2
                 where (c1.userID1 = c2.userID2 AND 
@@ -128,8 +131,12 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         $result = $conn->query($sql);
         $res = "[";
         if ($result->num_rows > 0) {
+
             while ($row = mysqli_fetch_row($result)) {
-                $user = new Match($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]);
+                $i = 0;
+                $user = new Match($row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++],
+                    $row[$i++],$row[$i++],$row[$i++],$row[$i++], $row[$i++], $row[$i++]);
+
                 $res = $res.$user->jsonSerialize().",";
             }
 
@@ -145,16 +152,20 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
 
         //SELECT * FROM user WHERE id IN (SELECT userID2 FROM connections WHERE userID1='66')
         $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.age,
- profile.photoId, profile.location, profile.Description  FROM user
-inner join profile
-on user.id = profile.userID) AS res
-WHERE firstname LIKE '%{$_POST['filter']}%';";
+                 profile.photoId, profile.location, profile.Description,
+                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
+                 FROM user
+                 inner join profile
+                 on user.id = profile.userID) AS res
+                 WHERE firstname LIKE '%{$_POST['filter']}%';";
 
         $result = $conn->query($sql);
         $res = "[";
         if ($result->num_rows > 0) {
             while ($row = mysqli_fetch_row($result)) {
-                $user = new Match($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]);
+                $i = 0;
+                $user = new SearchUser($row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++],
+                    $row[$i++], $row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
                 $res = $res.$user->jsonSerialize().",";
             }
 

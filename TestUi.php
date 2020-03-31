@@ -22,11 +22,6 @@ session_start(); ?>
         var userID = <?php echo "'{$_SESSION['userid']}';" ?>
         var users = <?php require("usersjson.php") ?>
 
-            var curPos = 0;
-            var testImgs = [];
-
-
-
         /*
         {"messages":[{"username":"Jenny Ruiz","message":"Hello","timestamp":"2020-03-27 14:19:29"}]}
                <li class="sent">
@@ -425,7 +420,7 @@ session_start(); ?>
               <div class="modal-dialog" role="document">
                   <div class="modal-content">
                       <div class="modal-header">
-                          <h5 class="modal-title"><b>Information about this person</b></h5>
+                          <h5 class="modal-title"><b>Matched on: </b> <e id="conndate"></e></h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeUserProfile()">
                               <span aria-hidden="true">&times;</span>
                           </button>
@@ -433,7 +428,7 @@ session_start(); ?>
                       <div class="modal-body">
                           <table id="popup_user_info">
                               <tr>
-                                  <td><p class='grid-item'><img src='https://placekitten.com/100/100'/></p></td>
+                                  <td><p class='grid-item'><img id="person_image" src='images/user_default.png'/></p></td>
                                   <td>
                                       <style type="text/css">
                                           td
@@ -479,7 +474,7 @@ session_start(); ?>
                       </div>
                       <div class="modal-footer">
                           <button type="button" class="btn btn-outline-info" data-dismiss="modal" onclick="showChat(), closeUserProfile()">Start Chat</button>
-                          <button type="button" class="btn btn-outline-success pull-right" data-dismiss="modal" onclick="match()">Match</button>
+<!--                          <button type="button" class="btn btn-outline-success pull-right" data-dismiss="modal" onclick="match()">Match</button>-->
                           <button type="button" class="btn btn-outline-danger pull-right" data-dismiss="modal" onclick="unlink()">Unlink</button>
                           <span style="width: 100px"></span>
                           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="closeUserProfile()">Close</button>

@@ -1,4 +1,6 @@
 var testImgs = [];
+var myMatches = [];
+var searchUsers = [];
 
 function showChat() {
     $('#matcharea').prop('hidden', true);
@@ -10,7 +12,47 @@ function showSearch() {
     $('#chatarea').prop('hidden', true);
 }
 function  openUserProfile(event) {
-    $('#profileModal').show();
+    var res = getMatchData(event);
+    clearProfileModal();
+    if(res != null) {
+        console.log(res);
+
+        $('#conndate').text(res.connectionDate);
+        $('#person_age').text(res.age);
+        $('#person_gender').text(res.gender);
+        $('#person_location').text(res.location.length == 0 ? 'N/A': res.location);
+        $('#person_is_smoker').text(res.smoker);
+        $('#person_is_drinker').text(res.drinker);
+        $('#person_fullname').text(res.name + ' ' + res.lastname);
+        $('#profileModal').show();
+    }
+
+}
+
+function clearProfileModal() {
+    $('#conndate').text('');
+    $('#person_fullname').text('');
+    $('#person_age').text('');
+    $('#person_gender').text('');
+    $('#person_location').text('');
+    $('#person_is_smoker').text('');
+    $('#person_is_drinker').text('');
+}
+
+
+function getMatchData(uid) {
+    var res;
+
+    if(myMatches.length > 0) {
+        for(let i = 0; i < myMatches.length; i++) {
+            if(myMatches[i].id == uid) {
+                res = myMatches[i];
+                break;
+            }
+        }
+    }
+
+    return res;
 }
 
 function  closeUserProfile() {
@@ -38,12 +80,17 @@ function getAllProfiles() {
         data: request,
         success: function (response) {
             console.log(response);
+
             let obj = JSON.parse(response);
+            searchUsers = obj;
             document.getElementById("searchResults").innerHTML = '';
             //TODO: where are the images going to be stored
+
             if(obj != null) {
                 for(var i = 0; i < obj.length;i++) {
-                    let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
+                    var genImage = obj[i].gender == 'Male' ? 'images/male.png' : 'images/female.png';
+                    var defImage = obj[i].photoId.length == 0 ? genImage: obj[i].photoId;
+                    let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='"+defImage+"'/><h4>" + obj[i].name + "</h4></div>\n";
                     document.getElementById("searchResults").innerHTML += test;
                 }
             }
@@ -71,8 +118,12 @@ function getUserMatches() {
             let obj = JSON.parse(response);
             //TODO: where are the images going to be stored
             if(obj != null) {
+                myMatches = obj;
+
                 for(var i = 0; i < obj.length;i++) {
-                    let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
+                    var genImage = obj[i].gender == 'Male' ? 'images/male.png' : 'images/female.png';
+                    var defImage = obj[i].photoId.length == 0 ? genImage: obj[i].photoId;
+                    let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='"+  defImage +"'/><h4>" + obj[i].name + "</h4></div>\n";
                     document.getElementById("mymatches").innerHTML += test;
                 }
             }
@@ -133,7 +184,6 @@ function nextUser() {
     $('#uname').text(users[curPos].name);
     $('#uage').text(users[curPos].age);
 }
-
 
 function nextImg() {
     curPos++;
