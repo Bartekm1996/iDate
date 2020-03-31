@@ -317,7 +317,7 @@ session_start(); ?>
                                     </div>
 
                                 </div>
-                                <button onclick="openMyProfile(<?php echo $_SESSION['userid'];?>)"  class="btn btn-primary" style="margin-top: 10px; margin-left: 5px;">View Profile <?php echo $_SESSION['userid'];?></button>
+                                <button onclick="openMyProfile(<?php echo $_SESSION['userid'];?>)"  class="btn btn-primary" style="margin-top: 10px; margin-left: 5px;">View Profile/button>
                             </div>
                             <div class="card-body">
                             </div>
@@ -328,7 +328,7 @@ session_start(); ?>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-matches-tab" data-toggle="tab" href="#matches" role="tab" aria-controls="nav-matches" aria-selected="true" onclick="showSearch()">Matches</a>
                             <a class="nav-item nav-link" id="nav-messages-tab" data-toggle="tab" href="#messages" role="tab" aria-controls="nav-messages" aria-selected="false" onclick="loadConversations()">Messages</a>
-                            <a class="nav-item nav-link" id="nav-search-tab" data-toggle="tab" href="#search" role="tab" aria-controls="nav-search" aria-selected="false">Search</a>
+                            <a class="nav-item nav-link" id="nav-search-tab" data-toggle="tab" href="#search" role="tab" aria-controls="nav-search" aria-selected="false" onclick="searchClear()">Search</a>
                         </div>
                     </nav>
 

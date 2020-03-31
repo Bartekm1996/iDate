@@ -115,6 +115,11 @@ function  openSearchProfile(uid) {
     getUserProfileData(uid, true, false, false);//disabled checkboxes and is not matched
 }
 
+function searchClear() {
+    $('#search').val('');
+}
+
+
 function getUserProfileData(uid, disableCheck, isMatched, isOwn) {
     //get_userprofiles_api
     var request = {};
