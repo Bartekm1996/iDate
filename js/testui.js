@@ -8,22 +8,59 @@ function showChat() {
 }
 
 function showSearch() {
+    $('#searchFilter').val('');
+    searchUsers = [];
+    document.getElementById("searchResults").innerHTML = '';
     $('#matcharea').prop('hidden', false);
     $('#chatarea').prop('hidden', true);
 }
-function  openUserProfile(event) {
-    var res = getMatchData(event);
+
+function  openSearchProfile(event) {
+    var res = getSearchData(event);
     clearProfileModal();
+    hideModalButtons();
     if(res != null) {
         console.log(res);
 
-        $('#conndate').text(res.connectionDate);
+        var genImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
+        var defImage = res.photoId.length == 0 ? genImage: res.photoId;
+        $('#person_image').attr('src', defImage);
+
+        document.getElementById('profile_modal_title').innerHTML = "<b>Profile Information</b>";
         $('#person_age').text(res.age);
         $('#person_gender').text(res.gender);
         $('#person_location').text(res.location.length == 0 ? 'N/A': res.location);
         $('#person_is_smoker').text(res.smoker);
         $('#person_is_drinker').text(res.drinker);
         $('#person_fullname').text(res.name + ' ' + res.lastname);
+        $('#btnModalMatch').show();
+        $('#profileModal').show();
+    }
+
+}
+
+function  openUserProfile(event) {
+    var res = getMatchData(event);
+    clearProfileModal();
+    hideModalButtons();
+
+    if(res != null) {
+        console.log(res);
+
+        var genImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
+        var defImage = res.photoId.length == 0 ? genImage: res.photoId;
+        $('#person_image').attr('src', defImage);
+
+        document.getElementById('profile_modal_title').innerHTML = "<b>Connection Date:</b> " + res.connectionDate;
+
+        $('#person_age').text(res.age);
+        $('#person_gender').text(res.gender);
+        $('#person_location').text(res.location.length == 0 ? 'N/A': res.location);
+        $('#person_is_smoker').text(res.smoker);
+        $('#person_is_drinker').text(res.drinker);
+        $('#person_fullname').text(res.name + ' ' + res.lastname);
+        $('#btnModalChat').show();
+        $('#btnModalUnMatch').show();
         $('#profileModal').show();
     }
 
@@ -47,6 +84,21 @@ function getMatchData(uid) {
         for(let i = 0; i < myMatches.length; i++) {
             if(myMatches[i].id == uid) {
                 res = myMatches[i];
+                break;
+            }
+        }
+    }
+
+    return res;
+}
+
+function getSearchData(uid) {
+    var res;
+
+    if(searchUsers.length > 0) {
+        for(let i = 0; i < searchUsers.length; i++) {
+            if(searchUsers[i].id == uid) {
+                res = searchUsers[i];
                 break;
             }
         }
@@ -90,7 +142,7 @@ function getAllProfiles() {
                 for(var i = 0; i < obj.length;i++) {
                     var genImage = obj[i].gender == 'Male' ? 'images/male.png' : 'images/female.png';
                     var defImage = obj[i].photoId.length == 0 ? genImage: obj[i].photoId;
-                    let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='"+defImage+"'/><h4>" + obj[i].name + "</h4></div>\n";
+                    let test = "<div onclick='openSearchProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='"+defImage+"'/><h4>" + obj[i].name + "</h4></div>\n";
                     document.getElementById("searchResults").innerHTML += test;
                 }
             }
@@ -126,6 +178,7 @@ function getUserMatches() {
                     let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='"+  defImage +"'/><h4>" + obj[i].name + "</h4></div>\n";
                     document.getElementById("mymatches").innerHTML += test;
                 }
+
             }
         },
         failure: function (response) {
@@ -139,6 +192,11 @@ function getUserMatches() {
 
 }
 
+function hideModalButtons() {
+    $('#btnModalChat').hide();
+    $('#btnModalMatch').hide();
+    $('#btnModalUnMatch').hide();
+}
 function sendDataTest(request, urll) {
     console.log(request);
     $.ajax({
