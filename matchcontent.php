@@ -2,7 +2,7 @@
     <div id="matcharea" class="center mt-lg-2" hidden>
         <div class="card shadow-lg p-3 mb-5 bg-white rounded" style="height: 75vh; width: 22rem; margin-left: auto;margin-right: auto">
             <div style="position:relative">
-                <img id="imgP" width="200px" height="250px" src="https://placekitten.com/200/250" class="card-img-top">
+                <img id="imgP" width="200px" height="250px" src="images/default.png" class="card-img-top">
                 <div class="matchbtn" style="left:2%">
                     <i class="fa fa-3x fa-arrow-circle-left" onclick="prevImg()"></i>
                 </div>

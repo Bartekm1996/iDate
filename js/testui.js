@@ -2,7 +2,7 @@ var testImgs = [];
 var myMatches = [];
 var searchUsers = [];
 var availableInterests = [];
-var curPos = 0;
+var curPos = -1;
 var curImgPos = 0;
 
 function showChat() {
@@ -340,8 +340,22 @@ function match() {
     var request = {};
     request.create_match_api = true;
     request.match_id = users[curPos].id;
-    //sendDataTest(request, "api.php");
-    nextUser();
+    $.ajax({
+        method: "POST",
+        url: "api.php",
+        data: request,
+        success: function (response) {
+            console.log(response);
+            nextUser();
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+
 }
 
 function unlink() {
@@ -357,6 +371,8 @@ function nomatch() {
 }
 
 function nextUser() {
+    if(users == null) return;
+
     curPos++;
     curImgPos = 0;
     if(curPos >= users.length) curPos = 0;
@@ -371,7 +387,6 @@ function nextUser() {
         url: "api.php",
         data: request,
         success: function (response) {
-            console.log(response);
             let obj = JSON.parse(response);
             if(obj != null && obj.length > 0) {
                 testImgs = obj;
@@ -394,12 +409,15 @@ function nextUser() {
 }
 
 function nextImg() {
+    if(testImgs == null) return;
+
     curImgPos++;
     if(curImgPos >= testImgs.length) curImgPos = 0;
     $('#imgP').attr("src",testImgs[curImgPos].url);
 }
 
 function prevImg() {
+    if(testImgs == null) return;
     curImgPos--;
     if(curImgPos < 0) curImgPos = testImgs.length -1;
     $('#imgP').attr("src",testImgs[curImgPos].url);
@@ -431,5 +449,6 @@ $(document).ready(function() {
     getUserMatches();
     showSearch();
     loadAllInterests();
+    nextUser();//load first user
 
 });
