@@ -17,8 +17,7 @@ class Match implements JsonSerializable {
     public $connectionDate;
 
 
-    public function __construct($id, $name, $age, $photoId, $location, $desc,
-        $smoker, $drinker, $seeking, $lastname, $gender, $connectionDate)
+    public function __construct($id, $name, $age, $gender,$photoId, $location, $desc)
     {
         $this->id = $id;
         $this->name = $name;
@@ -26,13 +25,14 @@ class Match implements JsonSerializable {
         $this->photoId = $photoId;
         $this->location = $location;
         $this->desc = $desc;
-        $this->smoker = $smoker;
-        $this->drinker = $drinker;
-        $this->seeking = $seeking;
-        $this->lastname = $lastname;
+      //  $this->smoker = $smoker;
+     //   $this->drinker = $drinker;
+     //   $this->lastname = $lastname;
         $this->gender = $gender;
-        $this->connectionDate = $connectionDate;
+      //  $this->connectionDate = $connectionDate;
     }
+
+
 
     public function jsonSerialize()
     {

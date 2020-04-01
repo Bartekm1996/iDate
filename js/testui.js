@@ -86,19 +86,17 @@ function getAllProfiles() {
                         '<div class="row active-with-click">' +
                         '<div class="col-xs-12">' +
                         '<article class="material-card Red">' +
-                        '<h2><span>'+obj[i].name+'</span><strong ><i class="fas fa-birthday-cake"></i>' +obj[i].age+ '<i class="fas fa-map-pin"></i>'  + (obj[i].location > 0 ?  obj[i].location : "Unknown" )   + '</strong></h2>' +
+                        '<h2><span >'+obj[i].name+'</span><strong><i class="fas fa-birthday-cake"><i class="ml-3"></i>' +obj[i].age+ '</i><i class="fas fa-map-pin ml-3"><i class="ml-3">'  + (obj[i].location > 0 ?  obj[i].location : "Unknown" )   + '</i></i></strong></h2>'+
                         '<div class="mc-content">' +
                         '<div class="img-container">' +
-                        '<img  id="person_image" src="https://scontent.fcgp2-1.fna.fbcdn.net/v/t1.0-9/64622894_10157744391564026_2243513133849116672_o.jpg?_nc_cat=103&_nc_ohc=3LqOQPKa3LAAQkhNs6IycYd_UEZkq70P1ODj1pCG2E1SdYBAURRB9C5Rg&_nc_ht=scontent.fcgp2-1.fna&oh=64f4a0143ea114c3583a7d0be3114df5&oe=5EAB9485">' +
+                        '<img  id="person_image" style="width: 100%; height: 100%;" src="https://source.unsplash.com/random">' +
                         '</div>' +
                         '<div class="mc-description">' +
                         '<div class="modal-body">' +
                         '<table id="popup_user_info">' +
                         '<tr><td></td><td>Name</td><td id="person_fullname">'+obj[i].name+'</td>' +
                         '<tr><td><td>Age :'+obj[i].age+'</td><td></td></td></tr>' +
-                        '<tr><td><td>Gender : Male</td></td></tr>' +
-                        '<tr><td><td>Gender : Male</td></td></tr>' +
-                        '<tr><td><td>Gender : Male</td></td></tr>' +
+                        '<tr><td><td>Gender : '+obj[i].gender+'</td></td></tr>' +
                         '</table>' +
                         '</div>' +
                         '</div></div>' +
