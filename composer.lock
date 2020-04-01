@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "content-hash": "a95c729a9047d7397c71427f4e3da0a9",
@@ -110,16 +110,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.12.0",
+            "version": "8.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "f15a9cdffd6728abb28184a1c45e84a9919f8b40"
+                "reference": "198dffa12831e17320207ce1bd3b121402d2cc8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/f15a9cdffd6728abb28184a1c45e84a9919f8b40",
-                "reference": "f15a9cdffd6728abb28184a1c45e84a9919f8b40",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/198dffa12831e17320207ce1bd3b121402d2cc8d",
+                "reference": "198dffa12831e17320207ce1bd3b121402d2cc8d",
                 "shasum": ""
             },
             "require": {
@@ -174,7 +174,7 @@
                 "phonenumber",
                 "validation"
             ],
-            "time": "2020-03-18T21:29:37+00:00"
+            "time": "2020-03-30T08:29:12+00:00"
         },
         {
             "name": "giggsey/locale",
@@ -340,16 +340,16 @@
         },
         {
             "name": "google/cloud-storage",
-            "version": "v1.19.0",
+            "version": "v1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-storage.git",
-                "reference": "49dc19608ebea54023c2b3910e72b91393235d82"
+                "reference": "d09ef3d47079e4a3cac1419856302cc5c07c5e1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/49dc19608ebea54023c2b3910e72b91393235d82",
-                "reference": "49dc19608ebea54023c2b3910e72b91393235d82",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/d09ef3d47079e4a3cac1419856302cc5c07c5e1f",
+                "reference": "d09ef3d47079e4a3cac1419856302cc5c07c5e1f",
                 "shasum": ""
             },
             "require": {
@@ -387,7 +387,7 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Storage Client for PHP",
-            "time": "2020-03-25T23:00:37+00:00"
+            "time": "2020-03-30T20:36:58+00:00"
         },
         {
             "name": "google/crc32",
@@ -664,16 +664,16 @@
         },
         {
             "name": "kreait/firebase-php",
-            "version": "4.41.0",
+            "version": "4.42.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kreait/firebase-php.git",
-                "reference": "7d11727f8685813dbae135ce0903b412235c11c2"
+                "reference": "74f309127723f4af041c0ffe70d97da7deb10f4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/7d11727f8685813dbae135ce0903b412235c11c2",
-                "reference": "7d11727f8685813dbae135ce0903b412235c11c2",
+                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/74f309127723f4af041c0ffe70d97da7deb10f4f",
+                "reference": "74f309127723f4af041c0ffe70d97da7deb10f4f",
                 "shasum": ""
             },
             "require": {
@@ -682,12 +682,13 @@
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
                 "giggsey/libphonenumber-for-php": "^8.9",
-                "google/auth": "^0.11.0|^1.0",
+                "google/auth": "^1.8",
+                "google/cloud-core": "^1.36",
                 "google/cloud-storage": "^1.14",
                 "guzzlehttp/guzzle": "^6.2.1|^7.0@beta",
                 "kreait/clock": "^1.0.1",
                 "kreait/firebase-tokens": "^1.10",
-                "kreait/gcp-metadata": "^1.0.1",
+                "kreait/gcp-metadata": "^1.1.0",
                 "lcobucci/jwt": "^3.3.1",
                 "mtdowling/jmespath.php": "^2.3",
                 "php": "^7.0",
@@ -739,7 +740,7 @@
                 "google",
                 "sdk"
             ],
-            "time": "2020-03-16T18:19:54+00:00"
+            "time": "2020-03-30T16:49:31+00:00"
         },
         {
             "name": "kreait/firebase-tokens",

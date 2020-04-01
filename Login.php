@@ -96,7 +96,7 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
     $resp = new SweetalertResponse(4,
         'Error',
         "Invalid Parameters set",
-        SweetalertResponse::ERROR,
+        SweetalertResponse::ERROR
     );
 }
 

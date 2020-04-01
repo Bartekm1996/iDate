@@ -1,7 +1,11 @@
 <?php
 
-
-class Match implements JsonSerializable {
+/*
+ * user.id, user.firstname, user.age,
+profile.photoId, profile.location, profile.Description,
+profile.Smoker, profile.Seeking, user.lastname, user.gender
+ */
+class SearchUser implements JsonSerializable {
 
     public $id;
     public $age;
@@ -14,11 +18,10 @@ class Match implements JsonSerializable {
     public $seeking;
     public $lastname;
     public $gender;
-    public $connectionDate;
 
 
     public function __construct($id, $name, $age, $photoId, $location, $desc,
-        $smoker, $drinker, $seeking, $lastname, $gender, $connectionDate)
+        $smoker, $drinker, $seeking, $lastname, $gender)
     {
         $this->id = $id;
         $this->name = $name;
@@ -31,7 +34,6 @@ class Match implements JsonSerializable {
         $this->seeking = $seeking;
         $this->lastname = $lastname;
         $this->gender = $gender;
-        $this->connectionDate = $connectionDate;
     }
 
     public function jsonSerialize()
@@ -46,7 +48,6 @@ class Match implements JsonSerializable {
         "\",\"drinker\":\"".$this->drinker.
         "\",\"seeking\":\"".$this->seeking.
         "\",\"lastname\":\"".$this->lastname.
-        "\",\"connectionDate\":\"".$this->connectionDate.
         "\",\"gender\":\"".$this->gender
         ."\"}";
     }
