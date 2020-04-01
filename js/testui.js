@@ -104,8 +104,8 @@ function getAllProfiles() {
                         '<i class="fa fa-bars"></i>' +
                         '</a>' +
                         '<div class="mc-footer">'+
-                        '<button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i> Match User</button>'+
-                        '<button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button"><i class="fas fa-comments"></i> Messages ' + obj[i].name +'</button>'+
+                        '<button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i></button>'+
+                        '<button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button"><i class="fas fa-comments"></i></button>'+
                         '</article></div></div></section></div>';
 
                    // let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";

@@ -176,20 +176,24 @@
 
 @media screen and (max-width: 1499px) {
     .match-user-button {
-        font-size: 0;
+        content: '\f004';
+        font-family: "Font Awesome 5 Free";
     }
 
     .message-user-button{
-        font-size: 0;
+        content: '\f075';
+        font-family: "Font Awesome 5 Free";
     }
 }
 
 @media screen and (min-width: 1500px) {
     .match-user-button{
+        content: "Match User";
         font-size: initial;
     }
 
     .message-user-button{
+        content: "Message";
         font-size: initial;
     }
 }
