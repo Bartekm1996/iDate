@@ -6,7 +6,7 @@ require ('SweetalertResponse.php');
 if(isset($_GET['userId'])){
     $mongo = new MongoConnect();
 
-    $result = $mongo->getConversations();
+    $result = $mongo->getConversations($_GET['userId']);
     $myObj = array();
 
     if(isset($_GET['messages'])){
@@ -23,6 +23,7 @@ if(isset($_GET['userId'])){
 
     }else {
         foreach ($result as $document) {
+
             for ($x = 0; $x < sizeof($document->_conversations); $x++) {
                 array_push($myObj, array(
                     "username" => $document->_conversations[$x]->username,

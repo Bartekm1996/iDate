@@ -1,10 +1,9 @@
 <?php
+session_start();
 require("db.php");
 require("SweetalertResponse.php");
 require("Email.php");
 require("MongoConnect.php");
-
-session_start();
 
 $resp = null;
 if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
@@ -53,9 +52,9 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
         $sql = "";
 
         if(strpos($uname, "@") !== false){
-            $sql = "SELECT registered, id, firstname, userName FROM user where email='{$uname}' AND password='{$upass}' LIMIT 1;";
+            $sql = "SELECT registered, id, firstname, lastname, userName FROM user where email='{$uname}' AND password='{$upass}' LIMIT 1;";
         }else{
-            $sql = "SELECT registered, id, firstname FROM user where userName='{$uname}' AND password='{$upass}' LIMIT 1;";
+            $sql = "SELECT registered, id, firstname, lastname FROM user where userName='{$uname}' AND password='{$upass}' LIMIT 1;";
         }
 
 
@@ -72,8 +71,11 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
             );
 
             $_SESSION['userid'] = $row[1];
-            $_SESSION['firstname'] = $row[2];
-            $uname = sizeof($row) === 2 ? $row[3] : $uname;
+            $_SESSION['firstname'] = $row[2]." ".$row[3];
+            $index = sizeof($row) === 5 ? 4 : 3;
+            $uname = sizeof($row) === 5 ? $row[$index] : $uname;
+            $_SESSION['username'] = $uname;
+
 
             $mongo = new MongoConnect();
             $mongo->historyUpdate($uname, "User Logged In", "Log In");

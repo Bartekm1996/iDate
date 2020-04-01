@@ -4,11 +4,14 @@
 function showChat() {
     $('#matcharea').prop('hidden', true);
     $('#frame').prop('hidden', false);
+    $('#matching').prop('hidden', true);
 }
 
 function showSearch() {
+    getAllProfiles();
     $('#matcharea').prop('hidden', false);
     $('#frame').prop('hidden', true);
+    $('#matching').prop('hidden', false);
 }
 function  openUserProfile(event) {
     $('#profileModal').show();
@@ -53,17 +56,21 @@ function getAllProfiles() {
 
     let filter = $('#searchFilter').val();
 
-
-    console.log(filter);
-
-    if(filter.length == 0) {
-        document.getElementById("searchResults").innerHTML = '<h4>No Results Found</h4>';
-        return;
+    if(filter.length === 0){
+        $('#searchResults').prop('hidden', true);
+        $('#matching').prop('hidden', false);
+    }else {
+        $('#searchResults').prop('hidden', false);
+        $('#matching').prop('hidden', true);
     }
 
     var request = {};
     request.get_profiles_api = true;
-    request.filter = filter;
+
+    if(filter.length !== 0){
+        request.filter = filter;
+    }
+
     $.ajax({
         method: "POST",
         url: "api.php",
@@ -75,14 +82,14 @@ function getAllProfiles() {
             //TODO: where are the images going to be stored
             if(obj != null) {
                 for(var i = 0; i < obj.length;i++) {
-                    let test = '<section class="container"' +
+                    let test = '<div style="height: 100%; width: 100%;"><section class="container"' +
                         '<div class="row active-with-click">' +
                         '<div class="col-xs-12">' +
                         '<article class="material-card Red">' +
                         '<h2><span>'+obj[i].name+'</span><strong ><i class="fas fa-birthday-cake"></i>' +obj[i].age+ '<i class="fas fa-map-pin"></i>'  + (obj[i].location > 0 ?  obj[i].location : "Unknown" )   + '</strong></h2>' +
                         '<div class="mc-content">' +
                         '<div class="img-container">' +
-                        '<img class="img-responsive" id="person_image" src="https://scontent.fcgp2-1.fna.fbcdn.net/v/t1.0-9/64622894_10157744391564026_2243513133849116672_o.jpg?_nc_cat=103&_nc_ohc=3LqOQPKa3LAAQkhNs6IycYd_UEZkq70P1ODj1pCG2E1SdYBAURRB9C5Rg&_nc_ht=scontent.fcgp2-1.fna&oh=64f4a0143ea114c3583a7d0be3114df5&oe=5EAB9485">' +
+                        '<img  id="person_image" src="https://scontent.fcgp2-1.fna.fbcdn.net/v/t1.0-9/64622894_10157744391564026_2243513133849116672_o.jpg?_nc_cat=103&_nc_ohc=3LqOQPKa3LAAQkhNs6IycYd_UEZkq70P1ODj1pCG2E1SdYBAURRB9C5Rg&_nc_ht=scontent.fcgp2-1.fna&oh=64f4a0143ea114c3583a7d0be3114df5&oe=5EAB9485">' +
                         '</div>' +
                         '<div class="mc-description">' +
                         '<div class="modal-body">' +
@@ -99,9 +106,9 @@ function getAllProfiles() {
                         '<i class="fa fa-bars"></i>' +
                         '</a>' +
                         '<div class="mc-footer">'+
-                        '<button target=_parent type="button" class="btn btn-danger mt-2"><i class="fas fa-user-plus"></i> Match User</button>'+
-                        '<button target=_parent type="button" class="ml-3 btn btn-success mt-2"><i class="fas fa-comments"></i> Messages ' + obj[i].name +'</button>'+
-                        '</article></div></div></section>';
+                        '<button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i> Match User</button>'+
+                        '<button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button"><i class="fas fa-comments"></i> Messages ' + obj[i].name +'</button>'+
+                        '</article></div></div></section></div>';
 
                    // let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
                     document.getElementById("searchResults").innerHTML += test;
@@ -252,6 +259,8 @@ $(document).ready(function() {
         // $(".tab").addClass("active"); // instead of this do the below
         $(this).removeClass("btn-default").addClass("btn-primary");
     });
+
+
 
     $('#myTab a').on('click', function (e) {
         e.preventDefault()

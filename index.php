@@ -1,3 +1,4 @@
+<?php session_start()?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +25,9 @@
     <!--    <script src="//geodata.solutions/includes/countrystatecity.js"></script>-->
     <script type="text/javascript">
         //<!-- Ajax post test-->
+
+
+
         function loginTest() {
             const request = {};
             request.user_name = $('#user_name').val();
@@ -239,7 +243,7 @@
                                 icon: 'success',
                                 title: 'Signed in successfully'
                             })
-                            window.location.href = '/TestUi.php';
+                            window.location.href = 'TestUi.php';
                             break;
                         case 3:
                             passWordReset('Invalid Password', 'warning')

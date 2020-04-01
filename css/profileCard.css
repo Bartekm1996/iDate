@@ -27,9 +27,11 @@
         transform: rotate(359deg);
     }
 }
-.material-card {
+.material-card,
+.material-card .mc-active{
     position: relative;
     height: 0;
+    width: 100%;
     padding-bottom: calc(100% - 16px);
     margin-bottom: 6.6em;
 }
@@ -125,16 +127,83 @@
     -o-transition: all 0.3s;
     transition: all 0.3s;
 }
+
+.material-card .mc-btn-next {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 5px solid;
+    width: 54px;
+    height: 54px;
+    line-height: 44px;
+    text-align: center;
+    color: #ff251e !important;
+    cursor: pointer;
+    z-index: 20;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.material-card .mc-btn-previous {
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 5px solid;
+    width: 54px;
+    height: 54px;
+    line-height: 44px;
+    text-align: center;
+    color: #ff3816 !important;
+    cursor: pointer;
+    z-index: 20;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+
+
+@media screen and (max-width: 1499px) {
+    .match-user-button {
+        font-size: 0;
+    }
+
+    .message-user-button{
+        font-size: 0;
+    }
+}
+
+@media screen and (min-width: 1500px) {
+    .match-user-button{
+        font-size: initial;
+    }
+
+    .message-user-button{
+        font-size: initial;
+    }
+}
+
 .material-card.mc-active .mc-btn-action {
     top: 62px;
 }
 .material-card .mc-description {
     position: absolute;
     top: 100%;
-    right: 30px;
-    left: 30px;
+    width: 100%;
     bottom: 54px;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
     opacity: 0;
     filter: alpha(opacity=0);
     -webkit-transition: all 1.2s;
@@ -1242,16 +1311,4 @@
 }
 .material-card.Blue-Grey.mc-active .mc-btn-action {
     border-color: #ECEFF1;
-}
-body {
-    background-color: #ECEFF1;
-    color: #37474F;
-    font-family: 'Raleway', sans-serif;
-    font-weight: 300;
-    font-size: 16px;
-}
-h1,
-h2,
-h3 {
-    font-weight: 200;
 }

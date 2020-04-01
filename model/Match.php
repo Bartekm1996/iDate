@@ -9,9 +9,10 @@ class Match implements JsonSerializable {
     public $photoId;
     public $location;
     public $desc;
+    public $gender;
 
 
-    public function __construct($id, $name, $age, $photoId, $location, $desc)
+    public function __construct($id, $name, $age, $gender, $photoId, $location, $desc)
     {
         $this->id = $id;
         $this->name = $name;
@@ -19,10 +20,11 @@ class Match implements JsonSerializable {
         $this->photoId = $photoId;
         $this->location = $location;
         $this->desc = $desc;
+        $this->gender = $gender;
     }
 
     public function jsonSerialize()
     {
-        return  "{\"id\":\"".$this->id."\",\"name\":\"".$this->name."\",\"age\":\"".$this->age."\",\"photoId\":\"".$this->photoId."\",\"location\":\"".$this->location."\",\"desc\":\"".$this->desc."\"}";
+        return  "{\"id\":\"".$this->id."\",\"name\":\"".$this->name."\",\"age\":\"".$this->age."\",\"gender\":\"".$this->gender."\",\"photoId\":\"".$this->photoId."\",\"location\":\"".$this->location."\",\"desc\":\"".$this->desc."\"}";
     }
 }

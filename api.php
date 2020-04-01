@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 //User this class as the api
 require("db.php");
 require("model/User.php");
@@ -129,17 +131,25 @@ WHERE id IN (SELECT userID2 FROM connections WHERE userID1='{$_POST['user_id']}'
         $res = $res."]";
         echo $res;
     }
-} else if(isset($_POST['get_profiles_api']) && isset($_POST['filter'])) { //add gender search
+} else if(isset($_POST['get_profiles_api'])) { //add gender search
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
 
         //SELECT * FROM user WHERE id IN (SELECT userID2 FROM connections WHERE userID1='66')
-        $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.age,
- profile.photoId, profile.location, profile.Description  FROM user
-inner join profile
-on user.id = profile.userID) AS res
-WHERE firstname LIKE '%{$_POST['filter']}%';";
+        if(isset($_POST['filter'])) {
+                        $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.age,
+             profile.photoId, profile.location, profile.Description  FROM user
+            inner join profile
+            on user.id = profile.userID) AS res
+            WHERE firstname LIKE '%{$_POST['filter']}%';";
+        }else {
+
+                        $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.age,
+             profile.photoId, profile.location, profile.Description  FROM user
+            inner join profile
+            on user.id = profile.userID) as res";
+        }
 
         $result = $conn->query($sql);
         $res = "[";
@@ -158,6 +168,57 @@ WHERE firstname LIKE '%{$_POST['filter']}%';";
     $arr = $_POST["formData"];
 
     echo json_encode($_FILES['files']);
-}
+} else if(isset($_POST['get_matches_api'])){
 
+        $user_id = $conn->real_escape_string($_POST['userId']);
+        $res = "[";
+
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        } else {
+            $sqlInterest = "SELECT Seeking FROM profile WHERE userID = 170;";
+            $result = $conn->query($sqlInterest);
+
+            if ($result->num_rows > 0) {
+                $resp = $result->fetch_row()[0];
+                $user_interest = $conn->real_escape_string(ucfirst($resp));
+                $result->free_result();
+                $sqlPotInterest = "SELECT id FROM user where gender = '{$user_interest}'";
+                $result = $conn->query($sqlPotInterest);
+                if ($result->num_rows > 0){
+                    while($row = mysqli_fetch_row($result)){
+                        $res = $res.$row[0].",";
+                    }
+                    $res = $res."]";
+
+                }
+                $_SESSION['possible_matches'] = $res;
+                echo $res;
+
+            }
+
+    }
+}else if(isset($_POST['get_user_profile_api'])){
+    $user_id = $conn->real_escape_string($_POST['userId']);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+        $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.lastname, user.age, user.gender,
+             profile.photoId, profile.location, profile.Description  FROM user
+            inner join profile
+            on user.id = profile.userID) AS res
+            WHERE id='{$user_id}';";
+
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+            $row = $result->fetch_row();
+            $user = new Match($row[0], $row[1]." ".$row[2], $row[3], $row[4], $row[5], $row[6], $row[7]);
+            $res = $user->jsonSerialize();
+    }
+        echo $res;
+
+    }
+}
+ob_start();
 

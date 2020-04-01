@@ -61,4 +61,4 @@ if(isset($_POST['userId']) && isset($_POST['photoUrl'])) {
     $conn->close();
     echo $resp->jsonSerialize();
 }
-ob_end_flush();
+ob_start();

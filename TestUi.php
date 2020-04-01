@@ -1,5 +1,4 @@
-<?php
-session_start(); ?>
+<?php session_start()?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +16,7 @@ session_start(); ?>
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/chatv2.css">
     <link rel="stylesheet" href="css/matches.css">
+    <link rel="stylesheet" href="css/usermatch.css">
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -31,6 +31,13 @@ session_start(); ?>
     <script>
 
 
+        window.onload = function(){
+            loadMatches();
+            let res = "<?php echo $_SESSION['firstname'] ?>";
+            $('#username-header').text(res);
+            $('#username-header').attr('user-name', "<?php echo $_SESSION['username'] ?>")
+            console.log("<?php echo $_SESSION['username'] ?>")
+        }
 
         /*
         {"messages":[{"username":"Jenny Ruiz","message":"Hello","timestamp":"2020-03-27 14:19:29"}]}
@@ -87,6 +94,57 @@ session_start(); ?>
 
         function search() {
 
+        }
+
+        function logout() {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "Readu to miss a chance of finding your love ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    }).fire({
+                        icon: 'success',
+                        title: 'Logged out successfully'
+                    })
+                    <?php
+                        session_unset();
+                        session_destroy();
+                    ?>
+                    window.location.href = "index.php";
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Congratulations',
+                        'You Made the right choice :)',
+                        'success'
+                    )
+                }
+            })
         }
 
 
@@ -168,14 +226,15 @@ session_start(); ?>
             $('#contactsList').empty();
 
             const request = {};
-            request.userId = 'Bartekm1999';
+            request.userId = $('#username-header').attr('user-name');
+            console.log(request.userId);
             $.ajax({
                 method: "GET",
                 url: "Mongo.php",
                 data: request,
                 success: function (response) {
 
-                    let res = JSON.parse(response);
+                    console.log(response);
                     console.log('success ' + response + " length " + res["contacts"].length);
 
                     for (let i = 0; i < res["contacts"].length; i++) {
@@ -269,7 +328,79 @@ session_start(); ?>
             $("#contacts").toggleClass("expanded");
         });
 
+        function loadMatches(){
 
+            const request = {};
+            request.get_matches_api = "yes";
+            request.userId = "170";
+
+            $.ajax({
+                method: "POST",
+                url: "api.php",
+                data: request,
+                success: function (response) {
+                    let res = response.substring(2).slice(0,-1).split(",");
+                    console.log('success ' + res[1]);
+                    nextMatch(res[0]);
+                    $('#person_fullname').attr('data-matches', res);
+                    $('#person_fullname').attr('data-index', 0)
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+
+        }
+        
+        function nextMatch(index) {
+
+
+            const request = {};
+            request.get_user_profile_api = "yes";
+
+            if($('#person_fullname').attr('data-index') !== undefined || index === null){
+                let tmp = $('#person_fullname').attr('data-matches').split(',');
+                console.log(tmp);
+                let tmpIndex = parseInt($('#person_fullname').attr('data-index'))+1;
+                if(tmpIndex === tmp.length-1){
+                    tmpIndex = 0;
+                }
+                request.userId = tmp[tmpIndex];
+                $('#person_fullname').attr('data-index',tmpIndex+1)
+            }else{
+                request.userId = index;
+            }
+
+            console.log(parseInt($('#person_fullname').attr('data-index'))+1);
+
+            $.ajax({
+                method: "POST",
+                url: "api.php",
+                data: request,
+                success: function (response) {
+
+                    let res = JSON.parse(response);
+                    $('#person_fullname').text(res.name);
+                    $('#person_age_outter').text("Age: " + res.age);
+                    $('#person_location_outter').text(res.location.length > 0 ? res.location.length : "Location: Hidden");
+                    $('#message_button').text("Message " + res.name);
+                    $('#user_full_age').text("Age " + res.age);
+                    $('#user_full_name').text("Name " + res.name);
+                    $('#user_gender').text("Gender " + res.gender);
+                    document.getElementById("person_image").src = "https://source.unsplash.com/random";
+                    console.log('success' + response);
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+        }
 
         function newMessage() {
             message = $(".message-input input").val();
@@ -279,7 +410,7 @@ session_start(); ?>
 
             const request = {};
 
-            request.userOne = 'Bartekm1999';
+            request.userOne = $('#username-header').attr('user-name');
             request.userTwoId = $('ul#contactsList').find('li.active').attr("data-id");
             request.userTwoName = $('ul#contactsList').find('li.active').attr("data-username");
             request.messages = message;
@@ -354,7 +485,7 @@ session_start(); ?>
         div
     </style>
 </head>
-<body style="background-color: #999999;">
+<body style="background-color: white;">
 <div>
   <div class="page-wrapper chiller-theme toggled">
                 <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
@@ -365,9 +496,7 @@ session_start(); ?>
 
                         <div class="sidebar-header">
                             <div class="user-pic">
-                               <!-- <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
-                                     alt="User picture">
-                                     -->
+
                                 <div class="img__wrap">
                                     <?php
 
@@ -403,8 +532,7 @@ session_start(); ?>
                                 </div>
                             </div>
                             <div class="user-info mt-lg-4">
-                              <span class="user-name">Jhon
-                                <strong>Smith</strong>
+                              <span class="user-name" id="username-header">
                               </span>
                               <span class="user-role"><?php if($respAdmin === "Administrator")echo "Administrator"; ?></span>
                               <span class="user-status">
@@ -421,31 +549,35 @@ session_start(); ?>
                                     <span>General</span>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="#" onclick="loadMatches()">
                                         <i class="fas fa-user"></i>
                                         <span>Profile</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-dropdown">
-                                    <a href="#">
-                                        <i class="fas fa-users"></i>
-                                        <span>Users</span>
-                                        <span class="badge badge-pill badge-warning">New</span>
-                                    </a>
-                                    <div class="sidebar-submenu">
-                                        <ul>
-                                            <li>
-                                                <a href="#" onclick="showSearch()">All users</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">New Users</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Unverified users</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
+
+                                            <?php
+
+
+                                                if($respAdmin === "Administrator"){
+                                                    echo
+                                                        '<li class="sidebar-dropdown">'.
+                                                        '<a href="#">'.
+                                                        '<i class="fas fa-users"></i>'.
+                                                        '<span>Users</span>'.
+                                                        '<span class="badge badge-pill badge-warning">New</span>'.
+                                                        '</a>'.
+                                                        '<div class="sidebar-submenu">' .
+                                                        '<ul>'.
+                                                        '<li><a href="#" onclick="showSearch()">All users</a></li>'.
+                                                        '<li><a href="#">New Users</a></li>'.
+                                                        '<li><a href="#">Unverified users</a></li>'.
+                                                        '</ul>'.
+                                                        '</div></li>';
+                                                }else{
+                                                    echo '<li><a onclick="showSearch()"><i class="fas fa-users""></i><span>Find Love</span></a></li>'.
+                                                         '<li><a onclick=""><i class="fas fa-heart"></i><span>Matches</span></a></li>';
+                                                }
+                                            ?>
                                 <li>
                                     <a onclick="loadConversations()">
                                         <i class="fas fa-envelope"></i>
@@ -464,7 +596,7 @@ session_start(); ?>
                         <a href="#">
                             <i class="fa fa-envelope"></i>
                         </a>
-                        <a href="#">
+                        <a href="#" onclick="logout()">
                             <i class="fa fa-power-off"></i>
                         </a>
                     </div>
@@ -478,10 +610,49 @@ session_start(); ?>
                       </div>
                   </div>
               </div>
-              <div class="grid-container scroll scrollbar" id="searchResults">
+              <div class="grid-container" id="searchResults">
                   <!-- Matches will be generated here via JS -->
              </div>
           </div>
+
+          <div class="matching" id="matching" >
+              <section class="container"
+              <div class="row active-with-click">
+                  <div class="col-xs-12">
+                      <article class="material-card Red">
+                          <div>
+                              <h2><span id="person_fullname"></span><strong><i class="fas fa-birthday-cake"><i id="person_age_outter" class="ml-3"></i></i><i class="fas fa-map-pin ml-3"><i id="person_location_outter" class="ml-3"></i></i></strong></h2>
+                          </div>
+                          <div class="mc-content">
+                              <div class="img-container">
+                                  <img  id="person_image" style="width: 100%; height= 100%;" src="https://source.unsplash.com/random">
+                                  </div>
+                              <div class="mc-description">
+                                  <div class="modal-body">
+                                      <table id="popup_user_info">
+                                          <tr><td></td><td id="user_full_name"><b> </b> </td><td id="person_fullname"></td>
+                                          <tr><td><td id="user_full_age"><b> </b> </td><td></td></td></tr>
+                                          <tr><td><td id="user_gender"><b> </b> </td></td></tr>
+                                          <tr><td><td>Interests </td></td></tr>
+                                          <tr><td><td>Bio </td></td></tr>
+                                          </table>
+                                      </div>
+                                  </div>
+                          </div>
+                          <a class="mc-btn-action" onclick="epxand(this)"><i class="fa fa-bars"></i></a>
+                          <a class="mc-btn-next" onclick="nextMatch(null)"><i class="fas fa-angle-double-right"></i></a>
+                          <a class="mc-btn-previous" onclick="nextMatch(null)"><i class="fas fa-angle-double-left"></i></a>
+
+                          <div class="mc-footer">
+                              <button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i> Match User</button>
+                              <button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button" id="message_button"><i class="fas fa-comments mr-2" ></i></button>
+                          </div>
+                      </article>
+                  </div>
+              </div>
+              </section>
+          </div>
+
 
           <div id="frame" hidden>
               <div id="sidepanel">
@@ -548,12 +719,10 @@ session_start(); ?>
                                           <tr>
                                               <td></td>
                                               <td>Name:</td>
-                                              <td id="person_fullname">Full name</td>
                                           </tr>
                                           <tr>
                                               <td></td>
                                               <td>Age:</td>
-                                              <td id="person_age">100</td>
                                           </tr>
                                           <tr>
                                               <td></td>

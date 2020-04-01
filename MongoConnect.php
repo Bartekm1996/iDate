@@ -65,8 +65,8 @@ class MongoConnect
         $this->getConnection()->executeBulkWrite('iDate.history', $bulk);
     }
 
-    public function getConversations(){
-        $filter = ['_id' => 'Bartekm1999'];
+    public function getConversations(String $user){
+        $filter = ['_id' => $user];
         $options = [];
         $query = new MongoDB\Driver\Query($filter, $options);
         try {
