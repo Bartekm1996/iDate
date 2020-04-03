@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>iDate</title>
+    <title>iDate: Where people meet</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
@@ -151,7 +151,13 @@
                 return false;
             }
         }
-        function regTest() {
+
+        function showSupport() {
+            $('#contact_form').attr('hidden', false);
+        }
+
+
+    function regTest() {
             const request = {};
             request.username = $('#username').val();
             request.pass = $('#password').val();
@@ -266,6 +272,8 @@
 </head>
 <body style="background-color: #999999;">
 <div class="limiter">
+    <?php require ("support.php")?>
+
     <div class="container-login100">
         <div class="login100-more" style="background-image: url('images/connected-couples.jpg');">
         </div>
@@ -362,7 +370,8 @@
                     Sign Up
                 </a>
             </div>
-            <p class="dis-flex pos-justify m-t-45">IDate</p>
+            <p class="dis-flex pos-justify m-t-45">IDate ® <script>document.write(new Date().getFullYear().toString())</script></p>
+            <a href="#" class="dis-flex pos-justify m-t-5" id="support" onclick="showSupport()">Contact Support</a>
         </div>
     </div>
 </div>

@@ -1,12 +1,11 @@
 
 #frame {
-    width: 80%;
+    width: 100%;
     min-width: 360px;
     height: 100vh;
     min-height: 300px;
     background: #E6EAEA;
     position: absolute;
-    left: 20%;
 }
 
 #frame #sidepanel {

@@ -9,6 +9,7 @@ require("model/Match.php");
 require("model/SearchUser.php");
 require("model/AvailableInterests.php");
 require("model/Connection.php");
+require("SweetalertResponse.php");
 /* Create a match with current logged in user and match_id user */
 if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id2'])) {
 
@@ -318,6 +319,34 @@ else if(isset($_POST['upload_files_api'])) {
         echo $res;
 
     }
+}else if(isset($_POST['send_query_message'])){
+
+    $user_name = $conn->real_escape_string($_POST['userName']);
+    $user_email = $conn->real_escape_string($_POST['userEmail']);
+    $user_desc = $conn->real_escape_string($_POST['userDesc']);
+    $user_reason = $conn->real_escape_string($_POST['userReason']);
+
+    $resp = "";
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+        $date = date('Y-m-d H:i:s', time());
+        $sql = "INSERT INTO queries (userName, email, description, reason, date) VALUES('{$user_name}','{$user_email}','{$user_desc}','{$user_reason}','{$date}')";
+        if ($conn->query($sql) === TRUE) {
+            $resp = new SweetalertResponse(3,
+                'Message Sent',
+                "Message was sent successfully",
+                SweetalertResponse::SUCCESS
+            );
+        }else {
+            $resp = new SweetalertResponse(3,
+                'Failed to send message',
+                "Failed to send message",
+                SweetalertResponse::ERROR
+            );
+        }
+    }
+    echo $resp->jsonSerialize();
 }
 ob_start();
 

@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
 
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/userManagmentTable.css">
     <link rel="stylesheet" type="text/css" href="vendorv/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/chat.css">
@@ -18,35 +19,70 @@
     <link rel="stylesheet" href="css/matches.css">
     <link rel="stylesheet" href="css/usermatch.css">
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/profileCard.css">
-    <!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>-->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>     <!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>-->
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="css/profileCard.css">
     <script>
 
 
-        window.onload = function(){
-            loadMatches();
-            let res = "<?php echo $_SESSION['firstname'] ?>";
-            $('#username-header').text(res);
-            $('#username-header').attr('user-name', "<?php echo $_SESSION['username'] ?>")
-            console.log("<?php echo $_SESSION['username'] ?>")
-        }
+        window.onload = function() {
 
 
-        /*
-        {"messages":[{"username":"Jenny Ruiz","message":"Hello","timestamp":"2020-03-27 14:19:29"}]}
-               <li class="sent">
-                   <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
-                   <p>How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!</p>
-               </li>
-        */
+            <?php
+
+
+               require __DIR__.'/vendor/autoload.php';
+               require ("db.php");
+               $username = $_SESSION['username'];
+               $firstname = $_SESSION['firstname'];
+               $userid = $_SESSION['userid'];
+               $resp = ""; $respAdmin = "";
+
+               if ($conn->connect_error) {
+                   die("Connection failed: " . $conn->connect_error);
+               }else{
+                   $id = $conn->real_escape_string($userid);
+                  // $sql = "SELECT url FROM photo WHERE user_id='{$id}' && name='userProfilePhoto';";
+                   $sqlUserAdmin = "SELECT admin FROM user WHERE id = $id";
+
+                   /*
+                   $result = $conn->query($sql);
+                   if($result->num_rows > 0) {
+                       $resp = $result->fetch_row()[0];
+                   }
+                   */
+
+                   //$result->free_result();
+                   $result = $conn->query($sqlUserAdmin);
+                   if($result->num_rows > 0){
+                       $respAdmin = $result->fetch_row()[0];
+                   }
+                   $conn->close();
+               }
+               ?>
+
+
+            let admin = parseInt('<?php echo $respAdmin?>');
+
+            console.log(admin);
+            if(admin === 0){
+                 getUserData();
+                 showSearch();
+            }
+            console.log('<?php echo $firstname?>');
+            $('#username-header').text('<?php echo $firstname?>');
+            $('#username-header').attr('user-id', "<?php echo $userid ?>");
+            $('#username-header').attr('user-name', "<?php echo $username ?>");
+        };
+
+        let interval = setInterval(() => getMessage(),2000);
+
         jQuery(function ($) {
 
             $(".sidebar-dropdown > a").click(function() {
@@ -130,6 +166,8 @@
                         icon: 'success',
                         title: 'Logged out successfully'
                     })
+
+                    clearInterval(interval);
                     <?php
                     session_unset();
                     session_destroy();
@@ -229,7 +267,7 @@
             $('#contactsList').empty();
 
             const request = {};
-            request.userId = $('#username-header').attr('user-name');
+            request.userId =  $('#username-header').attr('user-name');
             console.log(request.userId);
             $.ajax({
                 method: "GET",
@@ -336,7 +374,7 @@
 
             const request = {};
             request.get_matches_api = "yes";
-            request.userId = "170";
+            request.userId = $('#username-header').attr('user-id');
 
             $.ajax({
                 method: "POST",
@@ -452,163 +490,106 @@
         });
 
     </script>
-    <!-- Import the Stitch JS SDK at the top of the file -->
-    <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4/stitch.js"></script>
-    <script>
-        // Destructure Stitch JS SDK Components
-        const { Stitch, RemoteMongoClient, BSON } = stitch;
-        const stitchApp = Stitch.initializeDefaultAppClient("<Your App ID>");
-        const mongodb = stitchApp.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
-        const itemsCollection = mongodb.db("store").collection("items");
-        const purchasesCollection = mongodb.db("store").collection("purchases");
-
-        async function watcher() {
-            // Create a change stream that watches the collection
-            // for when any document's 'status' field is changed
-            // to the string 'blocked'.
-            const stream = await myCollection.watch({
-                "updateDescription.updatedFields": {
-                    "status": "blocked",
-                }
-            });
-            // Set up a change event handler function for the stream
-            stream.onNext((event) => {
-                // Handle the change events for all specified documents here
-                console.log(event.fullDocument);
-            });
-
-            // Insert a document with status set to 'blocked'
-            // to trigger the stream onNext handler
-            await myCollection.insertOne({
-                "name": "test",
-                "status": "blocked",
-            });
-        }
-    </script>
-
 
     <style>
         div
     </style>
 </head>
-<body style="background-color: white;">
-<div>
-    <div class="page-wrapper chiller-theme toggled">
-        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
-            <i class="fas fa-bars"></i>
-        </a>
-        <nav id="sidebar" class="sidebar-wrapper">
-            <div class="sidebar-content">
+<body style="background-color: white; width: 100%; height: 100%;" >
+        <div class="page-wrapper chiller-theme toggled">
+            <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+                <i class="fas fa-bars"></i>
+            </a>
+            <nav id="sidebar" class="sidebar-wrapper">
+                <div class="sidebar-content">
 
-                <div class="sidebar-header">
-                    <div class="user-pic">
+                    <div class="sidebar-header">
+                        <div class="user-pic">
 
-                        <div class="img__wrap">
-                            <?php
-
-                            require __DIR__.'/vendor/autoload.php';
-                            require ("db.php");
-                            $resp = ""; $respAdmin = "";
-
-                            if ($conn->connect_error) {
-                                die("Connection failed: " . $conn->connect_error);
-                            }else{
-                                $id = $conn->real_escape_string('170');
-                                $sql = "SELECT url FROM photo WHERE user_id='{$id}' && name='userProfilePhoto';";
-                                $sqlUserAdmin = "SELECT user_id FROM admin";
-
-                                $result = $conn->query($sql);
-                                if($result->num_rows > 0) {
-                                    $resp = $result->fetch_row()[0];
-                                }
-
-                                $result->free_result();
-                                $result = $conn->query($sqlUserAdmin);
-                                if($result->num_rows > 0){
-                                    $respAdmin = $result->fetch_row()[0];
-                                }
-                                $conn->close();
-                            }
-
-                            ?>
-                            <img class="img__img" style="width: 130px; height: 130px;" id="profilePicture" src=" <?php if(strlen($resp)){echo $resp;}else{echo 'images/icons/userIcon.png';} ?>" alt="User Profile Picture"/>
-                            <div class="img__description_layer">
-                                <button class="img__description"  onclick="changeProfilePicture()">Change Profile Picture</button>
+                            <div class="img__wrap">
+                                <img class="img__img" style="width: 130px; height: 130px;" id="profilePicture" src="images/icons/userIcon.png" alt="User Profile Picture"/>
+                                <div class="img__description_layer">
+                                    <button class="img__description"  onclick="changeProfilePicture()">Change Profile Picture</button>
+                                </div>
                             </div>
                         </div>
+                        <div class="user-info mt-lg-4">
+                            <span class="user-name" id="username-header"></span>
+                            <span class="user-role"><?php echo $respAdmin == 1 ? "Administrators" : "User"?></span>
+                            <span class="user-status">
+                                  <i class="fa fa-circle"></i>
+                                  <span>Online</span>
+                            </span>
+                        </div>
                     </div>
-                    <div class="user-info mt-lg-4">
-                              <span class="user-name" id="username-header">
-                              </span>
-                        <span class="user-role"><?php if($respAdmin === "Administrator")echo "Administrator"; ?></span>
-                        <span class="user-status">
-                              <i class="fa fa-circle"></i>
-                              <span>Online</span>
-                              </span>
+
+                    <div class="sidebar-menu">
+                        <ul>
+                            <li class="header-menu">
+                                <span>General</span>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fas fa-user"></i>
+                                    <span>Profile</span>
+                                </a>
+                            </li>
+
+                            <?php
+
+
+                            if($respAdmin == 1){
+                                echo
+                                    '<li class="sidebar-dropdown">'.
+                                    '<a href="#">'.
+                                    '<i class="fas fa-users"></i>'.
+                                    '<span>Users</span>'.
+                                    '<span class="badge badge-pill badge-warning">New</span>'.
+                                    '</a>'.
+                                    '<div class="sidebar-submenu">' .
+                                    '<ul>'.
+                                    '<li><a href="#" onclick="showUserManagment()">All users</a></li>'.
+                                    '<li><a href="#" >Unverified users</a></li>'.
+                                    '</ul>'.
+                                    '</div></li>';
+                            }else{
+                                echo '<li><a onclick="showSearch()"><i class="fas fa-users""></i><span>Find Love</span></a></li>'.
+                                     '<li><a onclick="showUerMatches(170)"><i class="fas fa-heart"></i><span>My Matches</span></a></li>';
+                            }
+                            ?>
+                            <li>
+                                <?php
+
+                                    if($respAdmin == 1){
+                                        echo
+                                        '<a onclick="showTickets()"><i class="fas fa-envelope"></i><span>Tickets</span></a>';
+                                    }else{
+                                        echo '<a onclick="loadConversations()"><i class="fas fa-envelope"></i><span>Messages</span></a>';
+                                    }
+                                ?>        
+                            </li>
+                        </ul>
                     </div>
+                    <!-- sidebar-menu  -->
                 </div>
-                <!-- sidebar-header  -->
-                <!-- sidebar-search  -->
-                <div class="sidebar-menu">
-                    <ul>
-                        <li class="header-menu">
-                            <span>General</span>
-                        </li>
-                        <li>
-                            <a href="#" onclick="loadMatches()">
-                                <i class="fas fa-user"></i>
-                                <span>Profile</span>
-                            </a>
-                        </li>
-
-                        <?php
-
-
-                        if($respAdmin === "Administrator"){
-                            echo
-                                '<li class="sidebar-dropdown">'.
-                                '<a href="#">'.
-                                '<i class="fas fa-users"></i>'.
-                                '<span>Users</span>'.
-                                '<span class="badge badge-pill badge-warning">New</span>'.
-                                '</a>'.
-                                '<div class="sidebar-submenu">' .
-                                '<ul>'.
-                                '<li><a href="#" onclick="showSearch()">All users</a></li>'.
-                                '<li><a href="#">New Users</a></li>'.
-                                '<li><a href="#">Unverified users</a></li>'.
-                                '</ul>'.
-                                '</div></li>';
-                        }else{
-                            echo '<li><a onclick="showSearch()"><i class="fas fa-users""></i><span>Find Love</span></a></li>'.
-                                '<li><a onclick=""><i class="fas fa-heart"></i><span>Matches</span></a></li>';
-                        }
-                        ?>
-                        <li>
-                            <a onclick="loadConversations()">
-                                <i class="fas fa-envelope"></i>
-                                <span >Messages</span>
-                            </a>
-                        </li>
-                    </ul>
+                <!-- sidebar-content  -->
+                <div class="sidebar-footer">
+                    <a href="#">
+                        <i class="fa fa-bell"></i>
+                    </a>
+                    <a href="#">
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                    <a href="#" onclick="logout()">
+                        <i class="fa fa-power-off"></i>
+                    </a>
                 </div>
-                <!-- sidebar-menu  -->
-            </div>
-            <!-- sidebar-content  -->
-            <div class="sidebar-footer">
-                <a href="#">
-                    <i class="fa fa-bell"></i>
-                </a>
-                <a href="#">
-                    <i class="fa fa-envelope"></i>
-                </a>
-                <a href="#" onclick="logout()">
-                    <i class="fa fa-power-off"></i>
-                </a>
-            </div>
-        </nav>
-        <main>
-            <div class="matches" id="matcharea">
+            </nav>
+        </div>
+        <main style="width: 80%; height: 100%;">
+            <?php include ("userManagment.php") ?>
+            <?php include ("userTickets.php")?>;
+            <div class="matches" id="matcharea" hidden>
                 <div class="container h-100 mb-5">
                     <div class="d-flex justify-content-center h-100">
                         <div class="searchbar">
@@ -616,13 +597,13 @@
                         </div>
                     </div>
                 </div>
+                <h3 style="position: absolute; left: 40%; top: 50%;">No Matches Yet ?</h3>
                 <div class="grid-container" id="searchResults">
-                    <!-- Matches will be generated here via JS -->
                 </div>
             </div>
 
-            <div class="matching" id="matching" >
-                <section class="container"
+            <div id="matching" hidden>
+                <section class="matching">
                 <div class="row active-with-click">
                     <div class="col-xs-12">
                         <article class="material-card Red">
@@ -648,7 +629,6 @@
                             <a class="mc-btn-action" onclick="epxand(this)"><i class="fa fa-bars"></i></a>
                             <a class="mc-btn-next" onclick="nextMatch(null)"><i class="fas fa-angle-double-right"></i></a>
                             <a class="mc-btn-previous" onclick="nextMatch(null)"><i class="fas fa-angle-double-left"></i></a>
-
                             <div class="mc-footer">
                                 <button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i></button>
                                 <button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button" id="message_button"><i class="fas fa-comments mr-2" ></i></button>
@@ -659,7 +639,6 @@
                 </section>
             </div>
 
-
             <div id="frame" hidden>
                 <div id="sidepanel">
                     <div id="search">
@@ -668,36 +647,31 @@
                     </div>
                     <div id="contacts">
                         <ul id="contactsList">
-
                         </ul>
+                        </div>
                     </div>
-                </div>
 
-                <div class="content">
-                    <div id="placeholder">
-                        <h3 style="position: absolute; top: 50%; left: 35%;">Select User To Start Chat</h3>
-                    </div>
-                    <div class="contact-profile" id="contact-profile" style="display: none;">
-                        <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                        <p class="mt-3" id="contact_name"></p>
-                    </div>
-                    <div class="messages" id="messages" style="display: none;">
-                        <ul id="messages">
-                        </ul>
-                    </div>
-                    <div class="message-input" id="message-input" style="display: none;">
-                        <div class="wrap">
-                            <input type="text" placeholder="Write your message..." />
-                            <button class="submit" onclick="newMessage()"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                    <div class="content">
+                        <div id="placeholder">
+                            <h3 style="position: absolute; top: 50%; left: 35%;">Select User To Start Chat</h3>
+                        </div>
+                        <div class="contact-profile" id="contact-profile" style="display: none;">
+                            <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+                            <p class="mt-3" id="contact_name"></p>
+                        </div>
+                        <div class="messages" id="messages" style="display: none;">
+                            <ul id="messages">
+                            </ul>
+                        </div>
+                        <div class="message-input" id="message-input" style="display: none;">
+                            <div class="wrap">
+                                <input type="text" placeholder="Write your message..." />
+                                <button class="submit" onclick="newMessage()"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </main>
-    </div>
-
-</div>
-
 
 
 
@@ -764,13 +738,16 @@
             </div>
         </div>
     </div>
-</div>
 <div>
 
 
 
-
-
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="js/userTickets.js"></script>
+    <script src="js/userManagment.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="vendorv/jquery/jquery-3.2.1.min.js"></script>
     <script src="vendorv/animsition/js/animsition.min.js"></script>
     <script src="vendorv/bootstrap/js/popper.js"></script>

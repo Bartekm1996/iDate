@@ -45,7 +45,7 @@ if(isset($_GET['userId'])){
     if(isset($_GET['userOne']) && isset($_GET['userTwoId']) && isset($_GET['userTwoName']) && isset($_GET['messages'])) {
         $mongo = new MongoConnect();
         $written = false;
-        $result = $mongo->updateConversations($_GET['userOne'], $_GET['userTwoId'], $_GET['userTwoName'], $_GET['messages']);
+        $result = $mongo->updateConversations($_GET['userOne'], $_GET['userTwoName'], $_GET['messages']);
 
 
         if ($result->isAcknowledged()) {
