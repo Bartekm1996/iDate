@@ -16,11 +16,21 @@
     })
 
 
+
+
     $('#password').on('input', function(){
         let strength = parseInt($('#passWordId').attr('aria-valuenow'));
 
         if(document.getElementById('passWordInfo').getAttribute('hidden') !== null) {
             document.getElementById('passWordInfo').removeAttribute('hidden');
+        }
+
+        if($(this).val().match(" ")){
+            Swal.fire({
+               title: "Whitespace Error",
+               text: "Password cannot contain whitespaces",
+               icon: 'warning'
+            });
         }
 
         if($(this).val().length === 0){
@@ -152,6 +162,16 @@
         })    
     })
 
+    $('#username').on('keyup', function () {
+        if($(this).val().match(" ")){
+            Swal.fire({
+                title: "Whitespace Error",
+                text: "Username Cannot Contain Whitespaces",
+                icon: 'warning'
+            });
+        }
+    })
+
     /*==================================================================
     [ Validate ]*/
     var input = $('.validate-input .input100');
@@ -171,6 +191,7 @@
 
 
     $('.validate-form .input100').each(function(){
+
         $(this).focus(function(){
            hideValidate(this);
            $(this).parent().removeClass('true-validate');

@@ -33,15 +33,22 @@
 
         function loginTest() {
             const request = {};
-            request.user_name = $('#user_name').val();
-            request.login_password = $('#login_password').val();
-            if(request.user_name.length === 0 || request.login_password.length === 0){
-                Swal.fire({
-                    icon: 'warning',
-                    text: "Fill In All Required Fields"
-                });
-            }else {
-                sendDataTest(request, "Login.php");
+
+
+            let button = $('#login_button');
+            if(!button.text().match("Singing In")) {
+
+                request.user_name = $('#user_name').val();
+                request.login_password = $('#login_password').val();
+                if (request.user_name.length === 0 || request.login_password.length === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        text: "Fill In All Required Fields"
+                    });
+                } else {
+                    $('#login_button').html('<i class="fa fa-spinner fa-spin mr-2"></i> Singing In');
+                    sendDataTest(request, "Login.php");
+                }
             }
         }
         function resetEmail(username, email, values) {
@@ -290,10 +297,10 @@
 <div class="limiter">
     <?php require ("support.php")?>
 
-    <div class="container-login100">
-        <div class="login100-more" style="background-image: url('images/connected-couples.jpg');">
-        </div>
-        <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
+    <div class="container-login100" style="height: 100%;" >
+
+        <video class="login100-more" style="object-fit: cover;" height="100vh" id="vid" src="video/idate.mp4" preload="metadata" type="video/mp4" playsinline loop autoplay muted></video>
+        <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50" style="height: 100%; overflow-y: scroll;">
             <span class="login100-form-title p-b-59" id="signUpHeader">Sing In</span>
             <div id="loginForm" class="login100-form validate-form" >
                 <div class="wrap-input100 validate-input m-b-23" data-validate="UserName / Email is required">

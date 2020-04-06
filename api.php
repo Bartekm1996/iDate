@@ -214,10 +214,12 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
                  WHERE firstname LIKE '%{$_POST['filter']}%';";
         }else {
 
-                        $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.age,
-             profile.photoId, profile.location, profile.Description  FROM user
-            inner join profile
-            on user.id = profile.userID) as res";
+            $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.age,
+                 profile.photoId, profile.location, profile.Description,
+                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
+                 FROM user
+                 inner join profile
+                 on user.id = profile.userID) AS res";
         }
 
         $result = $conn->query($sql);
@@ -301,10 +303,11 @@ else if(isset($_POST['upload_files_api'])) {
 }else if(isset($_POST['get_user_profile_api'])){
     $user_id = $conn->real_escape_string($_POST['userId']);
 
+    $res = "";
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
-        $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.lastname, user.age, user.gender,
+        $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.lastname, user.age, user.gender, user.userName, 
              profile.photoId, profile.location, profile.Description  FROM user
             inner join profile
             on user.id = profile.userID) AS res
@@ -325,13 +328,22 @@ else if(isset($_POST['upload_files_api'])) {
     $user_email = $conn->real_escape_string($_POST['userEmail']);
     $user_desc = $conn->real_escape_string($_POST['userDesc']);
     $user_reason = $conn->real_escape_string($_POST['userReason']);
+    $date = $conn->real_escape_string($_POST['date']);
+    $status = $conn->real_escape_string($_POST['date']);
+    $number = "";
+    $archieved = $conn->real_escape_string(false);
+
+    if(isset($_POST['number'])){
+        $number = $conn->real_escape_string($_POST['number']);
+    }else{
+        $number = rand();
+    }
 
     $resp = "";
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
-        $date = date('Y-m-d H:i:s', time());
-        $sql = "INSERT INTO queries (userName, email, description, reason, date) VALUES('{$user_name}','{$user_email}','{$user_desc}','{$user_reason}','{$date}')";
+        $sql = "INSERT INTO queries (userName, email, description, reason, date, queryNumber, status, archived) VALUES('{$user_name}','{$user_email}','{$user_desc}','{$user_reason}','{$date}','{$number}','{$status}', '{$archieved}')";
         if ($conn->query($sql) === TRUE) {
             $resp = new SweetalertResponse(3,
                 'Message Sent',

@@ -7,14 +7,25 @@
         $('#contact_form').attr('hidden', true);
     }
 
+    function getDate() {
+        let m = new Date();
+        return m.getUTCFullYear() + "-" +
+            ("0" + (m.getUTCMonth() + 1)).slice(-2) + "-" +
+            ("0" + m.getUTCDate()).slice(-2) + " " +
+            ("0" + m.getUTCHours()).slice(-2) + ":" +
+            ("0" + m.getUTCMinutes()).slice(-2) + ":" +
+            ("0" + m.getUTCSeconds()).slice(-2);
+    }
+
     function sendMessage() {
 
         const request = {};
         request.send_query_message = true;
         request.userName = document.getElementById("txtUserName").value;
-        request.userEmail = document.getElementById("email").value;
+        request.userEmail = document.getElementById("email_support").value;
         request.userDesc = document.getElementById("txtMsg").value;
         request.userReason = document.getElementById("reason").value;
+        request.date = getDate();
 
         if(validate(request)) {
             $.ajax({
@@ -36,7 +47,7 @@
             });
         }else{
                 document.getElementById("txtUserName").style.border = request.userName.length === 0 ? "2px solid red" : "";
-                document.getElementById("email").style.border = request.userEmail.length === 0 ? "2px solid red" : "";
+                document.getElementById("email_support").style.border = request.userEmail.length === 0 ? "2px solid red" : "";
                 document.getElementById("txtMsg").style.border = request.userDesc.length === 0 ? "2px solid red" : "";
                 document.getElementById("reason").style.border = request.userReason.length === 0 ? "2px solid red" : "";
         }
@@ -62,7 +73,7 @@
                             <input type="text" id="txtUserName" class="form-control" placeholder="Enter User Name" required/>
                         </div>
                         <div class="form-group">
-                            <input type="email" class="form-control" id="email" placeholder="Enter Email" required/>
+                            <input type="email" class="form-control" id="email_support" placeholder="Enter Email" required/>
                         </div>
                         <div class="form-group">
                             <select id="reason" class="form-control" required>

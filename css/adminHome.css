@@ -1,0 +1,17 @@
+.ico {
+    width: 70px;
+}
+.action > div {
+    width: 120px;
+}
+.action > div .btn {
+    border-radius: 70px !important;
+}
+
+#summary{
+    position: absolute;
+    top: 30%;
+    left: 10%;
+    height: 100%;
+    width: 100%;
+}

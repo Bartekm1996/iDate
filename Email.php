@@ -10,11 +10,38 @@ class Email
 
     const VERIFY = 0;
     const RESET_PASSWORD = 1;
+    const BLOCKED = 2;
+    const DELETED = 3;
 
     public function __construct($to, $name)
     {
         $this->to = $to;
         $this->name = $name;
+    }
+
+    public function sendMessage($type,$reason,$action,$sender_name){
+
+
+        $subject = "";
+        switch ($type){
+            case self::BLOCKED:{
+                $subject = "Your Account Has Been Blocked";
+                break;
+            }
+            case self::DELETED:{
+                $subject = "Your Account Has Been Deleted";
+                break;
+            }
+        }
+
+        $template = "/emailTemplates/message.html";
+        $cont = file_get_contents(__DIR__.$template);
+        $res = str_replace("{{user_name}}", $this->name, $cont);
+        $res_one = str_replace( "{{action}}", $action, $res);
+        $res_two = str_replace( "{{reason}}", $reason, $res_one);
+        $res_three = str_replace( "{{sender_name}}", $sender_name, $res_two);
+
+        $this->sendEmail($subject, $res_three, $this->getTo());
     }
 
     public function sendRegisterEmail($type){

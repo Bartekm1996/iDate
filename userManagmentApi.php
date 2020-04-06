@@ -3,6 +3,11 @@ ob_start();
 require ('db.php');
 require ('model/UserManagment.php');
 require ('model/Query.php');
+require ('SweetalertResponse.php');
+require("Email.php");
+require ("model/UserInfo.php");
+require ("model/BlockReason.php");
+
 
 if(isset($_POST['get_all_users'])){
     if ($conn->connect_error) {
@@ -178,4 +183,67 @@ else if(isset($_POST['get_all_tickets'])){
         }
         echo $resp->jsonSerialize();
 
+    }
+}else if(isset($_POST['update_user'])){
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+
+        $sql = "";
+        $username = $conn->real_escape_string($_POST['user']);
+        $name = $conn->real_escape_string($_POST['name']);
+        $sender_name = $_POST['sender_name'];
+        $action = $_POST['action'];
+        $reason = $_POST['reason'];
+        $email = $_POST['email'];
+        $date = new DateTime();
+        $date = getdate($date->getTimestamp());
+
+        if($reason === 'block') {
+            $sql = "update profile set blocked = '1' where userID = (select id from user where username = '{$username}');";
+            $sqlQuery = "insert into blocked (blocked_user, blocked_date, blockee, reason) values '{$username}', '{$date}', '{$sender_name}', '$reason'";
+        }
+
+
+
+        if ($conn->query($sql) === TRUE) {
+
+            $email = new Email($email, $name);
+            $email->sendMessage($reason === 'delete' ? 3 : 2, $reason, $action, $sender_name);
+
+            $conn->query($sqlQuery);
+
+            $resp = new SweetalertResponse(1,
+                '',
+                "",
+                SweetalertResponse::SUCCESS
+            );
+        }else{
+            $resp = new SweetalertResponse(2,
+                '',
+                "",
+                SweetalertResponse::SUCCESS
+            );
+        }
+        echo $resp->jsonSerialize();
+
+
+    }
+}else if(isset($_POST['get_block_reason'])){
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+
+        $username = $conn->real_escape_string($_POST['username']);
+        $sql = "select * from blocked where blocked_user = '{$username}'";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            $res = $result->fetch_row();
+            $blocked = new BlockReason($res[0], $res[1], $res[2], $res[4]);
+            echo $res->jsonSerialize();
+        }
+    }
 }
+ob_end_flush();

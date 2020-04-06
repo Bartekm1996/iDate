@@ -8,8 +8,7 @@
     <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/userManagmentTable.css">
-    <link rel="stylesheet" type="text/css" href="vendorv/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/userManagmentTable.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/chat.css">
     <link rel="stylesheet" type="text/css" href="css/scroll.css">
@@ -18,31 +17,35 @@
     <link rel="stylesheet" href="css/chatv2.css">
     <link rel="stylesheet" href="css/matches.css">
     <link rel="stylesheet" href="css/usermatch.css">
-    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/cardV2.css">
+    <link rel="stylesheet" href="css/userProfile.css"/>
+
     <link rel="stylesheet" type="text/css" href="css/profileCard.css">
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="js/userProfile.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="vendorv/jquery/jquery-3.2.1.min.js"></script>
 
 
-
-
-    <link rel="stylesheet" type="text/css" href="css/profileCard.css">
     <script>
 
 
         window.onload = function() {
 
+            console.log("From on load function");
 
             <?php
 
 
                require __DIR__.'/vendor/autoload.php';
                require ("db.php");
-               $username = $_SESSION['username'];
-               $firstname = $_SESSION['firstname'];
-               $userid = $_SESSION['userid'];
-               $resp = ""; $respAdmin = "";
+
+                   $username = $_SESSION['username'];
+                   $firstname = $_SESSION['firstname'];
+                   $userid = $_SESSION['userid'];
+                   $resp = ""; $respAdmin = "";
 
                if ($conn->connect_error) {
                    die("Connection failed: " . $conn->connect_error);
@@ -70,18 +73,21 @@
 
             let admin = parseInt('<?php echo $respAdmin?>');
 
-            console.log(admin);
-            if(admin === 0){
-                 getUserData();
-                 showSearch();
-            }
-            console.log('<?php echo $firstname?>');
+       
+       
+       
+       
+       
+            console.log("UD " + <?php echo $userid?>);
             $('#username-header').text('<?php echo $firstname?>');
-            $('#username-header').attr('user-id', "<?php echo $userid ?>");
+            $('#username-header').attr('user-id', <?php echo $userid ?>);
             $('#username-header').attr('user-name', "<?php echo $username ?>");
+            fillTicketsNumbers();
+            fillMembersNumbers();
+            loadMatches();
         };
 
-        let interval = setInterval(() => getMessage(),2000);
+        //let interval = setInterval(() => getMessage(),2000);
 
         jQuery(function ($) {
 
@@ -167,7 +173,7 @@
                         title: 'Logged out successfully'
                     })
 
-                    clearInterval(interval);
+                    //clearInterval(interval);
                     <?php
                     session_unset();
                     session_destroy();
@@ -213,11 +219,12 @@
             $('.messages').css({"display": 'block'});
             $('.message-input').css({"display": 'block'});
 
+            let id = $('#username-header').attr('user-id');
 
-
+            console.log("id " + id);
             const request = {};
             request.messages = $('ul#contactsList').find('li.active').attr("data-id");
-            request.userId = 'Bartekm1999';
+            request.userId = id;
             $.ajax({
                 method: "GET",
                 url: "Mongo.php",
@@ -237,11 +244,11 @@
                     }
 
                     console.log(length);
-                    for (let i = length; i < res["messages"].length; i++) {
+                    for (let i = length; i < res.length; i++) {
                         $(  '<li>' +
-                            '<div class="' + (res['messages'][i]['username'] === 'Bartekm1999' ? "outgoing_msg" : "incoming_msg") + '">' +
-                            '<div class="' + (res['messages'][i]['username'] === 'Bartekm1999' ? "outgoing_msg_img" : "incoming_msg_img") + '"> <img src="" alt="" /></div>' +
-                            '<div class="' + (res['messages'][i]['username'] === 'Bartekm1999' ? "sent_msg" : "received_msg") + '">' +
+                            '<div class="' + (res['messages'][i]['username'] === id ? "outgoing_msg" : "incoming_msg") + '">' +
+                            '<div class="' + (res['messages'][i]['username'] === id ? "outgoing_msg_img" : "incoming_msg_img") + '"> <img src="" alt="" /></div>' +
+                            '<div class="' + (res['messages'][i]['username'] === id ? "sent_msg" : "received_msg") + '">' +
                             '<p>' + res['messages'][i]["message"] + '</p>' +
                             '<span class="time_date">' + res['messages'][i]["timestamp"] + '</span>' +
                             '</div>' +
@@ -361,7 +368,6 @@
             }
         }
 
-        $(".messages").animate({ scrollTop: $(document).height() }, "fast");
 
 
 
@@ -401,7 +407,7 @@
 
 
             const request = {};
-            request.get_user_profile_api = "yes";
+            request.get_user_profile_api = true;
 
             if($('#person_fullname').attr('data-index') !== undefined || index === null){
                 let tmp = $('#person_fullname').attr('data-matches').split(',');
@@ -505,7 +511,6 @@
 
                     <div class="sidebar-header">
                         <div class="user-pic">
-
                             <div class="img__wrap">
                                 <img class="img__img" style="width: 130px; height: 130px;" id="profilePicture" src="images/icons/userIcon.png" alt="User Profile Picture"/>
                                 <div class="img__description_layer">
@@ -528,11 +533,17 @@
                             <li class="header-menu">
                                 <span>General</span>
                             </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fas fa-user"></i>
-                                    <span>Profile</span>
-                                </a>
+                            <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <i class="fas fa-user"></i>
+                                        <span>Profile</span>
+                                    </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li><a href="#" onclick="showProfile('<?php echo $username?>', null)"><i class="fas fa-user"></i><span>Profile</span></a></li>
+                                        <li><a href="#" onclick="showUerMatches(170)"><i class="fas fa-heart"></i><span>My Matches</span></a></li>
+                                        </ul>
+                                    </div>
                             </li>
 
                             <?php
@@ -548,13 +559,15 @@
                                     '</a>'.
                                     '<div class="sidebar-submenu">' .
                                     '<ul>'.
-                                    '<li><a href="#" onclick="showUserManagment()">All users</a></li>'.
-                                    '<li><a href="#" >Unverified users</a></li>'.
+                                    '<li><a href="#" onclick="showUserManagment(null)">All users <span class="label label-success tag-pill" id="all_users"></span></a></li>'.
+                                    '<li><a href="#" onclick="showUserManagment(0)">Unverified users <span class="label tag-pill label-success" id="unverified_users"></span></a></li>'.
+                                    '<li><a href="#" onclick="showUserManagment(1)">Blocked users <span class="label tag-pill label-success" id="blocked_users"></span></a></li>'.
                                     '</ul>'.
-                                    '</div></li>';
+                                    '</div></li>'.
+                                    '<li><a onclick="showSearch()"><i class="fas fa-users""></i><span>Find Love</span></a></li>';
                             }else{
                                 echo '<li><a onclick="showSearch()"><i class="fas fa-users""></i><span>Find Love</span></a></li>'.
-                                     '<li><a onclick="showUerMatches(170)"><i class="fas fa-heart"></i><span>My Matches</span></a></li>';
+                                     '<li><a onclick="showUerMatches('.$id.')"><i class="fas fa-heart"></i><span>My Matches</span></a></li>';
                             }
                             ?>
                             <li>
@@ -562,9 +575,23 @@
 
                                     if($respAdmin == 1){
                                         echo
-                                        '<a onclick="showTickets()"><i class="fas fa-envelope"></i><span>Tickets</span></a>';
+                                            '<li class="sidebar-dropdown">'.
+                                            '<a href="#">'.
+                                            '<i class="fas fa-envelope"></i>'.
+                                            '<span>Tickets</span>'.
+                                            '<span class="badge badge-pill badge-warning">New</span>'.
+                                            '</a>'.
+                                            '<div class="sidebar-submenu">' .
+                                            '<ul>'.
+                                            '<li><a href="#" onclick="showTickets(\'Opened\')">Opened <span class="label tag-pill" id="opened_tickets"></span></a></li>'.
+                                            '<li><a href="#" onclick="showTickets(\'Closed\')">Closed <span class="label tag-pill label-success" id="closed_tickets"></span></a></li>'.
+                                            '<li><a href="#" onclick="showTickets(\'Unresolved\')">Unresolved <span class="label tag-pill label-success" id="unresolved_tickets"></span></a></li>'.
+                                            '<li><a href="#" onclick="showTickets(\'Archived\')">Archived <span class="label tag-pill label-success" id="archived_tickets"></span></a></li>'.
+                                            '</ul>'.
+                                            '</div></li>'.
+                                            '<li><a onclick="loadConversations()"><i class="fas fa-envelope"></i><span>Messages</span></a></li>';
                                     }else{
-                                        echo '<a onclick="loadConversations()"><i class="fas fa-envelope"></i><span>Messages</span></a>';
+                                        echo '<li><a onclick="loadConversations()"><i class="fas fa-envelope"></i><span>Messages</span></a></li>';
                                     }
                                 ?>        
                             </li>
@@ -574,10 +601,19 @@
                 </div>
                 <!-- sidebar-content  -->
                 <div class="sidebar-footer">
-                    <a href="#">
-                        <i class="fa fa-bell"></i>
-                    </a>
-                    <a href="#">
+                    <?php
+
+                    if($respAdmin == 1) {
+
+                        echo
+                         '<a href="#" onclick="showTickets(\'Opened\')">'.
+                         '<i class="fa fa-bell"></i>'.
+                         '</a>';
+                    }
+
+                    ?>
+
+                    <a href="#" onclick="loadConversations()">
                         <i class="fa fa-envelope"></i>
                     </a>
                     <a href="#" onclick="logout()">
@@ -587,8 +623,9 @@
             </nav>
         </div>
         <main style="width: 80%; height: 100%;">
+            <?php include ("userProfile.php") ?>
             <?php include ("userManagment.php") ?>
-            <?php include ("userTickets.php")?>;
+            <?php include ("userTickets.php")?>
             <div class="matches" id="matcharea" hidden>
                 <div class="container h-100 mb-5">
                     <div class="d-flex justify-content-center h-100">
@@ -597,12 +634,12 @@
                         </div>
                     </div>
                 </div>
-                <h3 style="position: absolute; left: 40%; top: 50%;">No Matches Yet ?</h3>
-                <div class="grid-container" id="searchResults">
+                <h3 id="my_matches_place_holder" style="position: absolute; left: 40%; top: 50%;" hidden>No Matches Yet ?</h3>
+                <div class="grid-container" id="searchResults" >
                 </div>
             </div>
 
-            <div id="matching" hidden>
+            <div id="matching">
                 <section class="matching">
                 <div class="row active-with-click">
                     <div class="col-xs-12">
@@ -626,12 +663,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <a class="mc-btn-action" onclick="epxand(this)"><i class="fa fa-bars"></i></a>
+                            <a class="mc-btn-action" id="expandable" onclick="epxand(this)"><i class="fa fa-bars"></i></a>
                             <a class="mc-btn-next" onclick="nextMatch(null)"><i class="fas fa-angle-double-right"></i></a>
                             <a class="mc-btn-previous" onclick="nextMatch(null)"><i class="fas fa-angle-double-left"></i></a>
                             <div class="mc-footer">
                                 <button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i></button>
-                                <button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button" id="message_button"><i class="fas fa-comments mr-2" ></i></button>
+                                <button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button" onclick="startChat()" id="message_button"><i class="fas fa-comments mr-2" ></i></button>
                             </div>
                         </article>
                     </div>
@@ -642,7 +679,7 @@
             <div id="frame" hidden>
                 <div id="sidepanel">
                     <div id="search">
-                        <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
+                        <label ><i class="fa fa-search" aria-hidden="true"></i></label>
                         <input type="text" placeholder="Search contacts..." />
                     </div>
                     <div id="contacts">
@@ -740,18 +777,13 @@
     </div>
 <div>
 
-
-
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script src="js/userTickets.js"></script>
-    <script src="js/userManagment.js"></script>
+    <script src="https://kit.fontawesome.com/2530adff57.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script src="vendorv/jquery/jquery-3.2.1.min.js"></script>
     <script src="vendorv/animsition/js/animsition.min.js"></script>
     <script src="vendorv/bootstrap/js/popper.js"></script>
     <script src="vendorv/bootstrap/js/bootstrap.js"></script>
+    <script src="js/userTickets.js"></script>
+    <script src="js/userManagment.js"></script>
     <script src="js/main.js"></script>
     <script src="js/testui.js"></script>
 

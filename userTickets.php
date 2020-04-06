@@ -12,18 +12,14 @@
 
 <!------ Include the above in your HEAD tag ---------->
 
-<script>
 
-    onload = function () {
-        getAllTickets();
-    };
-
-</script>
-
-<div class="container" id="main_cont">
+<div class="container" id="main_cont" hidden>
     <div class="row">
         <div class="panel">
-            <div class="pull-right">
+            <div style="display: inline-block;">
+                <input class="form-control ml-2 mt-4" placeholder="Enter ticket number" onkeyup="filterTickets(this)">
+            </div>
+            <div class="pull-right" style="display: inline-block;">
                 <div class="btn-group">
                     <button type="button" class="btn btn-success btn-filter" data-target="other">Other</button>
                     <button type="button" class="btn btn-warning btn-filter" data-target="not_receiving_verification_Email">Not Receiving Verification Email</button>

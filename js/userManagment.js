@@ -33,17 +33,56 @@ function filter(elem, attr) {
 
 }
 
-async function userActionTwo(action, user) {
+
+function getBlockedInfo(username){
+    const request = {};
+    request.get_block_reason = true;
+    request.username = username;
+
+    $.ajax({
+        method: "POST",
+        url: 'userManagmentApi.php',
+        data: request,
+        success: function (response) {
+            console.log('success:' + JSON.stringify(response));
+            Swal.fire(username + " has been blocked for " + response.reason + " on the " + response.date);
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+}
+
+async function userActionTwo(action, user, name, email) {
+
     let inputOptions = {};
+    inputOptions.user = user;
+    inputOptions.sender_name = "iDate Customer Service Team";
+    inputOptions.update_user = true;
+    inputOptions.name = name;
+    inputOptions.eamil = email;
+
 
     if(action === 'delete'){
-        inputOptions.inactiveaccount = 'Inactive Account',
-        inputOptions.breachOfTermsAndConditions = 'Breach Of Terms And Conditions',
-        inputOptions.reportedBySeveralUsers = 'Reported By Several Users'
+        inputOptions.action = 3;
     }else if(action === 'block'){
-        inputOptions.breachOfTermsAndConditions = 'Breach Of Terms And Conditions',
-        inputOptions.continousincompliance = 'Continous Incompliance',
-        inputOptions.reportedByUser = 'Reported By User'
+        inputOptions.action = 2;
+    }
+
+    let options = {};
+
+
+    if(action === 'delete'){
+        options.inactiveaccount = 'Inactive Account',
+        options.breachOfTermsAndConditions = 'Breach Of Terms And Conditions',
+        options.reportedBySeveralUsers = 'Reported By Several Users'
+    }else if(action === 'block'){
+        options.breachOfTermsAndConditions = 'Breach Of Terms And Conditions',
+        options.continousincompliance = 'Continous Incompliance',
+        options.reportedByUser = 'Reported By User'
     }
 
 
@@ -52,7 +91,7 @@ async function userActionTwo(action, user) {
         title: 'Select A Reason',
         text: 'Select A Reason for taking this action against ' + user,
         input: 'select',
-        inputOptions: inputOptions,
+        inputOptions: options,
         inputPlaceholder: 'Select A Reason',
         showCancelButton: true,
         inputValidator: (value) => {
@@ -65,8 +104,38 @@ async function userActionTwo(action, user) {
     })
 
     if (reason) {
-       sendEmail(reason);
-    }
+
+
+
+        inputOptions.reason = reason;
+
+        $.ajax({
+            method: "POST",
+            url: 'userManagmentApi.php',
+            data: inputOptions,
+            success: function (response) {
+                if(reason === 'block'){
+                    Swal.fire({
+                        title : "User Blocked",
+                        text : "User has been blocked Successfully",
+                        icon : "success"
+                    });
+                }else if(reason === 'delete'){
+                    Swal.fire({
+                        title : "User Deleted",
+                        text : "User has been deleted Successfully",
+                        icon : "success"
+                    });
+                }
+                console.log('success:' + JSON.stringify(response));
+            },
+            failure: function (response) {
+                console.log('failure:' + JSON.stringify(response));
+            },
+            error: function (response) {
+                console.log('error:' + JSON.stringify(response));
+            }
+        });
 
     }
 
@@ -105,26 +174,6 @@ function hideAllEditButtons() {
     $('#user_edit_email').attr('hidden',true);
 }
 
-function sendEmail(reason) {
-    const request = {};
-    request.get_all_users = true;
-
-    $.ajax({
-        method: "POST",
-        url: 'userManagmentApi.php',
-        data: request,
-        success: function (response) {
-            Swal.fire(`And Email Has Been Sent To The User`);
-            console.log('success:' + JSON.stringify(response));
-        },
-        failure: function (response) {
-            console.log('failure:' + JSON.stringify(response));
-        },
-        error: function (response) {
-            console.log('error:' + JSON.stringify(response));
-        }
-    });
-}
 
 function clearValues() {
     $("#user_nm").val("");
@@ -295,9 +344,13 @@ function getUserData(verified) {
                         node += '<a class="dropdown-item" href="#"><i class="fas fa-user-plus mr-2"></i>Activate</a>';
                     }
 
+                    if(parseInt(res[i].blocked) === 1){
+                        node += '<a class="dropdown-item" href="#" onclick="getBlockedInfo('+res[i].userName+'"><i class="fas fa-info-circle"></i>Block Info</a>';
+                    }
+
                     node +=
-                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\''+res[i].userName+'\')"><i class="fas fa-user-lock mr-2"></i>Block</a>'+
-                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\''+res[i].userName+'\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
+                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\''+res[i].userName+'\',\''+res[i].name+'\',\''+res[i].email+'\')"><i class="fas fa-user-lock mr-2"></i>Block</a>'+
+                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\''+res[i].userName+'\',\''+res[i].name+'\',\''+res[i].email+'\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
 
                     if(parseInt(res[i].admin) === 0){
                         node +=  '<a class="dropdown-item" href="#" onclick="userAdmin(\''+res[i].userName+'\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';
