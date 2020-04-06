@@ -68,45 +68,10 @@ async function userActionTwo(action, user) {
        sendEmail(reason);
     }
 
+    }
+
 }
 
-
-function userAction(title,msg, deletemsg, cancelmsg){
-    const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-danger'
-        },
-        buttonsStyling: false
-    })
-
-    swalWithBootstrapButtons.fire({
-        title: 'Are you sure you want to ' + title + ' as Admin',
-        text: msg,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes !',
-        cancelButtonText: 'No !',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.value) {
-            swalWithBootstrapButtons.fire(
-                'Deleted!',
-                deletemsg,
-                'success'
-            )
-        } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
-        ) {
-            swalWithBootstrapButtons.fire(
-                'Cancelled',
-                cancelmsg,
-                'error'
-            )
-        }
-    })
-}
 
 function editField(elem) {
    let res = $(elem).attr('data-id');
@@ -194,14 +159,114 @@ function editProfile(elem) {
         $(res).removeClass('active');
         $(elem).addClass('active');
     }
+}
+
+function  sendVerificationEmail(email, username) {
+    const request = {};
+    request.resend_verification_email = true;
+    request.email = email;
+    request.username = username;
 
 
+    $.ajax({
+        method: "POST",
+        url: 'userManagmentApi.php',
+        data: request,
+        success: function (response) {
+            Swal.fire(`And Email Has Been Sent To The User`);
+            console.log('success:' + JSON.stringify(response));
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
 
 }
 
-function getUserData() {
+function userAdmin(username, change) {
+
+    const request = {};
+    request.change_user_admin_status = true;
+    request.username = username;
+    request.change = change;
+
+    let info = (change === "Remove" ? "Removed" : "Added");
+
+
+    console.log(username);
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: 'Are you sure you want to '+ change + " " + username + ' as Admin',
+        text: 'This can be changed anytime',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes !',
+        cancelButtonText: 'No !',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                method: "POST",
+                url: 'userManagmentApi.php',
+                data: request,
+                success: function (response) {
+                    let res = JSON.parse(response);
+
+                    getUserData(null);
+
+                    if(res.statusCode === 1) {
+                        Swal.fire({
+                            title: 'User ' + info + " as Admin",
+                            text: 'User has been added ' + info + " as Admin",
+                            icon: 'success'
+                        });
+
+                    }else if(res.statusCode === 2){
+                        Swal.fire({
+                           title: 'Failed User to ' +info + " as Admin",
+                           text: 'Failed User to ' +info + " as Admin",
+                           icon: 'warning'
+                        })
+                    }
+                    console.log('success:' + JSON.stringify(response));
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire(
+                'Cancelled',
+                'Your action has been cancelled by you',
+                'error'
+            )
+        }
+    })
+
+}
+
+function getUserData(verified) {
+
+    $('#tableBody tr').remove();
+
     const request = {};
     request.get_all_users = true;
+
+    let counter = 0;
 
     $.ajax({
         method: "POST",
@@ -214,8 +279,6 @@ function getUserData() {
 
             for(let i = 0; i < res.length; i++)
             {
-                console.log('success:' + res[i].blocked);
-
                 let node =
                     '<tr data-id='+i+' class="clickable-row" onclick="editProfile(this)" style="padding-top: 5px;">' +
                     '<td>'+(parseInt(res[i].registered) === 0 ? "<span class=\"label label-warning\" id='status'>Pending</span>" : (parseInt(res[i].blocked) === 0 ? "<span class=\"label label-success\" id='status'>Active</span>" : "<span class=\"label label-danger\" id='status'>Blocked</span>"))+'</small></td>'+
@@ -236,26 +299,40 @@ function getUserData() {
                         '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\''+res[i].userName+'\')"><i class="fas fa-user-lock mr-2"></i>Block</a>'+
                         '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\''+res[i].userName+'\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
 
-                    if(parseInt([res[i].admin]) === 0){
-                        node +=  '<a class="dropdown-item" href="#" <i class="fas fa-user-lock mr-2"></i>Add User as Admin</a>';
+                    if(parseInt(res[i].admin) === 0){
+                        node +=  '<a class="dropdown-item" href="#" onclick="userAdmin(\''+res[i].userName+'\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';
                     }else{
-                        node += '<a class="dropdown-item" href="#"><i class="fas fa-user-lock mr-2"></i>Remove User a Admin</a>';
+                        node += '<a class="dropdown-item" href="#" onclick="userAdmin(\''+res[i].userName+'\',\'Remove\')"><i class="fas fa-user-minus"></i>Remove User a Admin</a>';
                     }
 
-                    node +=
-                        '<div class="dropdown-divider"></div>'+
-                        '<a class="dropdown-item" href="#"><i class="fas fa-paper-plane mr-2"></i>Resend Activation Email</a>'+
-                        '</div>'+
-                        '</div>'+
-                        '</td>'+
-                        '</tr>';
+                    if(parseInt(res[i].registered) === 0) {
+                        node +=
+                            '<div class="dropdown-divider"></div>'+
+                            '<a class="dropdown-item" href="#" onclick="sendVerificationEmail(\'' + res[i].email + '\',\'' + res[i].userName + '\')"><i class="fas fa-paper-plane mr-2"></i>Resend Activation Email</a>';
+                    }
 
-                $('#tableBody').append(node);
+                    node +='</div>'+
+                            '</div>'+
+                            '</td>'+
+                            '</tr>';
+
+                    if(verified !== null && parseInt(res[i].registered) === 0 && verified === 0){
+                        $('#tableBody').append(node);
+                        counter++;
+                    }else if(verified !== null && verified === 1 && parseInt(res[i].blocked) === 1){
+                        $('#tableBody').append(node);
+                        counter++;
+                    }else if(verified === null){
+                        $('#tableBody').append(node);
+                        counter++;
+                    }
+
+
 
 
             }
 
-            $('#column_size').text("Total entries " + res.length);
+            $('#column_size').text("Total entries " + counter);
 
         },
         failure: function (response) {

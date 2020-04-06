@@ -64,10 +64,6 @@ class Email
 
         try {
             $response = $sg->client->mail()->send()->post($mail);
-            //These cause output that message with json response
-//            print $response->statusCode() . "\n";
-//            print_r($response->headers());
-//            print $response->body() . "\n";
         } catch (Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }

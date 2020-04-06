@@ -51,41 +51,41 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
 
         $sql = "";
 
-        if(strpos($uname, "@") !== false){
-            $sql = "SELECT registered, id, firstname, lastname, userName FROM user where email='{$uname}' AND password='{$upass}' LIMIT 1;";
-        }else{
-            $sql = "SELECT registered, id, firstname, lastname FROM user where userName='{$uname}' AND password='{$upass}' LIMIT 1;";
-        }
+            if (strpos($uname, "@") !== false) {
+                $sql = "SELECT registered, id, firstname, lastname, userName FROM user where email='{$uname}' AND password='{$upass}' LIMIT 1;";
+            } else {
+                $sql = "SELECT registered, id, firstname, lastname FROM user where userName='{$uname}' AND password='{$upass}' LIMIT 1;";
+            }
 
 
-        $result = $conn->query($sql);
-        if ($result->num_rows > 0)
-        {
-            $row=mysqli_fetch_row($result);
-            //echo $row[0] ? "You logged and registered": "You are logged in but not registered";
-            $reg = $row[0] == 0;
-            $resp = new SweetalertResponse($reg ? 1 : 2,
-                $reg ? 'Please Verify' : 'Login Success',
-                $reg ? "Please verify $uname" : "$uname logged in successfully",
-                $reg ? SweetalertResponse::WARNING : SweetalertResponse::SUCCESS
-            );
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+                $row = mysqli_fetch_row($result);
+                //echo $row[0] ? "You logged and registered": "You are logged in but not registered";
+                $reg = $row[0] == 0;
+                $resp = new SweetalertResponse($reg ? 1 : 2,
+                    $reg ? 'Please Verify' : 'Login Success',
+                    $reg ? "Please verify $uname" : "$uname logged in successfully",
+                    $reg ? SweetalertResponse::WARNING : SweetalertResponse::SUCCESS
+                );
 
-            $_SESSION['userid'] = $row[1];
-            $_SESSION['firstname'] = $row[2]." ".$row[3];
-            $index = sizeof($row) === 5 ? 4 : 3;
-            $uname = sizeof($row) === 5 ? $row[$index] : $uname;
-            $_SESSION['username'] = $uname;
+                $_SESSION['userid'] = $row[1];
+                $_SESSION['firstname'] = $row[2] . " " . $row[3];
+                $uname = strpos($uname, "@") !== false ? $row[4] : $uname;
+
+                $_SESSION['username'] = $uname;
 
 
-            $mongo = new MongoConnect();
-            $mongo->historyUpdate($uname, "User Logged In", "Log In");
+                $mongo = new MongoConnect();
+                $mongo->historyUpdate($uname, "User Logged In", "Log In");
 
-        } else {
-            $resp = new SweetalertResponse(3,
-                'Login Failed',
-                 "Failed to login with username $uname",
-                SweetalertResponse::ERROR
-            );
+            } else {
+                $resp = new SweetalertResponse(3,
+                    'Login Failed',
+                    "Failed to login with username $uname",
+                    SweetalertResponse::ERROR
+                );
+            }
         }
     }
 

@@ -27,6 +27,9 @@
         //<!-- Ajax post test-->
 
 
+        onload = function () {
+            document.getElementById('vid').play();
+        }
 
         function loginTest() {
             const request = {};
@@ -129,43 +132,55 @@
             })
         }
 
-        function emailReqs() {
-            if($('#email').val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) !== null){
-                return true;
-            }else{
-                if($('#email').val().trim().length > 0) {
-                    errorMessage("Email Error", "Email doesn't meet criteria");
-                }
-                return false;
-            }
-        }
         function passWordReqs() {
-            if(parseInt($('#passWordId').attr('aria-valuenow')) === 100 && $('#password').val() === $('#confirm_password').val()){
-                return true;
-            }else{
-                if($('#password').val() !== $('#confirm_password').val()){
-                    errorMessage("PassWord Error", "Passwords don't match");
-                }else {
-                    errorMessage("PassWord Error", "Password doesn't meet criteria");
+                if(parseInt($('#passWordId').attr('aria-valuenow')) === 100 && $('#password').val() === $('#confirm_password').val()){
+                    return true;
+                }else{
+                    if($('#password').val() !== $('#confirm_password').val()){
+                        errorMessage("PassWord Error", "Passwords don't match");
+                        return false;
+                    }else {
+                        errorMessage("PassWord Error", "Password doesn't meet criteria");
+                        return false;
+                    }
                 }
-                return false;
-            }
         }
+
+        function isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); }
+
 
         function showSupport() {
             $('#contact_form').attr('hidden', false);
         }
 
 
-    function regTest() {
+        function regTest() {
             const request = {};
             request.username = $('#username').val();
             request.pass = $('#password').val();
             request.email = $('#email').val();
+
+            let pp = passWordReqs();
+            console.log(request.email !== "" + " email " + $('#email').val());
+
             if(request.username !== "" && request.pass !== "" && request.email !== ""){
-                if(passWordReqs() && emailReqs()){
-                    acceptTermsAndCons(request);
+
+                if(isNumber(request.username)){
+                    errorMessage("UserName Error", "Username cannot contain digits only");
+                }else {
+
+                    if ($('#password').val().match($('#username').val()) || $('#password').val().match($('#email').val())) {
+                        errorMessage("Password Error", "Password cannot contain your username or email");
+                    } else if ($('#username').val().match(" ") || $('#password').val().match(" ")) {
+                        errorMessage("Whitespace Error", "Username or Password cannot contain Whitespaces");
+                    } else {
+                        if (passWordReqs()) {
+                            $('#signUp').html('<i class="fa fa-spinner fa-spin mr-2"></i> Registering');
+                            acceptTermsAndCons(request);
+                        }
+                    }
                 }
+
             }else{
                 Swal.fire({
                     icon: 'warning',
@@ -233,6 +248,7 @@
                 data: request,
                 success: function (response) {
                     console.log(response.title);
+                    $('#login_button').html('Sign In');
                     switch(response.statusCode) {
                         case 2:
                             Swal.mixin({
@@ -270,7 +286,7 @@
         }
     </script>
 </head>
-<body style="background-color: #999999;">
+<body style="background-color: #e8519e;">
 <div class="limiter">
     <?php require ("support.php")?>
 
@@ -289,13 +305,13 @@
                     <span class="label-input100">Password</span>
                     <input class="input100" name="password" id="login_password" type="password" required placeholder="*******************">
                     <button class="focus-input100" data-symbol="&#xf190;" data-input-id="login_password" onclick="viewPassWord(this)">
-                        <span class="tooltiptext">View password <i class="fa fa-eye" aria-hidden="true"></i></span>
+                        <span class="tooltiptext"><i class="fa fa-eye" aria-hidden="true"></i> View password</span>
                     </button>
                 </div>
                 <div class="container-login100-form-btn m-t-10">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn txt4" onclick="loginTest()">
+                        <button class="login100-form-btn txt4" id="login_button" onclick="loginTest()">
                             Sign In
                         </button>
                     </div>
@@ -309,7 +325,7 @@
                 </div>
                 <div class="wrap-input100 validate-input m-b-25" data-validate="Username is required">
                     <span class="label-input100">Username</span>
-                    <input class="input100" type="text" id="username" onclick="emailReqs()" placeholder="Username...">
+                    <input class="input100" type="text" id="username" minlength="5" placeholder="Username...">
                     <span class="focus-input100" data-symbol="&#xf206;"></span>
                 </div>
                 <div class="wrap-input100-password validate-input m-b-25" data-validate = "Password is required">
@@ -318,7 +334,7 @@
                     <input class="input100" name="password" type="password" id="password" required placeholder="Enter Password">
                     <span  id="message"></span>
                     <button class="focus-input100" data-symbol="&#xf190;" data-input-id="password" onclick="viewPassWord(this)">
-                        <span class="tooltiptext">View password <i class="fa fa-eye" aria-hidden="true"></i></span>
+                        <span class="tooltiptext"><i class="fa fa-eye" aria-hidden="true"></i> View password</span>
                     </button>
                     <div class="progress">
                         <div id="passWordId" role="progressbar" style="width: 100%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
@@ -341,7 +357,7 @@
                     <input class="input100" name="confirm_password" type="password" id="confirm_password" required placeholder="Confirm Password">
                     <span  id="message"></span>
                     <button class="focus-input100" data-symbol="&#xf190;" data-input-id="confirm_password" onclick="viewPassWord(this)">
-                        <span class="tooltiptext">View password <i class="fa fa-eye" aria-hidden="true"></i></span>
+                        <span class="tooltiptext"><i class="fa fa-eye" aria-hidden="true"></i> View password</span>
                     </button>
                     <div class="progress">
                         <div id="confirmPassWordBar" role="progressbar"  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
