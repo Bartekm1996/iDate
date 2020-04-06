@@ -293,6 +293,8 @@ function getUserMatches(user_id) {
                 }else{
                     $('#my_matches_place_holder').attr('hidden', true);
                 }
+                $('#searchResults').empty();
+                
                 for(let i = 0; i < obj.length; i++) {
 
                     var res = obj[i];
