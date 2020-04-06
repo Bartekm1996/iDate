@@ -30,6 +30,7 @@
                     <div id="buttons" class="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4 mr-1 ml-1">
                         <div class="d-flex justify-content-between">
                             <a href="#" id="connect_button" class="btn btn-sm btn-info mr-4" hidden>Connect</a>
+                            <a href="#" id="card_report_button" class="btn btn-sm btn-default float-right" hidden>Report</a>
                             <a href="#" id="card_message_button" class="btn btn-sm btn-default float-right" hidden>Message</a>
                         </div>
                     </div>
@@ -59,6 +60,7 @@
                                 <i class="ni location_pin mr-2"></i>City, Country
                             </div>
                             <div class="h5 mt-4">
+                                <span id="seeking"></span>
                             </div>
                             <div>
                             </div>

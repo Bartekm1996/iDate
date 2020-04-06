@@ -16,12 +16,28 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
+        $heart = "";
         $date = date("Y/m/d");
         $sql = "INSERT INTO connections (userID1, userID2, connectionDate) "
             ."VALUES({$_POST['id1']}, {$_POST['id2']}, '{$date}');";
         if ($conn->query($sql) === TRUE) {
-            echo "Success";
-        } else echo "Failed";
+            $sql = "SELECT userID2 FROM connections where userID1 = '{$_POST['id1']}'";
+            $res = $conn->query($sql);
+            if($res->num_rows > 0){
+                $heart = new SweetalertResponse(1,
+                    'Congratulations !!!!!',
+                    "We have a match",
+                    SweetalertResponse::SUCCESS
+                );
+            }else{
+                $heart = new SweetalertResponse(2,
+                    'Congratulations ',
+                    "Hopefully you'll match",
+                    SweetalertResponse::SUCCESS
+                );
+            }
+            echo $heart->jsonSerialize();
+        }
     }
 } else if(isset($_POST['get_all_users_api'])) {
 
@@ -204,14 +220,19 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
 
         //SELECT * FROM user WHERE id IN (SELECT userID2 FROM connections WHERE userID1='66')
 
+        $id = $conn->real_escape_string($_POST['user_id']);
+
         if(isset($_POST['filter'])) {
-            $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.age,
+
+            $sql = "SELECT  * FROM (SELECT * FROM (SELECT user.id, user.firstname, user.age,
                  profile.photoId, profile.location, profile.Description,
                  profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
                  FROM user
                  inner join profile
-                 on user.id = profile.userID) AS res
-                 WHERE firstname LIKE '%{$_POST['filter']}%';";
+                 on user.id = profile.userID where profile.Seeking <> user.gender) AS res where id <> '{$id}'
+                 AND gender = (SELECT Seeking from profile where userID = '{$id}')) as res WHERE firstname LIKE '%{$_POST['filter']}%';";
+
+
         }else {
 
             $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.age,
@@ -219,7 +240,7 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
                  profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
                  FROM user
                  inner join profile
-                 on user.id = profile.userID) AS res";
+                 on user.id = profile.userID where profile.Seeking <> user.gender) AS res where id <> '{$id}' AND gender = (SELECT Seeking from profile where userID = '{$id}');";
         }
 
         $result = $conn->query($sql);
@@ -316,7 +337,7 @@ else if(isset($_POST['upload_files_api'])) {
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
             $row = $result->fetch_row();
-            $user = new Match($row[0], $row[1]." ".$row[2], $row[3], $row[4], $row[5], $row[6], $row[7]);
+            $user = new Match($row[0], $row[1]." ".$row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8]);
             $res = $user->jsonSerialize();
     }
         echo $res;

@@ -205,6 +205,7 @@ function addTicketLabel(node, counter){
 
 
 function showSearch() {
+    $('#searchFilter').attr('data-matches', false);
     loadMatches();
     getAllProfiles();
 
@@ -226,6 +227,7 @@ function showSearch() {
 }
 
 function showUerMatches(user_id) {
+    $('#searchFilter').attr('data-matches', true);
     $('#my_matches_place_holder').attr('hidden', false);
     $('#matcharea').attr('hidden', false);
     getUserMatches(parseInt(user_id));
@@ -292,31 +294,59 @@ function getUserMatches(user_id) {
                     $('#my_matches_place_holder').attr('hidden', true);
                 }
                 for(let i = 0; i < obj.length; i++) {
-                    let test = '<div>' +
-                        '<div class="row active-with-click">' +
-                        '<div class="col-xs-12">' +
-                        '<article class="material-card Red">' +
-                        '<h2><span >'+obj[i].name+'</span><strong><i class="fas fa-birthday-cake"><i class="ml-3"></i>' +obj[i].age+ '</i><i class="fas fa-map-pin ml-3"><i class="ml-3">'  + (obj[i].location > 0 ?  obj[i].location : "Unknown" )   + '</i></i></strong></h2>'+
-                        '<div class="mc-content">' +
-                        '<div class="img-container">' +
-                        '<img  id="person_image" style="width: 100%; height: 100%;" src="https://source.unsplash.com/random">' +
-                        '</div>' +
-                        '<div class="mc-description">' +
-                        '<div class="modal-body">' +
-                        '<table id="popup_user_info">' +
-                        '<tr><td></td><td>Name</td><td id="person_fullname">'+obj[i].name+'</td>' +
-                        '<tr><td><td>Age :'+obj[i].age+'</td><td></td></td></tr>' +
-                        '<tr><td><td>Gender : '+obj[i].gender+'</td></td></tr>' +
-                        '</table>' +
-                        '</div>' +
-                        '</div></div>' +
-                        '<a class="mc-btn-action" onclick="epxand(this)">' +
-                        '<i class="fa fa-bars"></i>' +
-                        '</a>' +
-                        '<div class="mc-footer">'+
-                        '<button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user"></i></button>'+
-                        '<button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button"><i class="fas fa-comments"></i></button>'+
-                        '</article></div></div></div>';
+                    let test = '<div style="width: 300px; height: 100%;">'+
+                        '<div class="image-flip" ontouchstart="this.classList.toggle(\'hover\');">' +
+                        '<div class="mainflip">'+
+                        '<div class="frontside">'+
+                        '<div class="card card-profile shadow">'+
+                        '<div class="row justify-content-center">'+
+                        '<div class="col-lg-3 order-lg-2">'+
+                        '<div class="card-profile-image">'+
+                        '<img src="https://source.unsplash.com/random" style="width: 118px; height: 118px;" class="rounded-circle avatar">'+
+                        '</div>'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
+                        '<div class="d-flex justify-content-between">'+
+                        '<a href="#" class="btn btn-sm btn-info mr-4" >Report</a>'+
+                        '<a href="#" onclick="showProfile(\''+obj[i].id+'\',\''+$('#username-header').attr('user-name')+'\',true)" class="btn btn-sm btn-default float-right">Profile</a>'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="card-body pt-0 pt-md-4">'+
+                        '<div class="row">'+
+                        '<div class="col">'+
+                        '<div class="card-profile-stats d-flex justify-content-center mt-md-5">'+
+                        '<div>'+
+                        '<span class="heading">22</span>'+
+                        '<span class="description">Matches</span>'+
+                        '</div>'+
+                        '<div>'+
+                        '<span class="heading">10</span>'+
+                        '<span class="description">Photos</span>'+
+                        '</div>'+
+                        '<div>'+
+                        '<span class="heading">89</span>'+
+                        '<span class="description">Connections</span>'+
+                        '</div>'+
+                        '</div>'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="text-center">'+
+                        '<h3>'+obj[i].name+'<span class="font-weight-light">, '+obj[i].age+'</span> </h3>'+
+                        '<div class="h5 font-weight-300">'+
+                        '<i class="ni location_pin mr-2"></i>City, Country'+
+                        '</div>'+
+                        '<div class="h5 mt-4">'+
+                        '</div>'+
+                        '<div>'+
+                        '</div>'+
+                        '<hr class="my-4">'+
+                        '<p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music.</p>'+
+                        '</div>'+
+                        '</div>'+
+                        '</div>'+
+                        '</div>'+
+                        '</div>';
 
                     $('#searchResults').append(test);
                     // let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
@@ -332,6 +362,10 @@ function getUserMatches(user_id) {
     });
 }
 
+function reportUser() {
+
+}
+
 function getAllProfiles() {
 
     let filter = $('#searchFilter').val();
@@ -345,8 +379,17 @@ function getAllProfiles() {
         $('#matching').prop('hidden', true);
     }
 
-    var request = {};
-    request.get_profiles_api = true;
+    const request = {};
+    request.user_id =  $('#username-header').attr('user-id');
+
+
+    if($('#searchFilter').attr('data-matches') === true){
+        request.search_matches = true;
+    }else{
+        request.get_profiles_api = true;
+    }
+
+
 
     if(filter.length !== 0){
         request.filter = filter;
@@ -434,8 +477,8 @@ function getAllProfiles() {
                  '</div>'+
                  '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
                  '<div class="d-flex justify-content-between">'+
-                 '<a href="#" class="btn btn-sm btn-info mr-4">Connect</a>'+
-                 '<a href="#" onclick="showProfile(\''+obj[i].id+'\',\''+$('#username-header').attr('user-name')+'\')" class="btn btn-sm btn-default float-right">Profile</a>'+
+                 '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\''+obj[i].id+'\',\''+$('#username-header').attr('user-id')+'\')">Connect</a>'+
+                 '<a href="#" onclick="showProfile(\''+obj[i].id+'\',\''+$('#username-header').attr('user-name')+'\',false)" class="btn btn-sm btn-default float-right">Profile</a>'+
                  '</div>'+
                  '</div>'+
                  '<div class="card-body pt-0 pt-md-4">'+
@@ -553,6 +596,39 @@ function getAllProfiles() {
 
  */
 
+function connect(user_id, logged_in_id) {
+
+    const request = {};
+    request.create_match_api = true;
+    request.id1 = user_id;
+    request.id2 = logged_in_id;
+    $.ajax({
+        method: "POST",
+        url: "api.php",
+        data: request,
+        success: function (response) {
+            console.log(response);
+            switch (response.statusCode) {
+                case 1:{
+                    $('#card_message_button').attr('hidden', false);
+                    break;
+                }
+                case 2:{
+
+                    break;
+                }
+            }
+            Swal.fire(response.title, response.message, response.type);
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+}
+
 
 function sendDataTest(request, urll) {
     console.log(request);
@@ -582,11 +658,7 @@ function match() {
 }
 
 function unlink() {
-    // var request = {};
-    // request.create_match_api = true;
-    // request.match_id = users[curPos].id;
-    // sendDataTest(request, "api.php");
-    // nextUser();
+
 }
 
 function nomatch() {

@@ -432,6 +432,7 @@
 
                     console.log(response);
                     let res = JSON.parse(response);
+                    $('#person_fullname').attr('data-user-name', res.username);
                     $('#person_fullname').text(res.name);
                     $('#person_age_outter').text("Age: " + res.age);
                     $('#person_location_outter').text(res.location.length > 0 ? res.location.length : "Location: Hidden");
@@ -449,6 +450,14 @@
                     console.log('error:' + JSON.stringify(response));
                 }
             });
+        }
+
+        function showFilter() {
+            let filter = $('#filter_pop_up');
+            if(filter.attr('hidden')){
+                filter.attr('hidden', false);
+            }else filter.attr('hidden', true);
+
         }
 
         function newMessage() {
@@ -541,7 +550,7 @@
                                 <div class="sidebar-submenu">
                                     <ul>
                                         <li><a href="#" onclick="showProfile('<?php echo $username?>', null)"><i class="fas fa-user"></i><span>Profile</span></a></li>
-                                        <li><a href="#" onclick="showUerMatches(170)"><i class="fas fa-heart"></i><span>My Matches</span></a></li>
+                                        <li><a href="#" onclick="showUerMatches('<?php echo $id ?>')"><i class="fas fa-heart"></i><span>My Matches</span></a></li>
                                         </ul>
                                     </div>
                             </li>
@@ -626,11 +635,16 @@
             <?php include ("userProfile.php") ?>
             <?php include ("userManagment.php") ?>
             <?php include ("userTickets.php")?>
+
+
             <div class="matches" id="matcharea" hidden>
+                <a href="#" class="fab" onclick="showFilter()">
+                    <i class="fas fa-filter fab-float"></i>
+                </a>
                 <div class="container h-100 mb-5">
                     <div class="d-flex justify-content-center h-100">
                         <div class="searchbar">
-                            <input class="search_input" id="searchFilter" type="text" name="" placeholder="Search..." onkeyup="getAllProfiles()">
+                            <input class="search_input" id="searchFilter" type="text" name="" placeholder="Search..." data-matches="false" onkeyup="getAllProfiles()">
                         </div>
                     </div>
                 </div>
@@ -668,7 +682,7 @@
                             <a class="mc-btn-previous" onclick="nextMatch(null)"><i class="fas fa-angle-double-left"></i></a>
                             <div class="mc-footer">
                                 <button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i></button>
-                                <button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button" onclick="startChat()" id="message_button"><i class="fas fa-comments mr-2" ></i></button>
+                                <button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button" onclick="showProfile('\''+ $('#person_fullname').attr('user_name')+'\',\''+$('#username-header').attr('user-name')+'\',false)" id="show_profile_button"><i class="fas fa-comments mr-2" ></i></button>
                             </div>
                         </article>
                     </div>

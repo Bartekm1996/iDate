@@ -15,9 +15,10 @@ class Match implements JsonSerializable {
     public $lastname;
     public $gender;
     public $connectionDate;
+    public $username;
 
 
-    public function __construct($id, $name, $age, $gender,$photoId, $location, $desc)
+    public function __construct($id, $name, $age, $gender,$username, $photoId, $location, $desc)
     {
         $this->id = $id;
         $this->name = $name;
@@ -25,29 +26,14 @@ class Match implements JsonSerializable {
         $this->photoId = $photoId;
         $this->location = $location;
         $this->desc = $desc;
-      //  $this->smoker = $smoker;
-     //   $this->drinker = $drinker;
-     //   $this->lastname = $lastname;
+        $this->username = $username;
         $this->gender = $gender;
-      //  $this->connectionDate = $connectionDate;
     }
 
 
 
     public function jsonSerialize()
     {
-        return  "{\"id\":\"".$this->id.
-        "\",\"name\":\"".$this->name.
-        "\",\"age\":\"".$this->age.
-        "\",\"photoId\":\"".$this->photoId.
-        "\",\"location\":\"".$this->location.
-        "\",\"desc\":\"".$this->desc.
-        "\",\"smoker\":\"".$this->smoker.
-        "\",\"drinker\":\"".$this->drinker.
-        "\",\"seeking\":\"".$this->seeking.
-        "\",\"lastname\":\"".$this->lastname.
-        "\",\"connectionDate\":\"".$this->connectionDate.
-        "\",\"gender\":\"".$this->gender
-        ."\"}";
+       return json_encode(get_object_vars($this));
     }
 }

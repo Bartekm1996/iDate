@@ -1,8 +1,4 @@
-function showProfile(currentProfile, username) {
-
-
-    console.log(currentProfile + " " + username);
-
+function showProfile(currentProfile, username, matched) {
     hideMatchArea();
     hideUserManagment();
     hideMatching();
@@ -10,8 +6,12 @@ function showProfile(currentProfile, username) {
     hideTickets();
 
     if(username !== null){
-        $('#connect_button').attr('hidden', false);
-        $('#card_message_button').attr('hidden', false);
+        if(matched === true){
+            $('#card_message_button').attr('hidden', false);
+            $('#card_report_button').attr('hidden', false);
+        }else{
+            $('#connect_button').attr('hidden', false);
+        }
         disableFields();
     }else{
         $('#connect_button').attr('hidden', true);
@@ -39,6 +39,7 @@ function showProfile(currentProfile, username) {
             $('#profile_input_user_first_name').val(res.firstName);
             $('#profile_input_user_last_name').val(res.lastName);
             $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);
+            $('#seeking').text("Seeking : " + (res.seeking === "female" ? "Women" : "Men"));
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
