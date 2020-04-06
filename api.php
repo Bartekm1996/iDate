@@ -1,4 +1,5 @@
 <?php
+session_start();
 ob_start();
 
 //User this class as the api
@@ -380,6 +381,11 @@ else if(isset($_POST['upload_files_api'])) {
         }
     }
     echo $resp->jsonSerialize();
+} else if(isset($_POST['logout_api'])) {
+    session_unset($_SESSION['userid']);
+    session_destroy();
+    //header("Location: index.php");
+    echo 'logged out';
 }
 ob_start();
 

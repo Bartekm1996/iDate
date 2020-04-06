@@ -704,4 +704,37 @@ $(document).ready(function() {
         $(this).tab('show')
     })
 
+    loadMyProfile();
 });
+
+function loadMyProfile() {
+
+    var request = {};
+    request.get_user_profile_api = true;
+    request.userId = userID;
+    console.log('request:loadMyProfile->', request);
+    $.ajax({
+        method: "POST",
+        url: "api.php",
+        data: request,
+        success: function (response) {
+            console.log('loadMyProfile:response->', response);
+            let res = JSON.parse(response);
+
+            var defImage = res.photoId;
+            
+            if(defImage == null || defImage.length == 0) {
+                defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
+            }
+
+            document.getElementById("profilePicture").src = defImage;
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+
+}

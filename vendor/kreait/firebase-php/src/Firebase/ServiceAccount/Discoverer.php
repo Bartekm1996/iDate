@@ -9,11 +9,12 @@ use Kreait\Firebase\Exception\ServiceAccountDiscoveryFailed;
 use Kreait\Firebase\ServiceAccount;
 use Throwable;
 
+/**
+ * @deprecated 4.42
+ */
 class Discoverer
 {
-    /**
-     * @var callable[]
-     */
+    /** @var callable[] */
     private $methods;
 
     /**

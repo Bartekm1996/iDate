@@ -1,4 +1,5 @@
 <?php session_start()?>
+<?php if(!isset($_SESSION['userid'])){ session_unset($_SESSION['userid']); session_destroy(); header("Location: index.php");} ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,6 +32,7 @@
 
     <script>
 
+        var userID = '<?php echo $_SESSION['userid']; ?>';
 
         window.onload = function() {
 
@@ -74,11 +76,7 @@
             let admin = parseInt('<?php echo $respAdmin?>');
 
        
-       
-       
-       
-       
-            console.log("UD " + <?php echo $userid?>);
+            //console.log("UD " + <?php echo $userid?>);
             $('#username-header').text('<?php echo $firstname?>');
             $('#username-header').attr('user-id', <?php echo $userid ?>);
             $('#username-header').attr('user-name', "<?php echo $username ?>");
@@ -150,14 +148,20 @@
 
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
-                text: "Readu to miss a chance of finding your love ?",
+                text: "Ready to miss a chance of finding your love ?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes!',
                 cancelButtonText: 'No, cancel!',
                 reverseButtons: true
             }).then((result) => {
+
                 if (result.value) {
+
+                var request = {};
+                request.logout_api = true;
+                sendDataTest(request, 'api.php');
+
                     Swal.mixin({
                         toast: true,
                         position: 'top-end',
@@ -174,11 +178,7 @@
                     })
 
                     //clearInterval(interval);
-                    <?php
-                    session_unset();
-                    session_destroy();
-                    ?>
-                    window.location.href = "index.php";
+                window.location.href = "index.php";
                 } else if (
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
@@ -435,12 +435,21 @@
                     $('#person_fullname').attr('data-user-name', res.username);
                     $('#person_fullname').text(res.name);
                     $('#person_age_outter').text("Age: " + res.age);
-                    $('#person_location_outter').text(res.location.length > 0 ? res.location.length : "Location: Hidden");
+
+//                    $('#person_location_outter').text(res.location != null &&
+//                    res.location.length > 0 ? res.location.length : "Location: Hidden");
+//
                     $('#message_button').text("Message " + res.name);
                     $('#user_full_age').text("Age " + res.age);
                     $('#user_full_name').text("Name " + res.name);
                     $('#user_gender').text("Gender " + res.gender);
-                    document.getElementById("person_image").src = "https://source.unsplash.com/random";
+                    var defImage = res.photoId;
+
+                    if(defImage == null || defImage.length == 0) {
+                        defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
+                    }
+
+                    document.getElementById("person_image").src = defImage;// "https://source.unsplash.com/random";
                     console.log('success' + response);
                 },
                 failure: function (response) {
@@ -725,81 +734,14 @@
         </main>
 
 
-
-<div id="profileModal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><b>Information about this person</b></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeUserProfile()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table id="popup_user_info">
-                    <tr>
-                        <td><p class='grid-item'><img src='https://placekitten.com/100/100'/></p></td>
-                        <td>
-                            <style type="text/css">
-                                td
-                                {
-                                    padding:0 15px 0 15px;
-                                }
-                            </style>
-                            <table >
-                                <tr>
-                                    <td></td>
-                                    <td>Name:</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>Age:</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>Gender:</td>
-                                    <td id="person_gender">Male</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>Location:</td>
-                                    <td id="person_location">City</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>Smoker:</td>
-                                    <td id="person_is_smoker">Yes/No</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>Drinker:</td>
-                                    <td id="person_is_drinker">Yes/No</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-info" data-dismiss="modal" onclick="showChat(), closeUserProfile()">Start Chat</button>
-                <button type="button" class="btn btn-outline-success pull-right" data-dismiss="modal" onclick="match()">Match</button>
-                <button type="button" class="btn btn-outline-danger pull-right" data-dismiss="modal" onclick="unlink()">Unlink</button>
-                <span style="width: 100px"></span>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="closeUserProfile()">Close</button>
-            </div>
-        </div>
-    </div>
-<div>
-
-    <script src="https://kit.fontawesome.com/2530adff57.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script src="vendorv/animsition/js/animsition.min.js"></script>
-    <script src="vendorv/bootstrap/js/popper.js"></script>
-    <script src="vendorv/bootstrap/js/bootstrap.js"></script>
-    <script src="js/userTickets.js"></script>
-    <script src="js/userManagment.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/testui.js"></script>
-
+        <script src="https://kit.fontawesome.com/2530adff57.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script src="vendorv/animsition/js/animsition.min.js"></script>
+        <script src="vendorv/bootstrap/js/popper.js"></script>
+        <script src="vendorv/bootstrap/js/bootstrap.js"></script>
+        <script src="js/userTickets.js"></script>
+        <script src="js/userManagment.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/testui.js"></script>
 </body>
 </html>

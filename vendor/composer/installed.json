@@ -681,17 +681,17 @@
     },
     {
         "name": "kreait/firebase-php",
-        "version": "4.42.0",
-        "version_normalized": "4.42.0.0",
+        "version": "4.44.0",
+        "version_normalized": "4.44.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/kreait/firebase-php.git",
-            "reference": "74f309127723f4af041c0ffe70d97da7deb10f4f"
+            "reference": "61264eddd4ff5d9d6726318dbcabce39decea1e0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/kreait/firebase-php/zipball/74f309127723f4af041c0ffe70d97da7deb10f4f",
-            "reference": "74f309127723f4af041c0ffe70d97da7deb10f4f",
+            "url": "https://api.github.com/repos/kreait/firebase-php/zipball/61264eddd4ff5d9d6726318dbcabce39decea1e0",
+            "reference": "61264eddd4ff5d9d6726318dbcabce39decea1e0",
             "shasum": ""
         },
         "require": {
@@ -710,6 +710,7 @@
             "lcobucci/jwt": "^3.3.1",
             "mtdowling/jmespath.php": "^2.3",
             "php": "^7.0",
+            "psr/cache": "^1.0",
             "psr/simple-cache": "^1.0",
             "riverline/multipart-parser": "^2.0",
             "superbalist/flysystem-google-storage": "^7.0"
@@ -725,11 +726,12 @@
         "suggest": {
             "google/cloud-firestore": "^1.0 to use the Firestore component"
         },
-        "time": "2020-03-30T16:49:31+00:00",
+        "time": "2020-04-05T22:05:00+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "4.x-dev"
+                "dev-master": "5.x-dev",
+                "dev-4.x": "4.x-dev"
             }
         },
         "installation-source": "dist",
