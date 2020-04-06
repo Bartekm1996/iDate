@@ -11,6 +11,7 @@ class UserInfo implements JsonSerializable
     private $descripion;
     private $age;
     private $seeking;
+    private $photoId;
 
     /**
      * UserInfo constructor.
@@ -20,7 +21,7 @@ class UserInfo implements JsonSerializable
      * @param $email
      * @param $descripion
      */
-    public function __construct($userName, $firstName, $lastName, $email, $descripion, $age, $seeking)
+    public function __construct($userName, $firstName, $lastName, $email, $descripion, $age, $seeking, $photoId)
     {
         $this->userName = $userName;
         $this->firstName = $firstName;
@@ -29,6 +30,7 @@ class UserInfo implements JsonSerializable
         $this->descripion = $descripion;
         $this->age = $age;
         $this->seeking = $seeking;
+        $this->photoId = $photoId;
     }
 
 

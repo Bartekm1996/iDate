@@ -39,21 +39,20 @@ else if(isset($_POST['get_user_info'])){
     $uname = $conn->real_escape_string($_POST['username']);
 
     $sql = "";
-    if(ctype_digit($uname)){
-        $sql = "SELECT id,userName,firstname,lastname,email, Description, age, Seeking FROM
-                (SELECT a.id, a.userName, a.firstname, a.lastname, a.email,a.age, b.Description, b.Seeking
-                FROM user as a LEFT JOIN(select userID, Description, Seeking from profile group by userID) as b on a.id = b.userID) as user WHERE id = '{$uname}'";
-    }else{
-        $sql = "SELECT id, userName,firstname,lastname,email, Description, age, Seeking FROM
-                (SELECT a.id, a.userName, a.firstname, a.lastname, a.email,a.age, b.Description, b.Seeking
-                FROM user as a LEFT JOIN(select userID, Description, Seeking from profile group by userID) as b on a.id = b.userID) as user WHERE userName = '{$uname}'";
-    }
+    $mode = ctype_digit($uname) ? "id='{$uname}';" : "userName='{$uname}';";
 
+        $sql = "SELECT id, userName,firstname,lastname,email, Description, age, Seeking, photoId
+                 FROM (SELECT user.id, user.firstname, user.lastname, 
+                 user.age, user.gender, user.userName,user.email, 
+             profile.photoId, profile.location, profile.Description, profile.Seeking  FROM user
+            inner join profile
+            on user.id = profile.userID) AS res
+            WHERE {$mode}";
 
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
             $res = $result->fetch_row();
-            $user = new UserInfo($res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7]) ;
+            $user = new UserInfo($res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8]) ;
             echo $user->jsonSerialize();
     }
 }

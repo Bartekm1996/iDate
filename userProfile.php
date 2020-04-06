@@ -23,7 +23,7 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
-                                <img src="https://source.unsplash.com/random" style="width: 118px; height: 118px;" class="rounded-circle avatar">
+                                <img id="upro_img" src="https://source.unsplash.com/random" style="width: 118px; height: 118px;" class="rounded-circle avatar">
                             </div>
                         </div>
                     </div>

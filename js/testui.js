@@ -294,6 +294,14 @@ function getUserMatches(user_id) {
                     $('#my_matches_place_holder').attr('hidden', true);
                 }
                 for(let i = 0; i < obj.length; i++) {
+
+                    var res = obj[i];
+                    var defImage = res.photoId;
+
+                    if(defImage == null || defImage.length == 0) {
+                        defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
+                    }
+
                     let test = '<div style="width: 300px; height: 100%;">'+
                         '<div class="image-flip" ontouchstart="this.classList.toggle(\'hover\');">' +
                         '<div class="mainflip">'+
@@ -302,7 +310,7 @@ function getUserMatches(user_id) {
                         '<div class="row justify-content-center">'+
                         '<div class="col-lg-3 order-lg-2">'+
                         '<div class="card-profile-image">'+
-                        '<img src="https://source.unsplash.com/random" style="width: 118px; height: 118px;" class="rounded-circle avatar">'+
+                        '<img src="' + defImage +'" style="width: 118px; height: 118px;" class="rounded-circle avatar">'+
                         '</div>'+
                         '</div>'+
                         '</div>'+
@@ -722,7 +730,7 @@ function loadMyProfile() {
             let res = JSON.parse(response);
 
             var defImage = res.photoId;
-            
+
             if(defImage == null || defImage.length == 0) {
                 defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
             }

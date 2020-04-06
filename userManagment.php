@@ -3,7 +3,7 @@
     <div class="container bootstrap snippet" style="height: 40%; width: 90%;">
         <div class="flex-row">
                     <div class="col-sm-3" style="display: table; margin: auto auto;" >
-                        <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="img-circle img-thumbnail" style="margin-top: 20px; margin-right: 20px"  alt="avatar">
+                        <img  src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="img-circle img-thumbnail" style="margin-top: 20px; margin-right: 20px"  alt="avatar">
                     </div>
                     <div class="col-sm-10"  style="width: 70%;margin-bottom: 20px; margin-left: 30px;">
                         <h2 id="user_profile_header">User Profile</h2>

@@ -33,6 +33,13 @@ function showProfile(currentProfile, username, matched) {
         success: function (response) {
             console.log(response);
             let res = JSON.parse(response);
+            var defImage = res.photoId;
+
+            if(defImage == null || defImage.length == 0) {
+                defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
+            }
+
+
             $('#user_profile_name').text("Hello " + res.firstName + " " + res.lastName);
             $('#profile_input_user_name').val(res.userName);
             $('#profile_input_user_email').val(res.email);
@@ -40,6 +47,9 @@ function showProfile(currentProfile, username, matched) {
             $('#profile_input_user_last_name').val(res.lastName);
             $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);
             $('#seeking').text("Seeking : " + (res.seeking === "female" ? "Women" : "Men"));
+
+            document.getElementById("upro_img").src = defImage;
+
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
