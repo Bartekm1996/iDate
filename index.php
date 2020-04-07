@@ -36,7 +36,7 @@
 
 
             let button = $('#login_button');
-            if(!button.text().match("Singing In")) {
+            if(!button.text().match("Signing In")) {
 
                 request.user_name = $('#user_name').val();
                 request.login_password = $('#login_password').val();
