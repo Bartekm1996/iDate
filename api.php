@@ -97,7 +97,7 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         $res = "[";
         if ($result->num_rows > 0) {
             while ($row = mysqli_fetch_row($result)) {
-                $user = new AvailableInterests($row[0], $row[1]);
+                $user = new AvailableInterests($row[0], $row[1], $row[2]);
                 $res = $res.$user->jsonSerialize().",";
             }
 
@@ -107,11 +107,13 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         echo $res;
     }
 }else if(isset($_POST['get_my_interests_api']) && isset($_POST['userid'])) {
+
+    $myobs = array();
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
 
-        $sql = "select availableInterests.id, availableInterests.name from interests as a1
+        $sql = "select availableInterests.id, availableInterests.name, availableInterests.picture from interests as a1
                 inner join availableInterests on a1.interestID = availableInterests.id
                 where a1.userID ={$_POST['userid']}";
 
@@ -119,14 +121,11 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         $res = "[";
         if ($result->num_rows > 0) {
             while ($row = mysqli_fetch_row($result)) {
-                $user = new AvailableInterests($row[0], $row[1]);
-                $res = $res.$user->jsonSerialize().",";
+                $user = new AvailableInterests($row[0], $row[1], $row[2]);
+                array_push($myobs, $user->jsonSerialize());
             }
-
-            $res = substr($res, 0,strlen($res)-1);
         }
-        $res = $res."]";
-        echo $res;
+        echo json_encode(array("ints" => $myobs));
     }
 }  else if(isset($_POST['update_available_interests_api']) && isset($_POST['userid'])
 && isset($_POST['interest']) && isset($_POST['add'])){
@@ -215,11 +214,13 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
         echo $res;
     }
 } else if(isset($_POST['get_profiles_api'])) { //add gender search
+
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
 
         //SELECT * FROM user WHERE id IN (SELECT userID2 FROM connections WHERE userID1='66')
+        $myobj = array();
 
         $id = $conn->real_escape_string($_POST['user_id']);
 
@@ -251,13 +252,10 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
                 $i = 0;
                 $user = new SearchUser($row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++],
                     $row[$i++], $row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
-                $res = $res.$user->jsonSerialize().",";
+                array_push($myobj, $user->jsonSerialize());
             }
-
-            $res = substr($res, 0,strlen($res)-1);
         }
-        $res = $res."]";
-        echo $res;
+        echo json_encode($myobj);
     }
 }
 else if(isset($_POST['upload_files_api'])) {
@@ -300,7 +298,7 @@ else if(isset($_POST['upload_files_api'])) {
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         } else {
-            $sqlInterest = "SELECT Seeking FROM profile WHERE userID = 170;";
+            $sqlInterest = "SELECT Seeking FROM profile WHERE userID = '{$user_id}';";
             $result = $conn->query($sqlInterest);
 
             if ($result->num_rows > 0) {

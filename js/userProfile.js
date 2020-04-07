@@ -4,8 +4,7 @@ function showProfile(currentProfile, username, matched) {
     hideMatching();
     hideChat();
     hideTickets();
-
-    loadHistoryTable(currentProfile);
+    getMyInterest($('#username-header').attr('user-id'));
 
     if(username !== null){
         if(matched === true){
@@ -34,11 +33,11 @@ function showProfile(currentProfile, username, matched) {
         data: request,
         success: function (response) {
             console.log(JSON.parse(response));
-            let res = JSON.parse(JSON.stringify(response));
-            var defImage = res.photoId;
+            let res = JSON.parse(response);
+            let defImage = res.photoId;
 
-            if(defImage == null || defImage.length == 0) {
-                defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
+            if(defImage === null) {
+                defImage = res.gender === 'Male' ? 'images/male.png' : 'images/female.png';
             }
 
 
@@ -49,6 +48,7 @@ function showProfile(currentProfile, username, matched) {
             $('#profile_input_user_last_name').val(res.lastName);
             $('#profile_bio').val(res.descripion);
             $('#profile_card_description').text(res.descripion);
+            $('#profile_user_card_name').attr('user_age', res.age);
             $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);
             $('#seeking').text("Seeking : " + (res.seeking === "female" ? "Women" : "Men"));
 
@@ -75,29 +75,18 @@ function loadHistoryTable(username) {
         url: "Mongo.php",
         data: request,
         success: function (response) {
-            console.log(response);
 
             let res = JSON.parse(response);
-            let timestamp = "";
             console.log(res.events[0].timestamp);
 
-            for(let i = (res.events.length-1); i > -1 ; i--){
-                if(res.events[i].event === "Log In"){
-                    Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        onOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    }).fire({
-                        icon: 'success',
-                        title: 'Last Signed In ' + res.events[i].timestamp
-                    })
-                    break;
+            if(res.events.length === 1){
+                msg("Welcome " + username);
+            }else {
+                for (let i = (res.events.length - 1); i > -1; i--) {
+                    if (res.events[i].event === "Log In") {
+                        msg('Last Signed In ' + res.events[i].timestamp)
+                        break;
+                    }
                 }
             }
 
@@ -123,6 +112,108 @@ function loadHistoryTable(username) {
             console.log('error:' + JSON.stringify(response));
         }
     });
+}
+
+function getMyInterest(userid) {
+    const request = {};
+    request.get_my_interests_api = true;
+    request.userid = userid;
+
+    $.ajax({
+        method: "POST",
+        url: "api.php",
+        data: request,
+        success: function (response) {
+            let res = JSON.parse(response);
+            console.log(res);
+            let table = $('#interestResult');
+            for(let i = 0; i < res.ints.length; i++){
+                let ress = JSON.parse(res.ints[i]);
+                table.append(
+                    '<div style="height: 100px; width: 100px;">'+
+                        '<div class="in-card">'+
+                        '<div class="in-card-header">'+ress.name+'</div>'+
+                        '<div class="in-card-main">'+
+                        '<img src="'+ress.picture+'" width="100px" height="100px">'+
+                        '<div class="in-main-description"'+ress.name+'</div>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>'
+
+            );
+            }
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+}
+
+function msg(txt){
+    Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        onOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    }).fire({
+        icon: 'success',
+        title: txt
+    })
+}
+
+function saveuserinformation() {
+    const request = {};
+    request.save_user_info = true;
+    request.firstname = $('#profile_input_user_first_name').val();
+    request.email = $('#profile_input_user_email').val();
+    request.lastname = $('#profile_input_user_last_name').val();
+    saveDate(request);
+}
+
+function saveaboutme() {
+    const request = {};
+    request.save_user_info = true;
+    request.about_me = $('#profile_bio').val();
+    request.user_id = $('#username-header').attr('user-id');
+    saveDate(request);
+}
+
+function saveuserinfo() {
+
+}
+
+function saveDate(request) {
+    $.ajax({
+        method: "POST",
+        url: "userManagmentApi.php",
+        data: request,
+        success: function (response) {
+            let res = JSON.parse(response);
+            Swal.fire(res.title, res.message, res.type);
+            if(request.firstname !== " "){
+                $('#user_profile_name').text("Hello " + request.firstname + " " + request.lastname);
+                $('#profile_user_card_name').text(request.firstname + " " + request.lastname + " , " + $('#profile_user_card_name').attr('user_age'));
+                $('#username-header').text(request.firstname);
+            }else if(request.about_me !== " "){
+                $('#profile_card_description').text(request.about_me);
+            }
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+
 }
 
 function disableFields() {

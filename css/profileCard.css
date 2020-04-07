@@ -204,7 +204,9 @@
 .material-card .mc-description {
     position: absolute;
     top: 100%;
-    width: 100%;
+    width: 80%;
+    left: 10%;
+    right: 10%;
     bottom: 54px;
     overflow-x: hidden;
     overflow-y: scroll;

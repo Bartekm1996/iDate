@@ -83,14 +83,14 @@
                         <form>
                             <div class="container" style="width: 100%;">
                                 <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">User information</h6>
-                                <a  style="display: inline-block;" id="user_profile_save_button" href="#!" class="btn btn-sm btn-primary pull-right">Save</a>
+                                <a  style="display: inline-block;" id="user_profile_save_button" href="#!" class="btn btn-sm btn-primary pull-right" onclick="saveuserinformation()">Save</a>
                             </div>
                             <div class="pl-lg-4">
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group focused">
                                             <label class="form-control-label" for="input-username">Username</label>
-                                            <input type="text" class="form-control form-control-alternative" placeholder="Username" id="profile_input_user_name">
+                                            <input type="text" class="form-control form-control-alternative" placeholder="Username" id="profile_input_user_name" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -155,7 +155,7 @@
                             <!-- Description -->
                             <div class="container" style="width: 100%;">
                                 <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">About Me</h6>
-                                <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_about_me_save_button">Save</a>
+                                <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_about_me_save_button" onclick="saveaboutme()">Save</a>
                             </div>
                             <div class="pl-lg-4">
                                 <div class="form-group focused">
@@ -167,17 +167,61 @@
                             <!-- About -->
                             <div class="container" style="width: 100%;">
                                 <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">Info</h6>
-                                <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_info_save_button">Save</a>
+                                <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_info_save_button" onclick="saveuserinfo()">Save</a>
                             </div>
                             <div class="pl-lg-4">
-                                <div class="form-group focused">
+                                <div class="form-group focused row">
+                                    <div style="display: inline-block;" class="col-sm-5">
+                                        <ul class="about">
+                                            <li class="about-items mb-3">
+                                                <i class="mdi mdi-account icon-sm "></i><span class="about-item-name">Gender </span>
+                                                <select id="gender_picker">
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>
+                                                    <option value="other">Can't Decide</option>
+                                                </select>
+                                            </li>
+                                            <li class="about-items">
+                                                <i class="mdi mdi-account icon-sm "></i><span class="about-item-name">Seeking </span>
+                                                <select id="seeking_picker">
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>
+                                                    <option value="other">Can't Decide</option>
+                                                </select>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display: inline-block;" class="col-sm-5">
+                                        <ul class="about">
+                                            <li class="about-items mb-3">
+                                                <i class="mdi mdi-account icon-sm "></i><span class="about-item-name">Drinker </span>
+                                                <select id="drinker_picker">
+                                                    <option value="yes">Yes</option>
+                                                    <option value="no">No</option>
+                                                    <option value="occasionally">Occassionally</option>
+                                                </select>
+                                            </li>
+                                            <li class="about-items">
+                                                <div>
+                                                    <i class="mdi mdi-account icon-sm "></i><span class="about-item-name">Seeking </span>
+                                                    <select id="smoking_picker">
+                                                        <option value="yes">Yes</option>
+                                                        <option value="no">No</option>
+                                                        <option value="occasionally">Occassionally</option>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                             <hr class="my-4">
                             <!-- Interests -->
-                            <div class="container" style="width: 100%;">
+                            <div class="container" style="width: 100%; height: 300px;">
                                 <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">Interests</h6>
-                                <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_interest_save_button">Save</a>
+                                <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_interest_save_button" onclick="edituserinterests()">Edit</a>
+                                <div style="display: grid; grid-template-columns: auto auto auto; height: 250px; margin-top: 50px; grid-gap: 40px; position: center; overflow-y: scroll;" id="interestResult" >
+                                </div>
                             </div>
                             <div class="pl-lg-4">
                                 <div class="form-group focused">

@@ -297,8 +297,8 @@ function getUserMatches(user_id) {
                 
                 for(let i = 0; i < obj.length; i++) {
 
-                    var res = obj[i];
-                    var defImage = res.photoId;
+                    let res = JSON.parse(obj[i]);
+                    let defImage = res.photoId;
 
                     if(defImage == null || defImage.length == 0) {
                         defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
@@ -417,6 +417,7 @@ function getAllProfiles() {
             if(obj != null) {
                 for(let i = 0; i < obj.length; i++) {
 
+                    let ress = JSON.parse(obj[i]);
                     /*
                 let test = '<div >'+
                  '<div class="row">' +
@@ -481,14 +482,14 @@ function getAllProfiles() {
                  '<div class="row justify-content-center">'+
                  '<div class="col-lg-3 order-lg-2">'+
                  '<div class="card-profile-image">'+
-                 '<img src="https://source.unsplash.com/random" style="width: 118px; height: 118px;" class="rounded-circle avatar">'+
+                 '<img src="'+(ress.photoId === null ? (ress.gender === "Male" ? "images/male.png" : "images/female.png") : ress.photoId)+'" style="width: 118px; height: 118px;" class="rounded-circle avatar">'+
                  '</div>'+
                  '</div>'+
                  '</div>'+
                  '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
                  '<div class="d-flex justify-content-between">'+
-                 '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\''+obj[i].id+'\',\''+$('#username-header').attr('user-id')+'\')">Connect</a>'+
-                 '<a href="#" onclick="showProfile(\''+obj[i].id+'\',\''+$('#username-header').attr('user-name')+'\',false)" class="btn btn-sm btn-default float-right">Profile</a>'+
+                 '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\''+ress.id+'\',\''+$('#username-header').attr('user-id')+'\')">Connect</a>'+
+                 '<a href="#" onclick="showProfile(\''+ress.id+'\',\''+$('#username-header').attr('user-name')+'\',false)" class="btn btn-sm btn-default float-right">Profile</a>'+
                  '</div>'+
                  '</div>'+
                  '<div class="card-body pt-0 pt-md-4">'+
@@ -511,7 +512,7 @@ function getAllProfiles() {
                  '</div>'+
                  '</div>'+
                  '<div class="text-center">'+
-                 '<h3>'+obj[i].name+'<span class="font-weight-light">, '+obj[i].age+'</span> </h3>'+
+                 '<h3>'+ress.name+'<span class="font-weight-light">, '+ress.age+'</span> </h3>'+
                  '<div class="h5 font-weight-300">'+
                  '<i class="ni location_pin mr-2"></i>City, Country'+
                  '</div>'+
@@ -520,7 +521,7 @@ function getAllProfiles() {
                  '<div>'+
                  '</div>'+
                  '<hr class="my-4">'+
-                 '<p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music.</p>'+
+                 '<p>'+ress.desc+'</p>'+
                  '</div>'+
                     '</div>'+
                     '</div>'+
@@ -617,6 +618,7 @@ function connect(user_id, logged_in_id) {
         url: "api.php",
         data: request,
         success: function (response) {
+            let les = JSON.parse(response);
             console.log(response);
             switch (response.statusCode) {
                 case 1:{
@@ -628,7 +630,7 @@ function connect(user_id, logged_in_id) {
                     break;
                 }
             }
-            Swal.fire(response.title, response.message, response.type);
+            Swal.fire(les.title, les.message, les.type);
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
