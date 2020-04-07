@@ -90,7 +90,7 @@
                                     <div class="col-lg-6">
                                         <div class="form-group focused">
                                             <label class="form-control-label" for="input-username">Username</label>
-                                            <input type="text" class="form-control form-control-alternative" placeholder="Username" id="profile_input_user_name" disabled>
+                                            <input type="text" class="form-control form-control-alternative" placeholder="Username" id="profile_input_user_name" readonly="readonly">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
