@@ -294,15 +294,14 @@ function getUserMatches(user_id) {
                     $('#my_matches_place_holder').attr('hidden', true);
                 }
                 $('#searchResults').empty();
-
-                debugger;
+                
                 for(let i = 0; i < obj.length; i++) {
 
-                    var res = obj[i];
-                    var defImage = res.photoId;
+                    let res = JSON.parse(obj[i]);
+                    let defImage = res.photoId;
 
-                    if(defImage == null || defImage.length == 0) {
-                        defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
+                    if(defImage == null) {
+                        defImage = res.gender === 'Male' ? 'images/male.png' : 'images/female.png';
                     }
 
                     let test = '<div style="width: 300px; height: 100%;">'+
@@ -482,14 +481,14 @@ function getAllProfiles() {
                  '<div class="row justify-content-center">'+
                  '<div class="col-lg-3 order-lg-2">'+
                  '<div class="card-profile-image">'+
-                 '<img src="images/default.png style="width: 118px; height: 118px;" class="rounded-circle avatar">'+
+                 '<img src="'+(ress.photoId === null ? (ress.gender === "Male" ? "images/male.png" : "images/female.png") : ress.photoId)+'" style="width: 118px; height: 118px;" class="rounded-circle avatar">'+
                  '</div>'+
                  '</div>'+
                  '</div>'+
                  '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
                  '<div class="d-flex justify-content-between">'+
-                 '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\''+obj[i].id+'\',\''+$('#username-header').attr('user-id')+'\')">Connect</a>'+
-                 '<a href="#" onclick="showProfile(\''+obj[i].id+'\',\''+$('#username-header').attr('user-name')+'\',false)" class="btn btn-sm btn-default float-right">Profile</a>'+
+                 '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\''+ress.id+'\',\''+$('#username-header').attr('user-id')+'\')">Connect</a>'+
+                 '<a href="#" onclick="showProfile(\''+ress.id+'\',\''+$('#username-header').attr('user-name')+'\',false)" class="btn btn-sm btn-default float-right">Profile</a>'+
                  '</div>'+
                  '</div>'+
                  '<div class="card-body pt-0 pt-md-4">'+

@@ -21,7 +21,7 @@
     -o-transform: rotateY(180deg);
     transform: rotateY(180deg);
 }
-*/
+ */
 
 .mainflip {
     -webkit-transition: 1s;

@@ -41,7 +41,7 @@ else if(isset($_POST['get_user_info'])){
     $sql = "";
     $mode = ctype_digit($uname) ? "id='{$uname}';" : "userName='{$uname}';";
 
-        $sql = "SELECT id, userName,firstname,lastname,email, Description, age, Seeking, photoId
+        $sql = "SELECT id, userName,firstname,lastname,email, Description, age, Seeking, photoId, gender
                  FROM (SELECT user.id, user.firstname, user.lastname, 
                  user.age, user.gender, user.userName,user.email, 
              profile.photoId, profile.location, profile.Description, profile.Seeking  FROM user
@@ -52,7 +52,7 @@ else if(isset($_POST['get_user_info'])){
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
             $res = $result->fetch_row();
-            $user = new UserInfo($res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8]) ;
+            $user = new UserInfo($res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8], $res[9]) ;
             echo $user->jsonSerialize();
     }
 }
@@ -251,5 +251,43 @@ else if(isset($_POST['get_all_tickets'])){
             echo $res->jsonSerialize();
         }
     }
+}else if(isset($_POST['save_user_info'])){
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+
+        $sql = "";
+        $resp = "";
+        if(isset($_POST['username'])){
+            $username = $conn->real_escape_string($_POST['username']);
+            $fname = $conn->real_escape_string($_POST['firstname']);
+            $lname = $conn->real_escape_string($_POST['lastname']);
+            $email = $conn->real_escape_string($_POST['email']);
+            $sql = "UPDATE user SET userName = '{$username}', email = '{$email}', firstname = '{$fname}', lastname = '{$lname}' WHERE userName = '{$username}'";
+        }else if(isset($_POST['about_me'])){
+            $id = $conn->real_escape_string($_POST['user_id']);
+            $me = $conn->real_escape_string($_POST['about_me']);
+            $sql = "UPDATE profile SET Description = '{$me}' WHERE userID = '{$id}' ";
+        }else if(isset($_POST['seeking'])){
+
+        }
+
+        $result = $conn->query($sql);
+
+        if ($result === true) {
+            $resp = new SweetalertResponse(1,
+                'Success',
+                "Information Saved",
+                SweetalertResponse::SUCCESS
+            );
+        }else{
+            $resp = new SweetalertResponse(1,
+                'Failed',
+                "Failed to save information",
+                SweetalertResponse::ERROR
+            );
+        }
+    }
+    echo $resp->jsonSerialize();
 }
 ob_end_flush();

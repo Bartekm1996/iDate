@@ -38,17 +38,6 @@ class SearchUser implements JsonSerializable {
 
     public function jsonSerialize()
     {
-        return  "{\"id\":\"".$this->id.
-        "\",\"name\":\"".$this->name.
-        "\",\"age\":\"".$this->age.
-        "\",\"photoId\":\"".$this->photoId.
-        "\",\"location\":\"".$this->location.
-        "\",\"desc\":\"".$this->desc.
-        "\",\"smoker\":\"".$this->smoker.
-        "\",\"drinker\":\"".$this->drinker.
-        "\",\"seeking\":\"".$this->seeking.
-        "\",\"lastname\":\"".$this->lastname.
-        "\",\"gender\":\"".$this->gender
-        ."\"}";
+        return json_encode(get_object_vars($this));
     }
 }
