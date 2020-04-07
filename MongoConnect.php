@@ -34,6 +34,17 @@ class MongoConnect
         $this->getConnection()->executeBulkWrite('iDate.history', $bulk);
     }
 
+    public function getLastLoggedIn(String $user){
+        $filter = ['_id' => $user];
+        $options = [];
+        $query = new MongoDB\Driver\Query($filter, $options);
+        try {
+            return $this->getConnection()->executeQuery('iDate.history', $query);
+        } catch (\MongoDB\Driver\Exception\Exception $e) {
+
+        }
+    }
+
     public function initConversations(String $user){
         $bulk = $bulk = new MongoDB\Driver\BulkWrite;
         $bulk->insert(

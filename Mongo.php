@@ -35,7 +35,26 @@ if(isset($_GET['userId'])){
         echo json_encode(array("contacts" => $myObj));
     }
 
-}else {
+}else if(isset($_GET['last_logged_in'])){
+
+    $mongo = new MongoConnect();
+    $result = $mongo->getLastLoggedIn($_GET['username']);
+    $myres = array();
+
+    foreach($result as $document){
+        for($x = (sizeof($document->_events) - 15); $x < sizeof($document->_events); $x++){
+            array_push($myres, array(
+                "timestamp" => $document->_events[$x]->timestamp,
+                "description" => $document->_events[$x]->description,
+                "event"=>$document->_events[$x]->event
+            ));
+        }
+
+        echo json_encode(array("events" => $myres));
+    }
+
+
+} else {
     /*
     request.userOne = 'Bartekm1999';
     request.userTwoId = $('ul#contactsList').find('li.active').attr("data-id");

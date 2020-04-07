@@ -82,7 +82,7 @@
             $('#username-header').attr('user-name', "<?php echo $username ?>");
             fillTicketsNumbers();
             fillMembersNumbers();
-            loadMatches();
+            showProfile( $('#username-header').attr('user-name'), null, false);
         };
 
         //let interval = setInterval(() => getMessage(),2000);
@@ -662,7 +662,7 @@
                 </div>
             </div>
 
-            <div id="matching">
+            <div id="matching" hidden>
                 <section class="matching">
                 <div class="row active-with-click">
                     <div class="col-xs-12">

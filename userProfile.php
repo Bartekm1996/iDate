@@ -1,6 +1,6 @@
 
 
-<div class="main-content" id="user_profile" hidden style="height: 100%; width: 100%; overflow-y: scroll;" >
+<div class="main-content" id="user_profile" style="height: 100%; width: 100%; overflow-y: scroll;" >
     <!-- Top navbar -->
     <!-- Header -->
     <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 600px; background-image: url(https://source.unsplash.com/random); background-size: cover; background-position: center top;">
@@ -65,7 +65,7 @@
                             <div>
                             </div>
                             <hr class="my-4">
-                            <p>Description</p>
+                            <p id="profile_card_description"></p>
                         </div>
                     </div>
                 </div>
@@ -160,7 +160,7 @@
                             <div class="pl-lg-4">
                                 <div class="form-group focused">
                                     <label>About Me</label>
-                                    <textarea rows="4" class="form-control form-control-alternative" placeholder="A few words about you ..."></textarea>
+                                    <textarea rows="4" class="form-control form-control-alternative" id="profile_bio" placeholder="A few words about you ..."></textarea>
                                 </div>
                             </div>
                             <hr class="my-4">
@@ -181,6 +181,30 @@
                             </div>
                             <div class="pl-lg-4">
                                 <div class="form-group focused">
+                                </div>
+                            </div>
+                            <div class="container" style="width: 100%;">
+                                <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">User Profile History</h6>
+                            </div>
+                            <div class="pl-lg-4">
+                                <div class="form-group focused" id="profile_history" style="height: 250px; overflow-y: scroll;">
+                                    <table class="table table-striped table-borderless table-hover" id="history_table" style="width: 100%; height: 250px; overflow-y: scroll;">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th>
+                                                <span>Date</span>
+                                            </th>
+                                            <th>
+                                                <span>Event</span>
+                                            </th>
+                                            <th>
+                                                <span>Description</span>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="history_table_body">
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </form>

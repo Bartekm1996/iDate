@@ -5,6 +5,8 @@ function showProfile(currentProfile, username, matched) {
     hideChat();
     hideTickets();
 
+    loadHistoryTable(currentProfile);
+
     if(username !== null){
         if(matched === true){
             $('#card_message_button').attr('hidden', false);
@@ -31,8 +33,8 @@ function showProfile(currentProfile, username, matched) {
         url: "userManagmentApi.php",
         data: request,
         success: function (response) {
-            console.log(response);
-            let res = JSON.parse(response);
+            console.log(JSON.parse(response));
+            let res = JSON.parse(JSON.stringify(response));
             var defImage = res.photoId;
 
             if(defImage == null || defImage.length == 0) {
@@ -45,11 +47,74 @@ function showProfile(currentProfile, username, matched) {
             $('#profile_input_user_email').val(res.email);
             $('#profile_input_user_first_name').val(res.firstName);
             $('#profile_input_user_last_name').val(res.lastName);
+            $('#profile_bio').val(res.descripion);
+            $('#profile_card_description').text(res.descripion);
             $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);
             $('#seeking').text("Seeking : " + (res.seeking === "female" ? "Women" : "Men"));
 
             document.getElementById("upro_img").src = defImage;
 
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+}
+
+function loadHistoryTable(username) {
+
+    const request = {};
+    request.last_logged_in = true;
+    request.username = username;
+
+    $.ajax({
+        method: "GET",
+        url: "Mongo.php",
+        data: request,
+        success: function (response) {
+            console.log(response);
+
+            let res = JSON.parse(response);
+            let timestamp = "";
+            console.log(res.events[0].timestamp);
+
+            for(let i = (res.events.length-1); i > -1 ; i--){
+                if(res.events[i].event === "Log In"){
+                    Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    }).fire({
+                        icon: 'success',
+                        title: 'Last Signed In ' + res.events[i].timestamp
+                    })
+                    break;
+                }
+            }
+
+            let table = $('#history_table_body');
+            for(let i = 0; i < res.events.length; i++){
+                table.append(
+                    '<tr><td>' +
+                    '<small>'+res.events[i].timestamp+'</small>'+
+                    '</td>' +
+                    '<td>' +
+                    '<small>'+res.events[i].event+'</small>'+
+                    '</td>' +
+                    '<td>' +
+                    '<small>'+res.events[i].description+'</small>'+
+                    '</td></tr>'
+                );
+            }
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
