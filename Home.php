@@ -82,6 +82,7 @@
             $('#username-header').attr('user-name', "<?php echo $username ?>");
             fillTicketsNumbers();
             fillMembersNumbers();
+            loadHistoryTable($('#username-header').attr('user-name'));
             showProfile( $('#username-header').attr('user-name'), null, false);
         };
 
@@ -403,10 +404,6 @@
 
         }
 
-        function testID() {
-            alert($('#match_id').val());
-        }
-
         function nextMatch(index) {
 
 
@@ -447,7 +444,6 @@
                     $('#user_full_age').text("Age " + res.age);
                     $('#user_full_name').text("Name " + res.name);
                     $('#user_gender').text("Gender " + res.gender);
-                    $('#match_id').val(res.id);
                     var defImage = res.photoId;
 
                     if(defImage == null || defImage.length == 0) {
@@ -543,7 +539,7 @@
                         </div>
                         <div class="user-info mt-lg-4">
                             <span class="user-name" id="username-header"></span>
-                            <span class="user-role"><?php echo $respAdmin == 1 ? "Administrators" : "User"?></span>
+                            <span class="user-role"><?php echo $respAdmin == 1 ? "Administrator" : "User"?></span>
                             <span class="user-status">
                                   <i class="fa fa-circle"></i>
                                   <span>Online</span>
