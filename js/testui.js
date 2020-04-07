@@ -294,7 +294,8 @@ function getUserMatches(user_id) {
                     $('#my_matches_place_holder').attr('hidden', true);
                 }
                 $('#searchResults').empty();
-                
+
+                debugger;
                 for(let i = 0; i < obj.length; i++) {
 
                     var res = obj[i];
@@ -481,7 +482,7 @@ function getAllProfiles() {
                  '<div class="row justify-content-center">'+
                  '<div class="col-lg-3 order-lg-2">'+
                  '<div class="card-profile-image">'+
-                 '<img src="https://source.unsplash.com/random" style="width: 118px; height: 118px;" class="rounded-circle avatar">'+
+                 '<img src="images/default.png style="width: 118px; height: 118px;" class="rounded-circle avatar">'+
                  '</div>'+
                  '</div>'+
                  '</div>'+
@@ -606,6 +607,10 @@ function getAllProfiles() {
 
  */
 
+function newMatch() {
+    connect(userID, $('#match_id').val());
+}
+
 function connect(user_id, logged_in_id) {
 
     const request = {};
@@ -618,7 +623,8 @@ function connect(user_id, logged_in_id) {
         data: request,
         success: function (response) {
             console.log(response);
-            switch (response.statusCode) {
+            var res = JSON.parse(response);
+            switch (res.statusCode) {
                 case 1:{
                     $('#card_message_button').attr('hidden', false);
                     break;
@@ -628,7 +634,7 @@ function connect(user_id, logged_in_id) {
                     break;
                 }
             }
-            Swal.fire(response.title, response.message, response.type);
+            Swal.fire(res.title, res.message, res.type);
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));

@@ -76,6 +76,8 @@ function loadHistoryTable(username) {
         data: request,
         success: function (response) {
             console.log(response);
+            if(response == null || response.length == 0) return;
+            
 
             let res = JSON.parse(response);
             let timestamp = "";
