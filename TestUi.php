@@ -691,7 +691,8 @@
                             <a class="mc-btn-next" onclick="nextMatch(null)"><i class="fas fa-angle-double-right"></i></a>
                             <a class="mc-btn-previous" onclick="nextMatch(null)"><i class="fas fa-angle-double-left"></i></a>
                             <div class="mc-footer">
-                                <button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i></button>
+                                <input id="match_id" type="hidden" value=""><!-- current selected user -->
+                                <button onclick="newMatch()" target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i></button>
                                 <button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button" onclick="showProfile('\''+ $('#person_fullname').attr('user_name')+'\',\''+$('#username-header').attr('user-name')+'\',false)" id="show_profile_button"><i class="fas fa-comments mr-2" ></i></button>
                             </div>
                         </article>
