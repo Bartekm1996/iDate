@@ -63,7 +63,7 @@ function showProfile(currentProfile, username, matched) {
         }
     });
 }
-
+//update
 function loadHistoryTable(username) {
 
     const request = {};
