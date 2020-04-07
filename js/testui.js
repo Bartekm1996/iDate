@@ -300,8 +300,8 @@ function getUserMatches(user_id) {
                     let res = JSON.parse(obj[i]);
                     let defImage = res.photoId;
 
-                    if(defImage == null || defImage.length == 0) {
-                        defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
+                    if(defImage == null) {
+                        defImage = res.gender === 'Male' ? 'images/male.png' : 'images/female.png';
                     }
 
                     let test = '<div style="width: 300px; height: 100%;">'+
