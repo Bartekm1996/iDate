@@ -36,7 +36,7 @@
 
 
             let button = $('#login_button');
-            if(!button.text().match("Singing In")) {
+            if(!button.text().match("Signing In")) {
 
                 request.user_name = $('#user_name').val();
                 request.login_password = $('#login_password').val();
@@ -101,9 +101,9 @@
                 html: 'Your Password will be generated in <b></b> milliseconds.',
                 timer: 1000,
                 timerProgressBar: true,
-                onBeforeOpen: () => {
+                onBeforeOpen: (i) => {
                     Swal.showLoading()
-                    timerInterval = setInterval(() => {
+                    timerInterval = setInterval((i) => {
                         const content = Swal.getContent()
                         if (content) {
                             const b = content.querySelector('b')
@@ -113,7 +113,7 @@
                         }
                     }, 100)
                 },
-                onClose: () => {
+                onClose: (i) => {
                     Swal.fire({
                         title: 'Your Password',
                         text: res,
@@ -257,7 +257,7 @@
                     console.log(response.title);
                     $('#login_button').html('Sign In');
                     switch(response.statusCode) {
-                        case 2:
+                        case 2:{
                             Swal.mixin({
                                 toast: true,
                                 position: 'top-end',
@@ -271,9 +271,10 @@
                             }).fire({
                                 icon: 'success',
                                 title: 'Signed in successfully'
-                            })
-                            window.location.href = 'TestUi.php';
+                            });
+                            window.location.href = 'Home.php';
                             break;
+                        }
                         case 3:
                             passWordReset('Invalid Password', 'warning')
                             break;
@@ -301,7 +302,7 @@
 
         <video class="login100-more" style="object-fit: cover;" height="100vh" id="vid" src="https://firebasestorage.googleapis.com/v0/b/inventory-b7072.appspot.com/o/iDate.mp4?alt=media&token=8c04f07e-a8c4-4278-ae4b-2fbc22513b83" preload="metadata" type="video/mp4" playsinline loop autoplay muted></video>
         <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50" style="height: 100%; overflow-y: scroll;">
-            <span class="login100-form-title p-b-59" id="signUpHeader">Sing In</span>
+            <span class="login100-form-title p-b-59" id="signUpHeader">Sign In</span>
             <div id="loginForm" class="login100-form validate-form" >
                 <div class="wrap-input100 validate-input m-b-23" data-validate="UserName / Email is required">
                     <span class="label-input100">User Name</span>
