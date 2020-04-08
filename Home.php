@@ -236,6 +236,7 @@
 
             let id = $('#username-header').attr('user-name');
 
+            console.log("id " + id);
             const request = {};
             request.messages = ($('ul#contactsList').find('li.active').attr("data-id") === undefined ?   0 : $('ul#contactsList').find('li.active').attr("data-id"));
             request.userId = id;
@@ -247,6 +248,7 @@
                 url: "Mongo.php",
                 data: request,
                 success: function (response) {
+                    console.log('success ' + response + " length ");
                     let res = JSON.parse(response);
                     console.log("Message " + res[0]._conversations[request.messages].messages[0].message);
 
@@ -289,11 +291,12 @@
 
         async function loadConversations(){
 
+            showChat();
             $('#contactsList').empty();
 
             const request = {};
             request.userId =  $('#username-header').attr('user-name');
-            console.log("Username " + request.userId);
+            console.log(request.userId);
             $.ajax({
                 method: "GET",
                 url: "Mongo.php",
@@ -305,6 +308,7 @@
 
                     for (let i = 0; i < res[0]._conversations.length; i++) {
 
+                        console.log(res['contacts'][i]["username"]);
 
                         $('<li class="contact" onclick="toggleClass(this)" data-id='+i+' data-username='+res[0]._conversations[i].username+'>'
                             + '<div class="wrap">'
@@ -439,10 +443,12 @@
                     tmpIndex = 0;
                 }
                 request.userId = tmp[tmpIndex];
-                $('#person_fullname').attr('data-index',tmpIndex);
+                $('#person_fullname').attr('data-index',tmpIndex+1)
             }else{
                 request.userId = index;
             }
+
+            console.log(parseInt($('#person_fullname').attr('data-index'))+1);
 
             $.ajax({
                 method: "POST",
@@ -542,6 +548,7 @@
                 }
             });
 
+            //$('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
             $('.message-input input').val(null);
             $(".messages").animate({ scrollTop: $(document).height() }, "fast");
 

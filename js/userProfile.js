@@ -63,7 +63,7 @@ function showProfile(currentProfile, username, matched) {
         }
     });
 }
-
+//update
 function loadHistoryTable(username) {
 
     const request = {};
@@ -75,6 +75,9 @@ function loadHistoryTable(username) {
         url: "Mongo.php",
         data: request,
         success: function (response) {
+            console.log(response);
+            if(response == null || response.length == 0) return;
+            
 
             console.log(response);
             let res = JSON.parse(response);
