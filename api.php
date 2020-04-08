@@ -184,7 +184,23 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
             join results with user and profile table and select the data from
             the person we have matched with
         */
-        $sql = "select user.id, user.firstname, user.age, 
+        $myobj = array();
+        $sql = "";
+        if(isset($_POST['filter'])){
+            $filter = $conn->real_escape_string($_POST['filter']);
+            $sql = "SELECT * FROM (select user.id, user.firstname, user.age,
+                profile.photoId, profile.location, profile.Description,
+                profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender,
+                results.connectionDate
+                from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
+                from connections as c1, connections as c2
+                where (c1.userID1 = c2.userID2 AND
+                c2.userID1 = c1.userID2) AND
+                c1.userID2 = '{$_POST['user_id']}') as results
+                inner join profile on results.userID1 = profile.userID
+                inner join user on results.userID1 = user.id) as user WHERE firstname LIKE '%{$filter}%' OR lastname LIKE '%{$filter}%';";
+        }else{
+            $sql = "select user.id, user.firstname, user.age, 
                 profile.photoId, profile.location, profile.Description,
                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender,
                 results.connectionDate
@@ -195,9 +211,10 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
                 c1.userID2 = '{$_POST['user_id']}') as results
                 inner join profile on results.userID1 = profile.userID
                 inner join user on results.userID1 = user.id;";
+        }
+
 
         $result = $conn->query($sql);
-        $res = "[";
         if ($result->num_rows > 0) {
 
             while ($row = mysqli_fetch_row($result)) {
@@ -205,44 +222,27 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
                 $user = new Match($row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++],
                     $row[$i++],$row[$i++],$row[$i++],$row[$i++], $row[$i++], $row[$i++]);
 
-                $res = $res.$user->jsonSerialize().",";
+               array_push($myobj, $user->jsonSerialize());
             }
 
-            $res = substr($res, 0,strlen($res)-1);
         }
-        $res = $res."]";
-        echo $res;
+
+        echo json_encode($myobj);
     }
 } else if(isset($_POST['get_profiles_api'])) { //add gender search
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
-
-        //SELECT * FROM user WHERE id IN (SELECT userID2 FROM connections WHERE userID1='66')
         $myobj = array();
 
         $id = $conn->real_escape_string($_POST['user_id']);
 
         if(isset($_POST['filter'])) {
-
-            $sql = "SELECT  * FROM (SELECT * FROM (SELECT user.id, user.firstname, user.age,
-                 profile.photoId, profile.location, profile.Description,
-                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
-                 FROM user
-                 inner join profile
-                 on user.id = profile.userID where profile.Seeking <> user.gender) AS res where id <> '{$id}'
-                 AND gender = (SELECT Seeking from profile where userID = '{$id}')) as res WHERE firstname LIKE '%{$_POST['filter']}%';";
-
-
+            $filter = $conn->real_escape_string($_POST['filter']);
+            $sql = "CALL GetUserPreference('{$id}','{$filter}')";
         }else {
-
-            $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.age,
-                 profile.photoId, profile.location, profile.Description,
-                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
-                 FROM user
-                 inner join profile
-                 on user.id = profile.userID where profile.Seeking <> user.gender) AS res where id <> '{$id}' AND gender = (SELECT Seeking from profile where userID = '{$id}');";
+            $sql = "CALL GetUserPreferences('{$id}')";
         }
 
         $result = $conn->query($sql);
@@ -298,28 +298,23 @@ else if(isset($_POST['upload_files_api'])) {
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         } else {
-            $sqlInterest = "SELECT Seeking FROM profile WHERE userID = '{$user_id}';";
-            $result = $conn->query($sqlInterest);
+            $sql = "CALL GetUserPreferences('{$user_id}')";
+            $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
                 $resp = $result->fetch_row()[0];
-                $user_interest = $conn->real_escape_string(ucfirst($resp));
-                $result->free_result();
-                $sqlPotInterest = "SELECT id FROM user where gender = '{$user_interest}'";
-                $result = $conn->query($sqlPotInterest);
-                if ($result->num_rows > 0){
-                    while($row = mysqli_fetch_row($result)){
-                        $res = $res.$row[0].",";
+                $user_interest = $conn->real_escape_string($resp);
+                if ($result->num_rows > 0) {
+                    while ($row = mysqli_fetch_row($result)) {
+                        $res = $res . $row[0] . ",";
                     }
-                    $res = $res."]";
+                    $res = $res . "]";
 
                 }
                 $_SESSION['possible_matches'] = $res;
                 echo $res;
-
             }
-
-    }
+        }
 }else if(isset($_POST['get_user_profile_api'])){
     $user_id = $conn->real_escape_string($_POST['userId']);
 

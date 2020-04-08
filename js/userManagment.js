@@ -66,23 +66,25 @@ async function userActionTwo(action, user, name, email) {
     inputOptions.eamil = email;
 
 
+    console.log(user + " " + action + " " + name + " " + email);
+
     if(action === 'delete'){
         inputOptions.action = 3;
     }else if(action === 'block'){
         inputOptions.action = 2;
     }
 
-    let options = {};
+    let con_one = "", con_two = "", con_three = "";
 
 
     if(action === 'delete'){
-        options.inactiveaccount = 'Inactive Account',
-        options.breachOfTermsAndConditions = 'Breach Of Terms And Conditions',
-        options.reportedBySeveralUsers = 'Reported By Several Users'
+            con_one = 'Inactive Account';
+            con_two = 'Breach Of Terms And Conditions';
+            con_three = 'Reported By Several Users';
     }else if(action === 'block'){
-        options.breachOfTermsAndConditions = 'Breach Of Terms And Conditions',
-        options.continousincompliance = 'Continous Incompliance',
-        options.reportedByUser = 'Reported By User'
+            con_one = 'Breach Of Terms And Conditions';
+            con_two = 'Continous Incompliance';
+            con_three = 'Reported By User';
     }
 
 
@@ -91,7 +93,11 @@ async function userActionTwo(action, user, name, email) {
         title: 'Select A Reason',
         text: 'Select A Reason for taking this action against ' + user,
         input: 'select',
-        inputOptions: options,
+        inputOptions:{
+            condition_one: con_one,
+            condition_two: con_two,
+            condition_three: con_three
+        },
         inputPlaceholder: 'Select A Reason',
         showCancelButton: true,
         inputValidator: (value) => {
@@ -103,9 +109,8 @@ async function userActionTwo(action, user, name, email) {
         }
     })
 
+    console.log("reason " + reason);
     if (reason) {
-
-
 
         inputOptions.reason = reason;
 
@@ -350,7 +355,7 @@ function getUserData(verified) {
 
                     node +=
                         '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\''+res[i].userName+'\',\''+res[i].name+'\',\''+res[i].email+'\')"><i class="fas fa-user-lock mr-2"></i>Block</a>'+
-                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\''+res[i].userName+'\',\''+res[i].name+'\',\''+res[i].email+'\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
+                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\''+res[i].userName+'\',\''+res[i].name+'\',\''+res[i].email+'\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
 
                     if(parseInt(res[i].admin) === 0){
                         node +=  '<a class="dropdown-item" href="#" onclick="userAdmin(\''+res[i].userName+'\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';

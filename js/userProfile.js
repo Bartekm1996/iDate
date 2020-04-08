@@ -50,7 +50,7 @@ function showProfile(currentProfile, username, matched) {
             $('#profile_card_description').text(res.descripion);
             $('#profile_user_card_name').attr('user_age', res.age);
             $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);
-            $('#seeking').text("Seeking : " + (res.seeking === "female" ? "Women" : "Men"));
+            $('#seeking').text("Seeking : " + (res.seeking === "female" ? "Women" : (res.seeking === "male" ? "Man" : "Other [Maybe Even Sheep]")));
 
             document.getElementById("upro_img").src = defImage;
 
@@ -76,6 +76,7 @@ function loadHistoryTable(username) {
         data: request,
         success: function (response) {
 
+            console.log(response);
             let res = JSON.parse(response);
             console.log(res.events[0].timestamp);
 
@@ -118,6 +119,8 @@ function getMyInterest(userid) {
     const request = {};
     request.get_my_interests_api = true;
     request.userid = userid;
+
+    $('#interestResult').empty();
 
     $.ajax({
         method: "POST",

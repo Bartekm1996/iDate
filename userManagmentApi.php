@@ -201,7 +201,7 @@ else if(isset($_POST['get_all_tickets'])){
         if($reason === 'block') {
             $sql = "update profile set blocked = '1' where userID = (select id from user where username = '{$username}');";
             $sqlQuery = "insert into blocked (blocked_user, blocked_date, blockee, reason) values '{$username}', '{$date}', '{$sender_name}', '$reason'";
-        }else if($reason){
+        }else if($reason === 'delete'){
             $sql = "DELETE FROM profile where userID = (SELECT id FROM user where userName = '{$username}')";
         }
 
@@ -212,24 +212,22 @@ else if(isset($_POST['get_all_tickets'])){
             $email = new Email($email, $name);
             $email->sendMessage($reason === 'delete' ? 3 : 2, $reason, $action, $sender_name);
 
-            $conn->query($sqlQuery);
 
             if($reason === 'block') {
+                $conn->query($sqlQuery);
                 $resp = new SweetalertResponse(1,
                     '',
                     "",
                     SweetalertResponse::SUCCESS
                 );
             }else if($reason === 'delete'){
-
+                $resp = new SweetalertResponse(2,
+                    '',
+                    "",
+                    SweetalertResponse::SUCCESS
+                );
             }
 
-        }else{
-            $resp = new SweetalertResponse(2,
-                '',
-                "",
-                SweetalertResponse::SUCCESS
-            );
         }
         echo $resp->jsonSerialize();
 

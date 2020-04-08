@@ -62,14 +62,14 @@ class MongoConnect
 
     public function initUsersConversation(String $user, String $recievingUser,  String $message){
         $bulk = new MongoDB\Driver\BulkWrite;
-        $bulk->update(array('_id'=>$user),array('$push'=>array('_conversations' => ['username'=> $user, 'message' => $message,'timestamp' => date('Y-m-d H:i:s', time())])));
-        $bulk->update(array('_id'=>$recievingUser,), array('$push' => array('_conversations' => ["username" => $user, "messages" => ['username'=> $user, 'message' => $message,'timestamp' => date('Y-m-d H:i:s', time())]])));
+        $bulk->update(array('_id'=>$user),  array('$push' => array('_conversations' => ["username" => $recievingUser, "messages" => [['username'=> $user, 'message' => $message,'timestamp' => date('Y-m-d H:i:s', time())]]])));
+        $bulk->update(array('_id'=>$recievingUser,), array('$push' => array('_conversations' => ["username" => $user, "messages" => [['username'=> $user, 'message' => $message,'timestamp' => date('Y-m-d H:i:s', time())]]])));
         return $this->getConnection()->executeBulkWrite('iDate.conversations', $bulk);
     }
 
     public function updateConversations(String $user, String $userTwoName,  String $message){
         $bulk = new MongoDB\Driver\BulkWrite;
-        $bulk->update(array('_id'=>$user, '_conversations.username' => $userTwoName ),array('$push'=>array('_conversations.$.messages' => ['username'=> $user, 'message' => $message,'timestamp' => date('Y-m-d H:i:s', time())])));
+        $bulk->update(array('_id'=>$user, '_conversations.username' => $userTwoName ),array('$push'=>array('_conversations.$.messages' => ['username'=> $user, "messages" => ['username'=> $user, 'message' => $message,'timestamp' => date('Y-m-d H:i:s', time())]])));
         $bulk->update(array('_id'=>$userTwoName, '_conversations.username' => $user), array('$push' => array('_conversations.$.messages' => ["username" => $user, "messages" => ['username'=> $user, 'message' => $message,'timestamp' => date('Y-m-d H:i:s', time())]])));
         return $this->getConnection()->executeBulkWrite('iDate.conversations', $bulk);
 

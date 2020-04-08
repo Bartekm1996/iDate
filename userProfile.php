@@ -31,7 +31,7 @@
                         <div class="d-flex justify-content-between">
                             <a href="#" id="connect_button" class="btn btn-sm btn-info mr-4" hidden>Connect</a>
                             <a href="#" id="card_report_button" class="btn btn-sm btn-default float-right" hidden>Report</a>
-                            <a href="#" id="card_message_button" class="btn btn-sm btn-default float-right" hidden>Message</a>
+                            <button id="card_message_button" class="btn btn-sm btn-default float-right" onclick="showUserChar($('#profile_input_user_name').val())"  hidden>Message</button>
                         </div>
                     </div>
                     <div class="card-body pt-0 pt-md-4">
@@ -220,7 +220,7 @@
                             <div class="container" style="width: 100%; height: 300px;">
                                 <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">Interests</h6>
                                 <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_interest_save_button" onclick="edituserinterests()">Edit</a>
-                                <div style="display: grid; grid-template-columns: auto auto auto; height: 250px; margin-top: 50px; grid-gap: 40px; position: center; overflow-y: scroll;" id="interestResult" >
+                                <div style="display: grid; grid-template-columns: auto auto auto auto; height: 250px; margin-top: 50px; position: center; overflow-y: scroll;" id="interestResult" >
                                 </div>
                             </div>
                             <div class="pl-lg-4">

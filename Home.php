@@ -32,6 +32,8 @@
 
     <script>
 
+        let interval  =0;
+
         var userID = '<?php echo $_SESSION['userid']; ?>';
 
         window.onload = function() {
@@ -80,10 +82,15 @@
             $('#username-header').text('<?php echo $firstname?>');
             $('#username-header').attr('user-id', <?php echo $userid ?>);
             $('#username-header').attr('user-name', "<?php echo $username ?>");
+
             fillTicketsNumbers();
             fillMembersNumbers();
             loadHistoryTable($('#username-header').attr('user-name'));
             showProfile( $('#username-header').attr('user-name'), null, false);
+
+            interval = setInterval(function() {
+               loadConversations();
+            }, 1000);
         };
 
         //let interval = setInterval(() => getMessage(),2000);
@@ -134,6 +141,8 @@
 
         });
 
+
+
         function search() {
 
         }
@@ -158,7 +167,7 @@
             }).then((result) => {
 
                 if (result.value) {
-
+                clearInterval(interval);
                 var request = {};
                 request.logout_api = true;
                 sendDataTest(request, 'api.php');
@@ -214,48 +223,57 @@
 
 
         function getMessage(){
+            clearInterval(interval);
+            interval = setInterval(function() {
+                getMessage();
+                loadConversations();
+            }, 5000);
 
             $('#placeholder').css({"display": 'none'});
             $('.contact-profile').css({"display": 'block'});
             $('.messages').css({"display": 'block'});
             $('.message-input').css({"display": 'block'});
 
-            let id = $('#username-header').attr('user-id');
+            let id = $('#username-header').attr('user-name');
 
-            console.log("id " + id);
             const request = {};
-            request.messages = $('ul#contactsList').find('li.active').attr("data-id");
+            request.messages = ($('ul#contactsList').find('li.active').attr("data-id") === undefined ?   0 : $('ul#contactsList').find('li.active').attr("data-id"));
             request.userId = id;
+
+
+            console.log(request.messages + "  " + request.userId);
             $.ajax({
                 method: "GET",
                 url: "Mongo.php",
                 data: request,
                 success: function (response) {
-                    console.log('success ' + response + " length ");
                     let res = JSON.parse(response);
+                    console.log("Message " + res[0]._conversations[request.messages].messages[0].message);
 
+                        let length = 0;
+                        if ($('.messages ul').attr('data-length') !== undefined || $('.messages ul').attr('data-length') > 0) {
+                            $('.messages ul').attr('data-length', $('.messages ul li').length);
+                            length = $('.messages ul').attr('data-length');
+                        } else {
+                            length = $('.messages ul li').length;
+                        }
 
+                        console.log("Length " + length);
 
-                    let length = 0;
-                    if($('.messages ul').attr('data-length') !== undefined){
-                        $('.messages ul').attr('data-length', $('.messages ul li').length);
-                        length =  $('.messages ul').attr('data-length');
-                    }else{
-                        length = $('.messages ul li').length;
-                    }
+                        if (length !== undefined) {
+                            for (let i = length; i < res[0]._conversations[request.messages].messages.length; i++) {
+                                $('<li>' +
+                                    '<div class="' + (res[0]._conversations[request.messages].messages[i].username === id ? "outgoing_msg" : "incoming_msg") + '">' +
+                                    '<div class="' + (res[0]._conversations[request.messages].messages[i].username === id ? "outgoing_msg_img" : "incoming_msg_img") + '"> <img src="" alt="" /></div>' +
+                                    '<div class="' + (res[0]._conversations[request.messages].messages[i].username === id ? "sent_msg" : "received_msg") + '">' +
+                                    '<p>' + res[0]._conversations[request.messages].messages[i].message + '</p>' +
+                                    '<span class="time_date">' + res[0]._conversations[request.messages].messages[i].timestamp + '</span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</li>').appendTo($('.messages ul'));
+                            }
+                        }
 
-                    console.log(length);
-                    for (let i = length; i < res.length; i++) {
-                        $(  '<li>' +
-                            '<div class="' + (res['messages'][i]['username'] === id ? "outgoing_msg" : "incoming_msg") + '">' +
-                            '<div class="' + (res['messages'][i]['username'] === id ? "outgoing_msg_img" : "incoming_msg_img") + '"> <img src="" alt="" /></div>' +
-                            '<div class="' + (res['messages'][i]['username'] === id ? "sent_msg" : "received_msg") + '">' +
-                            '<p>' + res['messages'][i]["message"] + '</p>' +
-                            '<span class="time_date">' + res['messages'][i]["timestamp"] + '</span>' +
-                            '</div>' +
-                            '</div>' +
-                            '</li>').appendTo($('.messages ul'));
-                    }
 
                 },
                 failure: function (response) {
@@ -271,12 +289,11 @@
 
         async function loadConversations(){
 
-            showChat();
             $('#contactsList').empty();
 
             const request = {};
             request.userId =  $('#username-header').attr('user-name');
-            console.log(request.userId);
+            console.log("Username " + request.userId);
             $.ajax({
                 method: "GET",
                 url: "Mongo.php",
@@ -284,19 +301,17 @@
                 success: function (response) {
 
                     let res = JSON.parse(response);
-                    console.log(response);
-                    console.log('success ' + response + " length " + res["contacts"].length);
+                    console.log(res);
 
-                    for (let i = 0; i < res["contacts"].length; i++) {
+                    for (let i = 0; i < res[0]._conversations.length; i++) {
 
-                        console.log(res['contacts'][i]["username"]);
 
-                        $('<li class="contact" onclick="toggleClass(this)" data-id='+res['contacts'][i]["id"]+' data-username='+res['contacts'][i]["username"]+'>'
+                        $('<li class="contact" onclick="toggleClass(this)" data-id='+i+' data-username='+res[0]._conversations[i].username+'>'
                             + '<div class="wrap">'
                             + '<img src="https://source.unsplash.com/random" alt="">'
                             + '<div class="meta">'
-                            + '<p class="name">' +res['contacts'][i]["username"]+'</p>'
-                            + '<p class="preview">'+res['contacts'][i]["message"]+'</p>'
+                            + '<p class="name">' +res[0]._conversations[i].username+'</p>'
+                            + '<p class="preview">'+res[0]._conversations[i].messages[res[0]._conversations[i].messages.length-1].message+'</p>'
                             + '</div></div></li>').appendTo($('#contactsList'))
 
                     }
@@ -380,7 +395,7 @@
         function loadMatches(){
 
             const request = {};
-            request.get_matches_api = "yes";
+            request.get_matches_api = true;
             request.userId = $('#username-header').attr('user-id');
 
             $.ajax({
@@ -388,11 +403,17 @@
                 url: "api.php",
                 data: request,
                 success: function (response) {
-                    let res = response.substring(2).slice(0,-1).split(",");
-                    console.log('success ' + res[1]);
-                    nextMatch(res[0]);
-                    $('#person_fullname').attr('data-matches', res);
-                    $('#person_fullname').attr('data-index', 0)
+                    if(response.length > 0) {
+                        let res = response.substring(2).slice(0, -1).split(",");
+                        nextMatch(res[0]);
+                        $('#person_fullname').attr('data-matches', res);
+                        $('#person_fullname').attr('data-index', 0);
+                        $('#my_matches_place_holder').attr('hidden', true);
+                    }else {
+                        hideMatching();
+                        $('#my_matches_place_holder').text("Sorry No Other Sheep Shagers To Show");
+                        $('#my_matches_place_holder').attr('hidden', false);
+                    }
                 },
                 failure: function (response) {
                     console.log('failure:' + JSON.stringify(response));
@@ -418,12 +439,10 @@
                     tmpIndex = 0;
                 }
                 request.userId = tmp[tmpIndex];
-                $('#person_fullname').attr('data-index',tmpIndex+1)
+                $('#person_fullname').attr('data-index',tmpIndex);
             }else{
                 request.userId = index;
             }
-
-            console.log(parseInt($('#person_fullname').attr('data-index'))+1);
 
             $.ajax({
                 method: "POST",
@@ -440,10 +459,10 @@
 //                    $('#person_location_outter').text(res.location != null &&
 //                    res.location.length > 0 ? res.location.length : "Location: Hidden");
 //
-                    $('#message_button').text("Message " + res.name);
-                    $('#user_full_age').text("Age " + res.age);
-                    $('#user_full_name').text("Name " + res.name);
-                    $('#user_gender').text("Gender " + res.gender);
+                    $('#user_full_age').html('<strong>Age </strong>' + res.age);
+                    $('#user_full_name').html('<strong>Name </strong>' + res.name);
+                    $('#user_gender').html('<strong>Gender </strong>' + res.gender);
+                    $('#user_card_bio').html('<strong>Bio </strong><br>' + res.desc);
                     var defImage = res.photoId;
 
                     if(defImage == null || defImage.length == 0) {
@@ -470,18 +489,40 @@
 
         }
 
+        function showChat() {
+            clearInterval(interval);
+            $('.messages').empty();
+            $('#frame').attr('data-opened', false);
+            hideMatchArea();
+            hideUserManagment();
+            hideMatching();
+            hideUserProfile();
+            hideTickets();
+            $('#frame').prop('hidden', false);
+
+        }
+
+
         function newMessage() {
-            message = $(".message-input input").val();
+            clearInterval(interval);
+            let message = $(".message-input input").val();
             if($.trim(message) == '') {
                 return false;
             }
 
+            let size = $('.messages ul li').length;
+
+            console.log("Size "+ size);
+
             const request = {};
 
             request.userOne = $('#username-header').attr('user-name');
-            request.userTwoId = $('ul#contactsList').find('li.active').attr("data-id");
-            request.userTwoName = $('ul#contactsList').find('li.active').attr("data-username");
+            request.userTwoId = ($('ul#contactsList').find('li.active').attr("data-id") === undefined ?   $('#contact_name').text() : $('ul#contactsList').find('li.active').attr("data-id"));
+            request.userTwoName = $('#contact_name').text();
             request.messages = message;
+            request.size = size;
+
+            console.log(request.userTwoId);
 
             $('.messages ul').attr('data-length', ($('.messages ul li').length));
 
@@ -501,9 +542,13 @@
                 }
             });
 
-            //$('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
             $('.message-input input').val(null);
             $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+
+
+            interval = setInterval(function() {
+                loadConversations();
+            }, 1000);
         };
 
 
@@ -608,9 +653,9 @@
                                             '<li><a href="#" onclick="showTickets(\'Archived\')">Archived <span class="label tag-pill label-success" id="archived_tickets"></span></a></li>'.
                                             '</ul>'.
                                             '</div></li>'.
-                                            '<li><a onclick="loadConversations()"><i class="fas fa-envelope"></i><span>Messages</span></a></li>';
+                                            '<li><a onclick="showChat()"><i class="fas fa-envelope"></i><span>Messages</span></a></li>';
                                     }else{
-                                        echo '<li><a onclick="loadConversations()"><i class="fas fa-envelope"></i><span>Messages</span></a></li>';
+                                        echo '<li><a onclick="showChat()"><i class="fas fa-envelope"></i><span>Messages</span></a></li>';
                                     }
                                 ?>        
                             </li>
@@ -678,11 +723,11 @@
                                 <div class="mc-description">
                                     <div class="modal-body">
                                         <table id="popup_user_info">
-                                            <tr><td></td><td id="user_full_name"><b> </b> </td><td id="person_fullname"></td>
+                                            <tr><td></td><td id="user_full_name"><b></b></td><td id="person_fullname"></td>
                                             <tr><td><td id="user_full_age"><b> </b> </td><td></td></td></tr>
                                             <tr><td><td id="user_gender"><b> </b> </td></td></tr>
-                                            <tr><td><td>Interests </td></td></tr>
-                                            <tr><td><td>Bio </td></td></tr>
+                                            <tr><td><td id="user_card_bio"> </td></td></tr>
+                                            <tr><td><td> </td></td></tr>
                                         </table>
                                     </div>
                                 </div>
@@ -691,8 +736,8 @@
                             <a class="mc-btn-next" onclick="nextMatch(null)"><i class="fas fa-angle-double-right"></i></a>
                             <a class="mc-btn-previous" onclick="nextMatch(null)"><i class="fas fa-angle-double-left"></i></a>
                             <div class="mc-footer">
-                                <button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i></button>
-                                <button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button" onclick="showProfile('\''+ $('#person_fullname').attr('user_name')+'\',\''+$('#username-header').attr('user-name')+'\',false)" id="show_profile_button"><i class="fas fa-comments mr-2" ></i></button>
+                                <button class="btn btn-danger mt-2"><i class="fas fa-user-plus"></i></button>
+                                <button class="ml-3 btn btn-success mt-2" onclick="showProfile('\''+ $('#person_fullname').attr('user_name')+'\',\''+$('#username-header').attr('user-name')+'\',false)"><i class="fas fa-comments mr-2" ></i></button>
                             </div>
                         </article>
                     </div>
@@ -700,7 +745,7 @@
                 </section>
             </div>
 
-            <div id="frame" hidden>
+            <div id="frame" hidden >
                 <div id="sidepanel">
                     <div id="search">
                         <label ><i class="fa fa-search" aria-hidden="true"></i></label>

@@ -1,12 +1,13 @@
 
-function showChat() {
-    hideMatchArea();
-    hideUserManagment();
-    hideMatching();
-    hideUserProfile();
-    hideTickets();
-    $('#frame').prop('hidden', false);
+function showUserChar(user) {
+    $('#placeholder').css({"display": 'none'});
+    $('.contact-profile').css({"display": 'block'});
+    $('.messages').css({"display": 'block'});
+    $('.message-input').css({"display": 'block'});
+    showChat();
+    $('#contact_name').text(user);
 }
+
 
 function hideChat() {
     $('#frame').prop('hidden', true);
@@ -298,11 +299,10 @@ function getUserMatches(user_id) {
                 for(let i = 0; i < obj.length; i++) {
 
                     let res = JSON.parse(obj[i]);
-                    let defImage = res.photoId;
 
-                    if(defImage == null) {
-                        defImage = res.gender === 'Male' ? 'images/male.png' : 'images/female.png';
-                    }
+                    console.log(res);
+                    let defImage = res.gender === 'Male' ? 'images/male.png' : 'images/female.png';
+
 
                     let test = '<div style="width: 300px; height: 100%;">'+
                         '<div class="image-flip" ontouchstart="this.classList.toggle(\'hover\');">' +
@@ -319,7 +319,7 @@ function getUserMatches(user_id) {
                         '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
                         '<div class="d-flex justify-content-between">'+
                         '<a href="#" class="btn btn-sm btn-info mr-4" >Report</a>'+
-                        '<a href="#" onclick="showProfile(\''+obj[i].id+'\',\''+$('#username-header').attr('user-name')+'\',true)" class="btn btn-sm btn-default float-right">Profile</a>'+
+                        '<a href="#" onclick="showProfile(\''+res.id+'\',\''+$('#username-header').attr('user-name')+'\',true)" class="btn btn-sm btn-default float-right">Profile</a>'+
                         '</div>'+
                         '</div>'+
                         '<div class="card-body pt-0 pt-md-4">'+
@@ -342,7 +342,7 @@ function getUserMatches(user_id) {
                         '</div>'+
                         '</div>'+
                         '<div class="text-center">'+
-                        '<h3>'+obj[i].name+'<span class="font-weight-light">, '+obj[i].age+'</span> </h3>'+
+                        '<h3>'+res.name+'<span class="font-weight-light">, '+res.age+'</span> </h3>'+
                         '<div class="h5 font-weight-300">'+
                         '<i class="ni location_pin mr-2"></i>City, Country'+
                         '</div>'+
@@ -351,7 +351,7 @@ function getUserMatches(user_id) {
                         '<div>'+
                         '</div>'+
                         '<hr class="my-4">'+
-                        '<p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music.</p>'+
+                        '<p>'+res.desc+'</p>'+
                         '</div>'+
                         '</div>'+
                         '</div>'+
@@ -394,7 +394,7 @@ function getAllProfiles() {
 
 
     if($('#searchFilter').attr('data-matches') === true){
-        request.search_matches = true;
+        request.get_user_matches_api = true;
     }else{
         request.get_profiles_api = true;
     }
@@ -404,6 +404,8 @@ function getAllProfiles() {
     if(filter.length !== 0){
         request.filter = filter;
     }
+
+    console.log("Filter " + filter);
 
     $.ajax({
         method: "POST",
