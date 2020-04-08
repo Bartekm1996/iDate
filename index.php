@@ -46,7 +46,7 @@
                         text: "Fill In All Required Fields"
                     });
                 } else {
-                    $('#login_button').html('<i class="fa fa-spinner fa-spin mr-2"></i> Singing In');
+                    $('#login_button').html('<i class="fa fa-spinner fa-spin mr-2"></i> Signing In');
                     sendDataTest(request, "Login.php");
                 }
             }
