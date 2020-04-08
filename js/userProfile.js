@@ -4,9 +4,12 @@ function showProfile(currentProfile, username, matched) {
     hideMatching();
     hideChat();
     hideTickets();
-    getMyInterest($('#username-header').attr('user-id'));
+
+
 
     if(username !== null){
+        $('#user_ints').attr('hidden',true);
+        getMyInterest($('#person_fullname').attr('data-id'));
         if(matched === true){
             $('#card_message_button').attr('hidden', false);
             $('#card_report_button').attr('hidden', false);
@@ -16,9 +19,11 @@ function showProfile(currentProfile, username, matched) {
         disableFields();
         $('#history_user_table').attr('hidden',true);
     }else{
+        $('#user_ints').attr('hidden',false);
         $('#connect_button').attr('hidden', true);
         $('#card_message_button').attr('hidden', true);
         $('#history_user_table').attr('hidden',false);
+        getMyInterest($('#username-header').attr('user-id'));
         enableFields();
     }
 
@@ -124,6 +129,7 @@ function getMyInterest(userid) {
     request.userid = userid;
 
     $('#interestResult').empty();
+    $('#card_interest_results').empty();
 
     $.ajax({
         method: "POST",
@@ -133,6 +139,7 @@ function getMyInterest(userid) {
             let res = JSON.parse(response);
             console.log(res);
             let table = $('#interestResult');
+            let sideTable = $('#card_interest_results');
             for(let i = 0; i < res.ints.length; i++){
                 let ress = JSON.parse(res.ints[i]);
                 table.append(
@@ -144,9 +151,11 @@ function getMyInterest(userid) {
                         '<div class="in-main-description"'+ress.name+'</div>'+
                         '</div>'+
                     '</div>'+
-                '</div>'
+                '</div>');
 
-            );
+                sideTable.append(
+                    '<span class="badge badge-primary" style="height: 25px; text-align: center; background: #2565AE">'+ress.name+'</span>'
+                );
             }
         },
         failure: function (response) {

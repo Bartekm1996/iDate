@@ -458,6 +458,7 @@
                     console.log(response);
                     let res = JSON.parse(response);
                     $('#person_fullname').attr('data-user-name', res.username);
+                    $('#person_fullname').attr('data-id',res.id);
                     $('#person_fullname').text(res.name);
                     $('#person_age_outter').text("Age: " + res.age);
 
@@ -750,7 +751,7 @@
                             <a class="mc-btn-previous" onclick="nextMatch(null)"><i class="fas fa-angle-double-left"></i></a>
                             <div class="mc-footer">
                                 <button class="btn btn-danger mt-2"><i class="fas fa-user-plus"></i></button>
-                                <button class="ml-3 btn btn-success mt-2" onclick="showProfile('\''+ $('#person_fullname').attr('user_name')+'\',\''+$('#username-header').attr('user-name')+'\',false)"><i class="fas fa-comments mr-2" ></i></button>
+                                <button class="ml-3 btn btn-success mt-2" onclick="showProfile($('#person_fullname').attr('data-user-name'),$('#username-header').attr('user-name'),false)"><i class="fas fa-comments mr-2" ></i></button>
                             </div>
                         </article>
                     </div>
@@ -758,12 +759,31 @@
                 </section>
             </div>
 
+
             <section class="filter" hidden>
-                <div class="mb-3 mt-3" style="width: 100%;margin-top: 40px;"><label class="text-white ml-4">Smoker </label><select id="smoker_select_picker" class="ml-3" style="width: 200px;"><optgroup label="This is a group"><option value="12" selected>This is item 1</option><option value="13">This is item 2</option><option value="14">This is item 3</option></optgroup></select></div>
-                <div
-                        style="width: 100%;"><label class="text-white ml-4">Drinker </label><select id="drinker_select_picker" class="ml-3" style="width: 200px;"><optgroup label="This is a group"><option value="12" selected>This is item 1</option><option value="13">This is item 2</option><option value="14">This is item 3</option></optgroup></select></div>
-                <div
-                        class="d-flex mt-4" style="width: 100%;"><span class="text-white font-weight-bold blue-text mr-2 mt-1 ml-3">18</span>
+                <div class="mb-3 mt-3" style="width: 100%;margin-top: 40px;">
+                    <label class="text-white ml-4">Smoker </label>
+                    <select id="smoker_select_picker" class="ml-3" style="width: 200px;">
+                        <optgroup label="This is a group">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="ocasionally">Ocasionally</option>
+                            <option value="party drinker">Party Smoker</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div style="width: 100%;">
+                    <label class="text-white ml-4">Drinker </label>
+                    <select id="drinker_select_picker" class="ml-3" style="width: 200px;">
+                        <optgroup label="This is a group">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="ocasionally">Ocasionally</option>
+                            <option value="party drinker">Party Drinker</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="d-flex mt-4" style="width: 100%;"><span class="text-white font-weight-bold blue-text mr-2 mt-1 ml-3">18</span>
                     <form class="range-field" style="width: 75%;"><input type="range" class="bg-secondary shadow-sm form-control-range border-0" id="ageSlider" min="18" max="65" /></form><span class="text-white font-weight-bold blue-text ml-2 mt-1mr-3">65+</span></div>
                 <div style="margin-top: 20px;">
                     <label class="text-left text-white d-none d-lg-flex ml-2 mt-2 mb-2" for="interest_box">Interests</label>

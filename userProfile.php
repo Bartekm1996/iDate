@@ -66,6 +66,13 @@
                             </div>
                             <hr class="my-4">
                             <p id="profile_card_description"></p>
+                            <hr class="my-4">
+                            <div style="margin-top: 25px;">
+                                <div style="width: 100%; height: 100px;">
+                                    <div style="display: grid; grid-template-columns: auto auto auto; height:100px; overflow-y: scroll; grid-gap: 10px;" id="card_interest_results">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -216,12 +223,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <hr class="my-4">
                             <!-- Interests -->
-                            <div class="container" style="width: 100%; height: 300px;">
+                            <div class="container" style="width: 100%; height: 300px;" hidden id="user_ints">
+                                <hr class="my-4">
                                 <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">Interests</h6>
                                 <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_interest_save_button" onclick="edituserinterests()">Edit</a>
-                                <div style="display: grid; grid-template-columns: auto auto auto auto; height: 250px; margin-top: 50px; position: center; overflow-y: scroll;" id="interestResult" >
+                                <div style="display: grid; grid-template-columns: auto auto auto auto; height: 250px; margin-top: 50px; position: center; overflow-y: scroll; grid-row-gap: 75px;" id="interestResult" >
                                 </div>
                             </div>
                             <div class="pl-lg-4">

@@ -476,11 +476,12 @@ function getAllProfiles() {
                  '</div>';
 
                 */
-                let test = '<div style="width: 300px; height: 100%;">'+
-                '<div class="image-flip" ontouchstart="this.classList.toggle(\'hover\');">' +
-                    '<div class="mainflip">'+
-                    '<div class="frontside">'+
-                     '<div class="card card-profile shadow">'+
+                let test =
+                 '<div style="width: 300px; height: 100%;">'+
+                 '<div class="image-flip" >' +
+                 '<div >'+
+                 '<div class="frontside">'+
+                 '<div class="card card-profile shadow">'+
                  '<div class="row justify-content-center">'+
                  '<div class="col-lg-3 order-lg-2">'+
                  '<div class="card-profile-image">'+
@@ -499,7 +500,7 @@ function getAllProfiles() {
                  '<div class="col">'+
                  '<div class="card-profile-stats d-flex justify-content-center mt-md-5">'+
                  '<div>'+
-                 '<span class="heading">22</span>'+
+                 '<span class="heading" >22</span>'+
                  '<span class="description">Matches</span>'+
                  '</div>'+
                  '<div>'+
@@ -513,7 +514,7 @@ function getAllProfiles() {
                  '</div>'+
                  '</div>'+
                  '</div>'+
-                 '<div class="text-center">'+
+                 '<div class="text-center text-desc mainflip" ontouchstart="this.classList.toggle(\'hover\');">'+
                  '<h3>'+ress.name+'<span class="font-weight-light">, '+ress.age+'</span> </h3>'+
                  '<div class="h5 font-weight-300">'+
                  '<i class="ni location_pin mr-2"></i>City, Country'+
