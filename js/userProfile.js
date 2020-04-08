@@ -14,9 +14,11 @@ function showProfile(currentProfile, username, matched) {
             $('#connect_button').attr('hidden', false);
         }
         disableFields();
+        $('#history_user_table').attr('hidden',true);
     }else{
         $('#connect_button').attr('hidden', true);
         $('#card_message_button').attr('hidden', true);
+        $('#history_user_table').attr('hidden',false);
         enableFields();
     }
 

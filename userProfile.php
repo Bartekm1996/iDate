@@ -198,8 +198,8 @@
                                                 <select id="drinker_picker">
                                                     <option value="yes">Yes</option>
                                                     <option value="no">No</option>
-                                                    <option value="occasionally">Occassionally</option>
-                                                </select>
+                                                    <option value="ocasionally">Ocasionally</option>
+                                                    <option value="party drinker">Party Smoker</option>                                                </select>
                                             </li>
                                             <li class="about-items">
                                                 <div>
@@ -207,7 +207,8 @@
                                                     <select id="smoking_picker">
                                                         <option value="yes">Yes</option>
                                                         <option value="no">No</option>
-                                                        <option value="occasionally">Occassionally</option>
+                                                        <option value="ocasionally">Ocasionally</option>
+                                                        <option value="party drinker">Party Drinker</option>
                                                     </select>
                                                 </div>
                                             </li>
@@ -227,28 +228,30 @@
                                 <div class="form-group focused">
                                 </div>
                             </div>
-                            <div class="container" style="width: 100%;">
-                                <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">User Profile History</h6>
-                            </div>
-                            <div class="pl-lg-4">
-                                <div class="form-group focused" id="profile_history" style="height: 250px; overflow-y: scroll;">
-                                    <table class="table table-striped table-borderless table-hover" id="history_table" style="width: 100%; height: 250px; overflow-y: scroll;">
-                                        <thead class="thead-dark">
-                                        <tr>
-                                            <th>
-                                                <span>Date</span>
-                                            </th>
-                                            <th>
-                                                <span>Event</span>
-                                            </th>
-                                            <th>
-                                                <span>Description</span>
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="history_table_body">
-                                        </tbody>
-                                    </table>
+                            <div id="history_user_table" hidden>
+                                <div class="container" style="width: 100%;">
+                                    <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">User Profile History</h6>
+                                </div>
+                                <div class="pl-lg-4" >
+                                    <div class="form-group focused" id="profile_history" style="height: 250px; overflow-y: scroll;">
+                                        <table class="table table-striped table-borderless table-hover" id="history_table" style="width: 100%; height: 250px; overflow-y: scroll;">
+                                            <thead class="thead-dark">
+                                            <tr>
+                                                <th>
+                                                    <span>Date</span>
+                                                </th>
+                                                <th>
+                                                    <span>Event</span>
+                                                </th>
+                                                <th>
+                                                    <span>Description</span>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="history_table_body">
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </form>

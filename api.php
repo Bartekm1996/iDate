@@ -11,6 +11,7 @@ require("model/SearchUser.php");
 require("model/AvailableInterests.php");
 require("model/Connection.php");
 require("SweetalertResponse.php");
+require("model/Profile.php");
 /* Create a match with current logged in user and match_id user */
 if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id2'])) {
 
@@ -191,7 +192,7 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
             $sql = "SELECT * FROM (select user.id, user.firstname, user.age,
                 profile.photoId, profile.location, profile.Description,
                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender,
-                results.connectionDate
+                results.connectionDate, user.userName
                 from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
                 from connections as c1, connections as c2
                 where (c1.userID1 = c2.userID2 AND
@@ -203,7 +204,7 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
             $sql = "select user.id, user.firstname, user.age, 
                 profile.photoId, profile.location, profile.Description,
                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender,
-                results.connectionDate
+                results.connectionDate, user.userName
                 from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
                 from connections as c1, connections as c2
                 where (c1.userID1 = c2.userID2 AND 
@@ -220,7 +221,7 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
             while ($row = mysqli_fetch_row($result)) {
                 $i = 0;
                 $user = new Match($row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++],
-                    $row[$i++],$row[$i++],$row[$i++],$row[$i++], $row[$i++], $row[$i++]);
+                    $row[$i++],$row[$i++],$row[$i++],$row[$i++], $row[$i++], $row[$i++], $row[$i++]);
 
                array_push($myobj, $user->jsonSerialize());
             }
@@ -331,7 +332,7 @@ else if(isset($_POST['upload_files_api'])) {
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
             $row = $result->fetch_row();
-            $user = new Match($row[0], $row[1]." ".$row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8]);
+            $user = new Profile($row[0], $row[1]." ".$row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8]);
             $res = $user->jsonSerialize();
     }
         echo $res;

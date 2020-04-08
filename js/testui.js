@@ -231,7 +231,7 @@ function showUerMatches(user_id) {
     $('#searchFilter').attr('data-matches', true);
     $('#my_matches_place_holder').attr('hidden', false);
     $('#matcharea').attr('hidden', false);
-    getUserMatches(parseInt(user_id));
+    getUserMatches(user_id);
     hideUserManagment();
     hideMatching();
     hideUserProfile();

@@ -151,6 +151,17 @@ main {
 /*//////////////////////////////////////////////////////////////////
 [ FAB ]*/
 
+.filter{
+  position:absolute;
+  width: 400px;
+  margin-top: 20px;
+  padding: 10px;
+  background: #1e2229;
+  border: 2px solid blue;
+  bottom: 60px;
+  right:60px;
+  z-index: 98;
+}
 
 .fab{
   position:fixed;

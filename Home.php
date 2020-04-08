@@ -461,8 +461,7 @@
                     $('#person_fullname').text(res.name);
                     $('#person_age_outter').text("Age: " + res.age);
 
-//                    $('#person_location_outter').text(res.location != null &&
-//                    res.location.length > 0 ? res.location.length : "Location: Hidden");
+                     $('#person_location_outter').text(res.location != null && res.location.length > 0 ? res.location.length : "Location: Hidden");
 //
                     $('#user_full_age').html('<strong>Age </strong>' + res.age);
                     $('#user_full_name').html('<strong>Name </strong>' + res.name);
@@ -487,11 +486,10 @@
         }
 
         function showFilter() {
-            let filter = $('#filter_pop_up');
+            let filter = $('.filter');
             if(filter.attr('hidden')){
                 filter.attr('hidden', false);
             }else filter.attr('hidden', true);
-
         }
 
         function showChat() {
@@ -505,6 +503,15 @@
 
         }
 
+        function addActive(elem) {
+            if($(elem).hasClass('active')){
+                $(elem).removeClass('active');
+                $(elem).css({"background":"gray"});
+            }else {
+                $(elem).addClass('active');
+                $(elem).css({"background":"blue"});
+            }
+        }
 
         function newMessage() {
             clearInterval(interval);
@@ -750,6 +757,23 @@
                 </div>
                 </section>
             </div>
+
+            <section class="filter" hidden>
+                <div class="mb-3 mt-3" style="width: 100%;margin-top: 40px;"><label class="text-white ml-4">Smoker </label><select id="smoker_select_picker" class="ml-3" style="width: 200px;"><optgroup label="This is a group"><option value="12" selected>This is item 1</option><option value="13">This is item 2</option><option value="14">This is item 3</option></optgroup></select></div>
+                <div
+                        style="width: 100%;"><label class="text-white ml-4">Drinker </label><select id="drinker_select_picker" class="ml-3" style="width: 200px;"><optgroup label="This is a group"><option value="12" selected>This is item 1</option><option value="13">This is item 2</option><option value="14">This is item 3</option></optgroup></select></div>
+                <div
+                        class="d-flex mt-4" style="width: 100%;"><span class="text-white font-weight-bold blue-text mr-2 mt-1 ml-3">18</span>
+                    <form class="range-field" style="width: 75%;"><input type="range" class="bg-secondary shadow-sm form-control-range border-0" id="ageSlider" min="18" max="65" /></form><span class="text-white font-weight-bold blue-text ml-2 mt-1mr-3">65+</span></div>
+                <div style="margin-top: 20px;">
+                    <label class="text-left text-white d-none d-lg-flex ml-2 mt-2 mb-2" for="interest_box">Interests</label>
+                    <div id="interest_box" class="ml-2 mr-2">
+                        <div class="mb-3" style="display: grid;grid-template-columns: auto auto auto auto;grid-gap: 10px;"><span class="badge badge-primary" onclick="addActive(this)">Programming</span><span class="badge badge-primary" onclick="addActive(this)">Football</span><span class="badge badge-primary" onclick="addActive(this)">Travelling</span><span class="badge badge-primary ml-2" onclick="addActive(this)">Horse Riding</span></div>
+                        <div class="mb-3" style="display: grid;grid-template-columns: auto auto auto;grid-gap: 10px;"><span class="badge badge-primary" onclick="addActive(this)">Fashion</span><span class="badge badge-primary" onclick="addActive(this)">Jogging</span><span class="badge badge-primary" onclick="addActive(this)">Crossfit</span></div>
+                        <div style="display: grid;grid-template-columns: auto auto auto auto;grid-gap: 20px;"><span class="badge badge-primary" onclick="addActive(this)">Swimming</span><span class="badge badge-primary" onclick="addActive(this)">Cinema</span><span class="badge badge-primary ml-2" onclick="addActive(this)">Diving</span></div>
+                    </div>
+                </div>
+            </section>
 
             <div id="frame" hidden >
                 <div id="sidepanel">
