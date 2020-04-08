@@ -63,51 +63,48 @@ async function userActionTwo(action, user, name, email) {
     inputOptions.sender_name = "iDate Customer Service Team";
     inputOptions.update_user = true;
     inputOptions.name = name;
-    inputOptions.eamil = email;
-
-
-    console.log(user + " " + action + " " + name + " " + email);
+    inputOptions.email = email;
 
     if(action === 'delete'){
-        inputOptions.action = 3;
+        inputOptions.action = 'delete';
     }else if(action === 'block'){
-        inputOptions.action = 2;
-    }
-
-    let con_one = "", con_two = "", con_three = "";
-
-
-    if(action === 'delete'){
-            con_one = 'Inactive Account';
-            con_two = 'Breach Of Terms And Conditions';
-            con_three = 'Reported By Several Users';
-    }else if(action === 'block'){
-            con_one = 'Breach Of Terms And Conditions';
-            con_two = 'Continous Incompliance';
-            con_three = 'Reported By User';
+        inputOptions.action = 'block';
     }
 
 
+    let ops = {};
 
-    const {value: reason} = await Swal.fire({
+    if(action === 'delete'){
+        ops = {
+            inactive_account: 'Inactive Account',
+            breach_of_terms_and_conditiosn: 'Breach Of Terms And Conditions',
+            reported_by_several_users: 'Reported By Several Users',
+        }
+    }else if(action === 'block'){
+        ops = {
+            breach_of_terms_and_conditiosn: 'Breach Of Terms And Conditions',
+            continous_incmopliance: 'Continous Incompliance',
+            reported_by_use: 'Reported By User'
+        }
+    }
+
+    const { value: reason } = await Swal.fire({
         title: 'Select A Reason',
         text: 'Select A Reason for taking this action against ' + user,
         input: 'select',
-        inputOptions:{
-            condition_one: con_one,
-            condition_two: con_two,
-            condition_three: con_three
-        },
+        inputOptions: ops,
         inputPlaceholder: 'Select A Reason',
         showCancelButton: true,
         inputValidator: (value) => {
             return new Promise((resolve) => {
-                if (value.length === 0) {
-                    resolve('You need to select a reason')
+                if (value !== '') {
+                    resolve()
+                } else {
+                    resolve('You need to select oranges :)')
                 }
             })
         }
-    })
+    });
 
     console.log("reason " + reason);
     if (reason) {
@@ -119,13 +116,16 @@ async function userActionTwo(action, user, name, email) {
             url: 'userManagmentApi.php',
             data: inputOptions,
             success: function (response) {
-                if(reason === 'block'){
+                showUserManagment(null);
+                fillMembersNumbers();
+
+                if(action === 'block'){
                     Swal.fire({
                         title : "User Blocked",
                         text : "User has been blocked Successfully",
                         icon : "success"
                     });
-                }else if(reason === 'delete'){
+                }else if(action === 'delete'){
                     Swal.fire({
                         title : "User Deleted",
                         text : "User has been deleted Successfully",
@@ -151,16 +151,18 @@ function editField(elem) {
    let res = $(elem).attr('data-id');
    res = "#"+res;
 
+
+
    if($(res).attr('data-active') === 'false'){
        $(res).attr('data-active', 'true');
        $(res).removeClass('hide-input');
        $(elem).text("Save");
    }else{
+       saveUserData();
        $(res).attr('data-active', 'false');
        $(res).addClass('hide-input');
        $(elem).text("");
        $(elem).html('<i class="fas fa-pen"></i>');
-
    }
 
 }
@@ -202,6 +204,17 @@ function editProfile(elem) {
     $('#first_name').val(name[0]);
     $('#user_last_name_input').val(name[1]);
     $('#location').val("Unknown");
+
+    let defImage = "";
+    let gender = $(elem).attr('data-gender');
+
+    defImage = gender === 'Male' ? 'images/male.png' : 'images/female.png';
+
+
+    console.log(defImage);
+
+    document.getElementById('mang_pro').src = defImage;
+
 
     let res = $('#tableBody').find('.active');
 
@@ -313,6 +326,130 @@ function userAdmin(username, change) {
 
 }
 
+function activateUser(username, email) {
+
+    const request = {};
+    request.user = username;
+    request.action = 'activate';
+    request.update_user = true;
+    request.email = email;
+    $.ajax({
+        method: "POST",
+        url: 'userManagmentApi.php',
+        data: request,
+        success: function (response) {
+            let res = JSON.parse(response);
+            if(res.statusCode === 1) {
+                Swal.fire({
+                    title: "User Activated Successfully",
+                    text: 'User '+username+" has been activated successfully",
+                    icon: 'success'
+                });
+
+            }else if(res.statusCode === 2){
+                Swal.fire({
+                    title: "Failed to activate user",
+                    text: 'Failed to activate user '+username+" successfully",
+                    icon: 'error'
+                })
+            }
+            showUserManagment(0);
+            fillMembersNumbers();
+            console.log('success:' + JSON.stringify(response));
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+}
+
+function saveUserData() {
+    const request = {};
+    request.username = $('#user_profile_header').text();
+    request.email = $('#user_email_input').val();
+    request.firstname = $('#first_name').val();
+    request.lastname = $('#user_last_name_input').val();
+    request.save_user_info = true;
+
+    if(request.username === ""){
+        Swal.fire("Select a user to update his info");
+    }else {
+        $.ajax({
+            method: "POST",
+            url: 'userManagmentApi.php',
+            data: request,
+            success: function (response) {
+                let res = JSON.parse(response);
+                if (res.statusCode === 1) {
+                    Swal.fire({
+                        title: "User info has been successfully updated",
+                        text: 'User ' + username + " details have been updated successfully",
+                        icon: 'success'
+                    });
+
+                } else if (res.statusCode === 2) {
+                    Swal.fire({
+                        title: "Failed to update User info successfully",
+                        text: 'Failed to update users ' + username + " details",
+                        icon: 'error'
+                    });
+                }
+                showUserManagment(null);
+                console.log('success:' + JSON.stringify(response));
+            },
+            failure: function (response) {
+                console.log('failure:' + JSON.stringify(response));
+            },
+            error: function (response) {
+                console.log('error:' + JSON.stringify(response));
+            }
+        });
+    }
+}
+
+function unblockUser(username, email) {
+
+    const request = {};
+    request.user = username;
+    request.action = 'unblock';
+    request.update_user = true;
+    request.email = email;
+    $.ajax({
+        method: "POST",
+        url: 'userManagmentApi.php',
+        data: request,
+        success: function (response) {
+            let res = JSON.parse(response);
+            if(res.statusCode === 1) {
+                Swal.fire({
+                    title: 'Unblocked ' + username + " Successfully",
+                    text: 'User '+username+" has been unblocked successfully",
+                    icon: 'success'
+                });
+
+            }else if(res.statusCode === 2){
+                Swal.fire({
+                    title: "Failed to unblock user",
+                    text: 'Failed to unblock user '+username+" successfully",
+                    icon: 'error'
+                })
+            }
+            showUserManagment(1);
+            fillMembersNumbers();
+            console.log('success:' + JSON.stringify(response));
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+}
+
 function getUserData(verified) {
 
     $('#tableBody tr').remove();
@@ -334,40 +471,42 @@ function getUserData(verified) {
             for(let i = 0; i < res.length; i++)
             {
                 let node =
-                    '<tr data-id='+i+' class="clickable-row" onclick="editProfile(this)" style="padding-top: 5px;">' +
+                    '<tr data-id='+i+' class="clickable-row" onclick="editProfile(this)"  data-gender="'+res[i].gender+'" data-photoId="'+res[i].photoId+'" style="padding-top: 5px;">' +
                     '<td>'+(parseInt(res[i].registered) === 0 ? "<span class=\"label label-warning\" id='status'>Pending</span>" : (parseInt(res[i].blocked) === 0 ? "<span class=\"label label-success\" id='status'>Active</span>" : "<span class=\"label label-danger\" id='status'>Blocked</span>"))+'</small></td>'+
                     '<td><small id="userName">'+res[i].userName+'</small></td>'+
                     '<td><small id="user_name">'+res[i].name+'</small></td>'+
                     '<td><small id="userEmail">'+res[i].email+'</small></td>'+
                     '<td><small>'+(parseInt(res[i].admin) === 0 ? "<span class=\"label label-primary\" id='role'>User</span>" : "<span class=\"label label-info\" id='role'>Admin</span>")+'</small></td>'+
-                    '<td>'+
-                    '<div class="btn-group">' +
-                    '<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>'+
-                    '<div class="dropdown-menu">';
+                    '<td>';
+                if(res[i].userName !== $('#username-header').attr('user-name')) {
+                    node += '<div class="btn-group">' +
+                        '<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>' +
+                        '<div class="dropdown-menu">';
 
-                    if(parseInt(res[i].registered) === 0){
-                        node += '<a class="dropdown-item" href="#"><i class="fas fa-user-plus mr-2"></i>Activate</a>';
+                    if (parseInt(res[i].registered) === 0) {
+                        node += '<a class="dropdown-item" href="#" onclick="activateUser(\'' + res[i].userName + '\',\''+res[i].email+'\')"><i class="fas fa-user-plus mr-2"></i>Activate</a>';
                     }
 
-                    if(parseInt(res[i].blocked) === 1){
-                        node += '<a class="dropdown-item" href="#" onclick="getBlockedInfo('+res[i].userName+'"><i class="fas fa-info-circle"></i>Block Info</a>';
-                    }
+                    if (parseInt(res[i].blocked) === 1) {
+                            node += '<a class="dropdown-item" href="#" onclick="unblockUser(\'' + res[i].userName + '\',\''+res[i].email+'\')"><i class="fas fa-user-lock mr-2"></i>Unblock</a>';
+                    } else node += '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\'' + res[i].userName + '\',\'' + res[i].name + '\',\'' + res[i].email + '\')"><i class="fas fa-user-lock mr-2"></i>Block</a>';
+
 
                     node +=
-                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\''+res[i].userName+'\',\''+res[i].name+'\',\''+res[i].email+'\')"><i class="fas fa-user-lock mr-2"></i>Block</a>'+
-                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\''+res[i].userName+'\',\''+res[i].name+'\',\''+res[i].email+'\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
+                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\'' + res[i].userName + '\',\'' + res[i].name + '\',\'' + res[i].email + '\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
 
-                    if(parseInt(res[i].admin) === 0){
-                        node +=  '<a class="dropdown-item" href="#" onclick="userAdmin(\''+res[i].userName+'\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';
-                    }else{
-                        node += '<a class="dropdown-item" href="#" onclick="userAdmin(\''+res[i].userName+'\',\'Remove\')"><i class="fas fa-user-minus"></i>Remove User a Admin</a>';
+                    if (parseInt(res[i].admin) === 0) {
+                        node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + res[i].userName + '\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';
+                    } else {
+                        node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + res[i].userName + '\',\'Remove\')"><i class="fas fa-user-minus"></i>Remove User a Admin</a>';
                     }
 
-                    if(parseInt(res[i].registered) === 0) {
+                    if (parseInt(res[i].registered) === 0) {
                         node +=
-                            '<div class="dropdown-divider"></div>'+
+                            '<div class="dropdown-divider"></div>' +
                             '<a class="dropdown-item" href="#" onclick="sendVerificationEmail(\'' + res[i].email + '\',\'' + res[i].userName + '\')"><i class="fas fa-paper-plane mr-2"></i>Resend Activation Email</a>';
                     }
+                }
 
                     node +='</div>'+
                             '</div>'+

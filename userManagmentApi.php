@@ -14,9 +14,9 @@ if(isset($_POST['get_all_users'])){
         die("Connection failed: " . $conn->connect_error);
     } else {
 
-        $sql = "SELECT id,userName,firstname,lastname,email,blocked,registered,admin FROM
-                (SELECT a.id, a.userName, a.firstname, a.lastname, a.email, a.registered,a.admin, b.userID, b.blocked 
-                FROM user as a LEFT JOIN(select userID, blocked from profile group by userID) as b on a.id = b.userID) as users";
+        $sql = "SELECT id,userName,firstname,lastname,email,blocked,registered,admin,photoId,gender FROM
+                (SELECT a.id, a.userName, a.firstname, a.lastname, a.email, a.registered,a.admin, b.userID, b.blocked, b.photoId,a.gender
+                FROM user as a LEFT JOIN(select userID, blocked,photoId from profile group by userID) as b on a.id = b.userID) as users";
 
         $result = $conn->query($sql);
         $res = "[";
@@ -24,7 +24,7 @@ if(isset($_POST['get_all_users'])){
             while ($row = mysqli_fetch_row($result)) {
                 $i = 0;
                 $user = new UserManagment($row[$i++], $row[$i++], $row[$i++]." ".$row[$i++], $row[$i++], $row[$i++],
-                    $row[$i++], $row[$i++]);
+                    $row[$i++], $row[$i++], $row[$i++], $row[$i++]);
                 $res = $res.$user->jsonSerialize().",";
             }
 
@@ -189,46 +189,73 @@ else if(isset($_POST['get_all_tickets'])){
     } else {
 
         $sql = "";
-        $username = $conn->real_escape_string($_POST['user']);
-        $name = $conn->real_escape_string($_POST['name']);
-        $sender_name = $_POST['sender_name'];
+        $res = "";
+        $sqlQuery = "";
         $action = $_POST['action'];
-        $reason = $_POST['reason'];
+        $username = $conn->real_escape_string($_POST['user']);
         $email = $_POST['email'];
-        $date = new DateTime();
-        $date = getdate($date->getTimestamp());
 
-        if($reason === 'block') {
-            $sql = "update profile set blocked = '1' where userID = (select id from user where username = '{$username}');";
-            $sqlQuery = "insert into blocked (blocked_user, blocked_date, blockee, reason) values '{$username}', '{$date}', '{$sender_name}', '$reason'";
-        }else if($reason === 'delete'){
-            $sql = "DELETE FROM profile where userID = (SELECT id FROM user where userName = '{$username}')";
-        }
+        if($action === 'block' || $action === 'delete') {
+            $name = $conn->real_escape_string($_POST['name']);
+            $sender_name = $_POST['sender_name'];
+            $reason = $_POST['reason'];
+            $date = getdate((new DateTime())->getTimestamp());
 
-
-
-        if ($conn->query($sql) === TRUE) {
-
-            $email = new Email($email, $name);
-            $email->sendMessage($reason === 'delete' ? 3 : 2, $reason, $action, $sender_name);
+            if ($action === 'block') {
+                $sql = "update profile set blocked = '1' where userID = (select id from user where username = '{$username}')"."insert into blocked (blocked_user, blocked_date, blockee, reason) values ('{$username}', '{$date}', '{$sender_name}', '{$reason}')";
+            } else if ($action === 'delete') {
+                $sql = "DELETE FROM profile where userID = (SELECT id FROM user where userName = '{$username}')";
+            }
 
 
-            if($reason === 'block') {
-                $conn->query($sqlQuery);
+            if ($conn->multi_query($sql) === TRUE) {
+                $email = new Email($email, $name);
+                $email->sendMessage($reason === 'delete' ? 3 : 2, $reason, $action, $sender_name);
+                if ($reason === 'block') {
+                        $resp = new SweetalertResponse(1,
+                            '',
+                            "" ,
+                            SweetalertResponse::SUCCESS
+                        );
+                } else if ($reason === 'delete') {
+                    $resp = new SweetalertResponse(2,
+                        '',
+                        '',
+                        SweetalertResponse::SUCCESS
+                    );
+                }
+
+            }
+        }else{
+            if($action === 'activate'){
+                $sql = "update user set registered = '1' where userName ='{$username}';";
+            }else if($action === 'unblock'){
+                $sql = "update profile set blocked = '0' where userID = (select id from user where username = '{$username}');";
+            }
+            if ($conn->query($sql) === TRUE) {
+
+                if($action === 'activate'){
+                    $email = new Email($email, $username);
+                    $email->sendMessage(4, "Account Activated", "Activate", "customerservicesteam@idate.ie");
+                }else if($action === 'unblock'){
+                    $email = new Email($email, $username);
+                    $email->sendMessage(5, "Account Unblocked", "Unblock", "customerservicesteam@idate.ie");
+                }
                 $resp = new SweetalertResponse(1,
-                    '',
-                    "",
-                    SweetalertResponse::SUCCESS
+                        '',
+                        "",
+                        SweetalertResponse::SUCCESS
                 );
-            }else if($reason === 'delete'){
+
+            }else{
                 $resp = new SweetalertResponse(2,
                     '',
                     "",
-                    SweetalertResponse::SUCCESS
+                    SweetalertResponse::WARNING
                 );
             }
-
         }
+
         echo $resp->jsonSerialize();
 
 

@@ -12,6 +12,8 @@ class Email
     const RESET_PASSWORD = 1;
     const BLOCKED = 2;
     const DELETED = 3;
+    const UNBLOCKED = 4;
+    const ACTIVATE = 5;
 
     public function __construct($to, $name)
     {
@@ -30,6 +32,14 @@ class Email
             }
             case self::DELETED:{
                 $subject = "Your Account Has Been Deleted";
+                break;
+            }
+            case self::UNBLOCKED:{
+                $subject = "Your Account Has Been Unblocked";
+                break;
+            }
+            case self::ACTIVATE:{
+                $subject = "Your account has been activated";
                 break;
             }
         }

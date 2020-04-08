@@ -39,8 +39,6 @@ function showProfile(currentProfile, username, matched) {
             if(defImage === null) {
                 defImage = res.gender === 'Male' ? 'images/male.png' : 'images/female.png';
             }
-
-
             $('#user_profile_name').text("Hello " + res.firstName + " " + res.lastName);
             $('#profile_input_user_name').val(res.userName);
             $('#profile_input_user_email').val(res.email);

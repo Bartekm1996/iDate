@@ -119,7 +119,7 @@
                             <!-- Address -->
                             <div class="container" style="width: 100%;">
                                 <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">Contact information</h6>
-                                <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_contact_save_button">Save</a>
+                                <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_contact_save_button" onclick="save">Save</a>
                             </div>
                             <div class="pl-lg-4">
                                 <div class="row">
