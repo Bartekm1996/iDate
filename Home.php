@@ -227,7 +227,7 @@
             interval = setInterval(function() {
                 getMessage();
                 loadConversations();
-            }, 5000);
+            }, 2000);
 
             $('#placeholder').css({"display": 'none'});
             $('.contact-profile').css({"display": 'block'});
@@ -260,9 +260,8 @@
                             length = $('.messages ul li').length;
                         }
 
-                        console.log("Length " + length);
+                        console.log("Length " + res[0]._conversations[request.messages].messages[0].username + " " + length);
 
-                        if (length !== undefined) {
                             for (let i = length; i < res[0]._conversations[request.messages].messages.length; i++) {
                                 $('<li>' +
                                     '<div class="' + (res[0]._conversations[request.messages].messages[i].username === id ? "outgoing_msg" : "incoming_msg") + '">' +
@@ -274,7 +273,7 @@
                                     '</div>' +
                                     '</li>').appendTo($('.messages ul'));
                             }
-                        }
+
 
 
                 },
@@ -291,7 +290,6 @@
 
         async function loadConversations(){
 
-            showChat();
             $('#contactsList').empty();
 
             const request = {};
@@ -308,7 +306,6 @@
 
                     for (let i = 0; i < res[0]._conversations.length; i++) {
 
-                        console.log(res['contacts'][i]["username"]);
 
                         $('<li class="contact" onclick="toggleClass(this)" data-id='+i+' data-username='+res[0]._conversations[i].username+'>'
                             + '<div class="wrap">'
@@ -316,7 +313,9 @@
                             + '<div class="meta">'
                             + '<p class="name">' +res[0]._conversations[i].username+'</p>'
                             + '<p class="preview">'+res[0]._conversations[i].messages[res[0]._conversations[i].messages.length-1].message+'</p>'
-                            + '</div></div></li>').appendTo($('#contactsList'))
+                            + '</div></div></li>').appendTo($('#contactsList'));
+
+                        console.log("Cse");
 
                     }
                 },
@@ -496,8 +495,6 @@
         }
 
         function showChat() {
-            clearInterval(interval);
-            $('.messages').empty();
             $('#frame').attr('data-opened', false);
             hideMatchArea();
             hideUserManagment();
@@ -555,8 +552,10 @@
 
             interval = setInterval(function() {
                 loadConversations();
-            }, 1000);
+                getMessage();
+            }, 2000);
         };
+
 
 
         $(window).on('keydown', function(e) {
