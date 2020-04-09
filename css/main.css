@@ -158,8 +158,8 @@ main {
   padding: 10px;
   background: #1e2229;
   border: 2px solid blue;
-  bottom: 60px;
-  right:60px;
+  bottom: 80px;
+  right:80px;
   z-index: 98;
 }
 
@@ -830,6 +830,7 @@ Tooltip
   margin: 5px;                  /* Add space between cards */
 }
 
+
 .in-card-header {
   color: #D32F2F;
   text-align: center;
@@ -837,6 +838,26 @@ Tooltip
   font-weight: 600;
   border-bottom: 1px solid #EF9A9A;
   background-color: #FFEBEE;
+  padding: 5px 10px;
+}
+
+.in-card-active {
+  width: 150px;                 /* Set width of cards */
+  display: flex;                /* Children use Flexbox */
+  flex-direction: column;       /* Rotate Axis */
+  border: 1px solid #66D3FA;    /* Set up Border */
+  border-radius: 4px;           /* Slightly Curve edges */
+  overflow: hidden;             /* Fixes the corners */
+  margin: 5px;                  /* Add space between cards */
+}
+
+.in-card-header-active {
+  color: whitesmoke;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid #66D3FA;
+  background-color: #66D3FA;
   padding: 5px 10px;
 }
 

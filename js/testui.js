@@ -327,16 +327,12 @@ function getUserMatches(user_id) {
                         '<div class="col">'+
                         '<div class="card-profile-stats d-flex justify-content-center mt-md-5">'+
                         '<div>'+
-                        '<span class="heading">22</span>'+
-                        '<span class="description">Matches</span>'+
+                        '<span class="heading">'+res.smoker+'</span>'+
+                        '<span class="description">Smoker</span>'+
                         '</div>'+
                         '<div>'+
-                        '<span class="heading">10</span>'+
-                        '<span class="description">Photos</span>'+
-                        '</div>'+
-                        '<div>'+
-                        '<span class="heading">89</span>'+
-                        '<span class="description">Connections</span>'+
+                        '<span class="heading">'+res.drinker+'</span>'+
+                        '<span class="description">Drinker</span>'+
                         '</div>'+
                         '</div>'+
                         '</div>'+
@@ -376,7 +372,7 @@ function reportUser() {
 
 }
 
-function getAllProfiles() {
+function getAllProfiles(smoker, drinker, age) {
 
     let filter = $('#searchFilter').val();
 
@@ -399,7 +395,11 @@ function getAllProfiles() {
         request.get_profiles_api = true;
     }
 
-
+    if(smoker !== null && drinker && null && age !== null){
+        request.smoker = smoker;
+        request.drinker = drinker;
+        request.age = age;
+    }
 
     if(filter.length !== 0){
         request.filter = filter;
@@ -500,16 +500,12 @@ function getAllProfiles() {
                  '<div class="col">'+
                  '<div class="card-profile-stats d-flex justify-content-center mt-md-5">'+
                  '<div>'+
-                 '<span class="heading" >22</span>'+
-                 '<span class="description">Matches</span>'+
+                 '<span class="heading">'+ress.smoker+'</span>'+
+                 '<span class="description">Smoker</span>'+
                  '</div>'+
                  '<div>'+
-                 '<span class="heading">10</span>'+
-                 '<span class="description">Photos</span>'+
-                 '</div>'+
-                 '<div>'+
-                 '<span class="heading">89</span>'+
-                 '<span class="description">Connections</span>'+
+                 '<span class="heading">'+ress.drinker+'</span>'+
+                 '<span class="description">Drinker</span>'+
                  '</div>'+
                  '</div>'+
                  '</div>'+

@@ -33,6 +33,39 @@ if(isset($_POST['get_all_users'])){
         $res = $res."]";
         echo $res;
     }
+}else if(isset($_POST['update_user_info'])){
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+        $resp = "";
+        $userid = $conn->real_escape_string($_POST['userId']);
+        $seeking = $conn->real_escape_string($_POST['seeking']);
+        $gender = $conn->real_escape_string($_POST['gender']);
+        $smoking = $conn->real_escape_string($_POST['smoker']);
+        $drinking = $conn->real_escape_string($_POST['drinker']);
+        $sql = "UPDATE profile SET Seeking = '{$seeking}', Drinker = '{$drinking}', Smoker = '{$smoking}' WHERE userID = '{$userid}'";
+        $sqlQuery = "UPDATE user SET gender = '{$gender}' WHERE id = '{$userid}';";
+        $result = $conn->query($sql);
+        if ($conn->query($sql) === TRUE) {
+            if ($conn->query($sqlQuery) === TRUE) {
+                $resp = new SweetalertResponse(3,
+                    'Updated User Info',
+                    "Updated User Info Successfully",
+                    SweetalertResponse::SUCCESS
+                );
+            } else {
+                $resp = new SweetalertResponse(3,
+                    'Failed to update User Info',
+                    "Failed to Update User Info",
+                    SweetalertResponse::ERROR
+                );
+            }
+
+        }
+    }
+
+    echo $resp->jsonSerialize();
+
 }
 else if(isset($_POST['get_user_info'])){
 
@@ -41,10 +74,10 @@ else if(isset($_POST['get_user_info'])){
     $sql = "";
     $mode = ctype_digit($uname) ? "id='{$uname}';" : "userName='{$uname}';";
 
-        $sql = "SELECT id, userName,firstname,lastname,email, Description, age, Seeking, photoId, gender
+        $sql = "SELECT id, userName,firstname,lastname,email, Description, age, Seeking, photoId, gender, Smoker, Drinker
                  FROM (SELECT user.id, user.firstname, user.lastname, 
                  user.age, user.gender, user.userName,user.email, 
-             profile.photoId, profile.location, profile.Description, profile.Seeking  FROM user
+             profile.photoId, profile.location, profile.Description, profile.Seeking, profile.Smoker, profile.Drinker  FROM user
             inner join profile
             on user.id = profile.userID) AS res
             WHERE {$mode}";
@@ -52,7 +85,7 @@ else if(isset($_POST['get_user_info'])){
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
             $res = $result->fetch_row();
-            $user = new UserInfo($res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8], $res[9]) ;
+            $user = new UserInfo($res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8], $res[9], $res[10], $res[11], $res[0]) ;
             echo $user->jsonSerialize();
     }
 }
@@ -144,7 +177,8 @@ else if(isset($_POST['get_all_tickets'])){
 
     }
 
-}else if(isset($_POST['resend_verification_email'])){
+}
+else if(isset($_POST['resend_verification_email'])){
 
     $email = $_POST['email'];
     $uname = $_POST['username'];
@@ -204,7 +238,13 @@ else if(isset($_POST['get_all_tickets'])){
             if ($action === 'block') {
                 $sql = "update profile set blocked = '1' where userID = (select id from user where username = '{$username}')"."insert into blocked (blocked_user, blocked_date, blockee, reason) values ('{$username}', '{$date}', '{$sender_name}', '{$reason}')";
             } else if ($action === 'delete') {
+
+                $sql_foreign_key_checks_off = "SET FOREIGN_KEY_CHECKS = 0";
                 $sql = "DELETE FROM profile where userID = (SELECT id FROM user where userName = '{$username}')";
+                $sqlQueryThree = "DELETE FROM interests WHERE userID = 190";
+                $sqlQueryTwo = "DELETE FROM connections WHERE userID1 = 190 OR userID2 = 190";
+                $sqlQuery = "DELETE p,u FROM profile p JOIN user u on p.userID = u.id";
+                $sql_foreign_key_checks_on = "SET FOREIGN_KEY_CHECKS = 1";
             }
 
 

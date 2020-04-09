@@ -11,9 +11,11 @@ class Profile implements JsonSerializable
     public $desc;
     public $gender;
     public $username;
+    public $smoking;
+    public $drinking;
 
 
-    public function __construct($id, $name, $age, $gender,$username, $photoId, $location, $desc)
+    public function __construct($id, $name, $age, $gender,$username, $photoId, $location, $desc, $smoking, $drinking)
     {
         $this->id = $id;
         $this->name = $name;
@@ -23,6 +25,8 @@ class Profile implements JsonSerializable
         $this->desc = $desc;
         $this->username = $username;
         $this->gender = $gender;
+        $this->smoking = $smoking;
+        $this->drinking = $drinking;
     }
 
 

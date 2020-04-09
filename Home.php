@@ -468,8 +468,10 @@
                     $('#user_full_name').html('<strong>Name </strong>' + res.name);
                     $('#user_gender').html('<strong>Gender </strong>' + res.gender);
                     $('#user_card_bio').html('<strong>Bio </strong><br>' + res.desc);
-                    var defImage = res.photoId;
+                    $('#user_smoking').html('<strong>Smoking </strong>' + res.smoking);
+                    $('#user_drinking').html('<strong>Drinking </strong>' + res.drinking);
 
+                    let defImage = res.photoId;
                     if(defImage == null || defImage.length == 0) {
                         defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
                     }
@@ -575,9 +577,7 @@
 
     </script>
 
-    <style>
-        div
-    </style>
+
 </head>
 <body style="background-color: white; width: 100%; height: 100%;" >
         <div class="page-wrapper chiller-theme toggled">
@@ -618,7 +618,7 @@
                                     </a>
                                 <div class="sidebar-submenu">
                                     <ul>
-                                        <li><a href="#" onclick="showProfile('<?php echo $username?>', null)"><i class="fas fa-user"></i><span>Profile</span></a></li>
+                                        <li><a href="#" onclick="showProfile('<?php echo $username?>', null, false)"><i class="fas fa-user"></i><span>Profile</span></a></li>
                                         <li><a href="#" onclick="showUerMatches('<?php echo $id ?>')"><i class="fas fa-heart"></i><span>My Matches</span></a></li>
                                         </ul>
                                     </div>
@@ -691,7 +691,7 @@
 
                     ?>
 
-                    <a href="#" onclick="loadConversations()">
+                    <a href="#" onclick="showChat()">
                         <i class="fa fa-envelope"></i>
                     </a>
                     <a href="#" onclick="logout()">
@@ -713,7 +713,7 @@
                 <div class="container h-100 mb-5">
                     <div class="d-flex justify-content-center h-100">
                         <div class="searchbar">
-                            <input class="search_input" id="searchFilter" type="text" name="" placeholder="Search..." data-matches="false" onkeyup="getAllProfiles()">
+                            <input class="search_input" id="searchFilter" type="text" name="" placeholder="Search..." data-matches="false" onkeyup="getAllProfiles(null,null,null)">
                         </div>
                     </div>
                 </div>
@@ -741,7 +741,8 @@
                                             <tr><td><td id="user_full_age"><b> </b> </td><td></td></td></tr>
                                             <tr><td><td id="user_gender"><b> </b> </td></td></tr>
                                             <tr><td><td id="user_card_bio"> </td></td></tr>
-                                            <tr><td><td> </td></td></tr>
+                                            <tr><td><td id="user_smoking"> </td></td></tr>
+                                            <tr><td><td id="user_drinking"> </td></td></tr>
                                         </table>
                                     </div>
                                 </div>
@@ -750,8 +751,8 @@
                             <a class="mc-btn-next" onclick="nextMatch(null)"><i class="fas fa-angle-double-right"></i></a>
                             <a class="mc-btn-previous" onclick="nextMatch(null)"><i class="fas fa-angle-double-left"></i></a>
                             <div class="mc-footer">
-                                <button class="btn btn-danger mt-2"><i class="fas fa-user-plus"></i></button>
-                                <button class="ml-3 btn btn-success mt-2" onclick="showProfile($('#person_fullname').attr('data-user-name'),$('#username-header').attr('user-name'),false)"><i class="fas fa-comments mr-2" ></i></button>
+                                <button class="btn btn-danger mt-2"><i class="fas fa-user-plus"  onclick="connect($('#person_fullname').attr('data-id'),$('#username-header').attr('user-id'))" ></i></button>
+                                <button class="ml-3 btn btn-success mt-2" onclick="showProfile($('#person_fullname').attr('data-user-name'),$('#username-header').attr('user-name'),false)"><i class="fas fa-user-alt"></i></button>
                             </div>
                         </article>
                     </div>
@@ -793,6 +794,7 @@
                         <div style="display: grid;grid-template-columns: auto auto auto auto;grid-gap: 20px;"><span class="badge badge-primary" onclick="addActive(this)">Swimming</span><span class="badge badge-primary" onclick="addActive(this)">Cinema</span><span class="badge badge-primary ml-2" onclick="addActive(this)">Diving</span></div>
                     </div>
                 </div>
+                <button class="btn btn-success" style="width: 100%; margin-top: 15px;" onclick="getAllProfiles($('#smoker_select_picker').val(),$('#drinker_select_picker').val(),$('#ageSlider').val())">Filter</button>
             </section>
 
             <div id="frame" hidden >

@@ -23,7 +23,7 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         $sql = "INSERT INTO connections (userID1, userID2, connectionDate) "
             ."VALUES({$_POST['id1']}, {$_POST['id2']}, '{$date}');";
         if ($conn->query($sql) === TRUE) {
-            $sql = "SELECT userID2 FROM connections where userID1 = '{$_POST['id1']}'";
+            $sql = "SELECT userID2 FROM connections WHERE userID1 = '{$_POST['id1']}' AND userID2 = '{$_POST['id2']}' OR userID2 = '{$_POST['id1']}' AND userID1 = '{$_POST['id1']}'";
             $res = $conn->query($sql);
             if($res->num_rows > 0){
                 $heart = new SweetalertResponse(1,
@@ -150,6 +150,39 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
             echo "success";
         }
 
+    }
+}else if(isset($_POST['updates_users_interests'])){
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+
+        $id = $conn->real_escape_string($_POST['userId']);
+        $names = $_POST['newNodes'];
+        $sql = "DELETE FROM interests WHERE userID = '{$id}'";
+        $counter = 0;
+        $resp = "";
+        if($conn->query($sql) === TRUE){
+            for($x = 0; $x < sizeof($names); $x++){
+                if($conn->query("INSERT INTO interests(userID, interestID) VALUES('{$id}',(SELECT id FROM availableInterests WHERE name = '{$names[$x]}'));") === TRUE){
+                    $counter++;
+                }
+            }
+        }
+
+        if($counter === sizeof($names)){
+            $resp = new SweetalertResponse(2,
+                'Interest Updated Successfully',
+                "Updated Interests With Success",
+                SweetalertResponse::SUCCESS
+            );
+        }else{
+            $resp = new SweetalertResponse(3,
+                'Failed to Updated Interests',
+                "Failed to Updated Users Interests",
+                SweetalertResponse::ERROR
+            );
+        }
+        echo $resp->jsonSerialize();
     }
 }
 else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
@@ -324,7 +357,7 @@ else if(isset($_POST['upload_files_api'])) {
         die("Connection failed: " . $conn->connect_error);
     } else {
         $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.lastname, user.age, user.gender, user.userName, 
-             profile.photoId, profile.location, profile.Description  FROM user
+             profile.photoId, profile.location, profile.Description, profile.Drinker, profile.Smoker  FROM user
             inner join profile
             on user.id = profile.userID) AS res
             WHERE id='{$user_id}';";
@@ -332,7 +365,7 @@ else if(isset($_POST['upload_files_api'])) {
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
             $row = $result->fetch_row();
-            $user = new Profile($row[0], $row[1]." ".$row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8]);
+            $user = new Profile($row[0], $row[1]." ".$row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10]);
             $res = $user->jsonSerialize();
     }
         echo $res;
