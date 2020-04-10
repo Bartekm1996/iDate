@@ -68,8 +68,8 @@ function showProfile(currentProfile, username, matched) {
             $('#upro_img').attr('data-id',res.id);
             $('#upro_img').attr('data-gender', res.gender);
             $('#upro_img').attr('data-seeking', res.seeking);
-            $('#city_select').val(res.town);
-            $('#city_selected').text(res.town + ",Ireland");
+            $('#city_select').val((res.town === null ? "Unknown" : res.town));
+            $('#city_selected').text((res.town === null ? "Unknown" : res.town) + ",Ireland");
             $('#profile_card_description').text(res.descripion);
             $('#profile_user_card_name').attr('user_age', res.age);
             $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);

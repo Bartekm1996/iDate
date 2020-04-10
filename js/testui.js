@@ -339,7 +339,7 @@ function getUserMatches(user_id) {
                         '<div class="text-center">'+
                         '<h3>'+res.name+'<span class="font-weight-light">, '+res.age+'</span> </h3>'+
                         '<div class="h5 font-weight-300">'+
-                        '<i class="ni location_pin mr-2"></i>'+res.town+', Ireland'+
+                        '<i class="ni location_pin mr-2"></i>'+(res.town === null ? "Unknown" : res.town) +', Ireland'+
                         '</div>'+
                         '<div class="h5 mt-4">'+
                         '</div>'+
@@ -509,7 +509,7 @@ function getAllProfiles(smoker, drinker, age) {
                  '<div class="text-center text-desc mainflip" ontouchstart="this.classList.toggle(\'hover\');">'+
                  '<h3>'+ress.name+'<span class="font-weight-light">, '+ress.age+'</span> </h3>'+
                  '<div class="h5 font-weight-300">'+
-                 '<i class="ni location_pin mr-2"></i>'+ress.town+', Ireland'+
+                 '<i class="ni location_pin mr-2"></i>'+(ress.town === null ? "Unknown" : ress.town)+', Ireland'+
                  '</div>'+
                  '<div class="h5 mt-4">'+
                  '</div>'+
@@ -904,7 +904,7 @@ function append(ress) {
         '<div class="text-center text-desc mainflip" ontouchstart="this.classList.toggle(\'hover\');">' +
         '<h3>' + (ress.firstName + " " + ress.lastName) + '<span class="font-weight-light">, ' + ress.age + '</span> </h3>' +
         '<div class="h5 font-weight-300">' +
-        '<i class="ni location_pin mr-2"></i>' + ress.town + ', Ireland' +
+        '<i class="ni location_pin mr-2"></i>' + (res.town === null ? "Unknown" : res.town) + ', Ireland' +
         '</div>' +
         '<div class="h5 mt-4">' +
         '</div>' +
