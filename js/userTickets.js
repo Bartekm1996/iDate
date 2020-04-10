@@ -35,6 +35,7 @@ function getAllTickets(status) {
 
                 index = parseInt(res[i].number);
 
+                console.log(res[i].reason);
                 switch (res[i].reason) {
                     case "Cannot Login": {
                         reason = "cannot_login";
@@ -46,6 +47,18 @@ function getAllTickets(status) {
                     }
                     case "Other": {
                         reason = "other";
+                        break;
+                    }
+                    case "Continous Stalking":{
+                        reason = "continous_stalking";
+                        break;
+                    }
+                    case "Inapropiate Behaviour":{
+                        reason = "inapropiate_behaviour";
+                        break;
+                    }
+                    case "Abusive Messages":{
+                        reason = "abusive_messages";
                         break;
                     }
                 }

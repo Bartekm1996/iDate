@@ -24,6 +24,9 @@
                     <button type="button" class="btn btn-success btn-filter" data-target="other">Other</button>
                     <button type="button" class="btn btn-warning btn-filter" data-target="not_receiving_verification_Email">Not Receiving Verification Email</button>
                     <button type="button" class="btn btn-danger btn-filter" data-target="cannot_login">Cannot Login</button>
+                    <button type="button" class="btn btn-danger btn-filter" data-target="abusive_messages">Abusive Messages</button>
+                    <button type="button" class="btn btn-warning btn-filter" data-target="continous_stalking">Continous Stalking</button>
+                    <button type="button" class="btn btn-danger btn-filter" data-target="inapropiate_behaviour">Inappropiate Behaviour</button>
                     <button type="button" class="btn btn-default btn-filter" data-target="all">All</button>
                 </div>
             </div>

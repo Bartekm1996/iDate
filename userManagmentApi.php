@@ -71,21 +71,19 @@ else if(isset($_POST['get_user_info'])){
 
     $uname = $conn->real_escape_string($_POST['username']);
 
-    $sql = "";
-    $mode = ctype_digit($uname) ? "id='{$uname}';" : "userName='{$uname}';";
+    $mode = ctype_digit($uname) ? "res.id='{$uname}';" : "res.userName='{$uname}';";
 
-        $sql = "SELECT id, userName,firstname,lastname,email, Description, age, Seeking, photoId, gender, Smoker, Drinker
-                 FROM (SELECT user.id, user.firstname, user.lastname, 
-                 user.age, user.gender, user.userName,user.email, 
+    $sql = "SELECT res.id, userName,firstname,lastname,email, Description, age, Seeking, photoId, gender, Smoker, Drinker, town.town
+                 FROM (SELECT user.id, user.firstname, user.lastname,
+                 user.age, user.gender, user.userName,user.email,
              profile.photoId, profile.location, profile.Description, profile.Seeking, profile.Smoker, profile.Drinker  FROM user
             inner join profile
-            on user.id = profile.userID) AS res
-            WHERE {$mode}";
+            on user.id = profile.userID) as res INNER JOIN town on town.id = res.location WHERE ".$mode;
 
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
             $res = $result->fetch_row();
-            $user = new UserInfo($res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8], $res[9], $res[10], $res[11], $res[0]) ;
+            $user = new UserInfo($res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8], $res[9], $res[10], $res[11], $res[0],$res[12], null) ;
             echo $user->jsonSerialize();
     }
 }
@@ -354,5 +352,47 @@ else if(isset($_POST['resend_verification_email'])){
         }
     }
     echo $resp->jsonSerialize();
+}else if(isset($_POST['save_user_city'])){
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+
+        $resp = "";
+        $userid = $conn->real_escape_string($_POST['userId']);
+        $city = $conn->real_escape_string($_POST['city']);
+
+        $result = $conn->query("UPDATE profile SET location = (SELECT id FROM town WHERE town = '{$city}') WHERE userID = '{$userid}';");
+
+        if ($result === true) {
+            $resp = new SweetalertResponse(1,
+                'Success',
+                "Information Saved",
+                SweetalertResponse::SUCCESS
+            );
+        }else{
+            $resp = new SweetalertResponse(1,
+                'Failed',
+                "Failed to save information",
+                SweetalertResponse::ERROR
+            );
+        }
+    }
+    echo $resp->jsonSerialize();
+}else if(isset($_POST['get_citites'])){
+    $resp = array();
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+
+
+        $result = $conn->query("SELECT town FROM town;");
+
+        if($result->num_rows > 0) {
+            for($x = 0; $x < $result->num_rows; $x++){
+                array_push($resp, $result->fetch_row()[0]);
+            }
+        }
+    }
+    echo json_encode($resp);
 }
 ob_end_flush();

@@ -12,6 +12,7 @@ require("model/AvailableInterests.php");
 require("model/Connection.php");
 require("SweetalertResponse.php");
 require("model/Profile.php");
+require("model/UserInfo.php");
 /* Create a match with current logged in user and match_id user */
 if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id2'])) {
 
@@ -225,26 +226,26 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
             $sql = "SELECT * FROM (select user.id, user.firstname, user.age,
                 profile.photoId, profile.location, profile.Description,
                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender,
-                results.connectionDate, user.userName
+                results.connectionDate, user.userName, town
                 from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
                 from connections as c1, connections as c2
                 where (c1.userID1 = c2.userID2 AND
                 c2.userID1 = c1.userID2) AND
                 c1.userID2 = '{$_POST['user_id']}') as results
                 inner join profile on results.userID1 = profile.userID
-                inner join user on results.userID1 = user.id) as user WHERE firstname LIKE '%{$filter}%' OR lastname LIKE '%{$filter}%';";
+                inner join user on results.userID1 = user.id inner join town t on profile.location = t.id) as user WHERE firstname LIKE '%{$filter}%' OR lastname LIKE '%{$filter}%';";
         }else{
             $sql = "select user.id, user.firstname, user.age, 
                 profile.photoId, profile.location, profile.Description,
                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender,
-                results.connectionDate, user.userName
+                results.connectionDate, user.userName, town
                 from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
                 from connections as c1, connections as c2
                 where (c1.userID1 = c2.userID2 AND 
                 c2.userID1 = c1.userID2) AND
-                c1.userID2 = '{$_POST['user_id']}') as results
+                c1.userID2 = '{$_POST['user_id']}')as results
                 inner join profile on results.userID1 = profile.userID
-                inner join user on results.userID1 = user.id;";
+                inner join user on results.userID1 = user.id inner join town t on profile.location = t.id;";
         }
 
 
@@ -254,7 +255,7 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
             while ($row = mysqli_fetch_row($result)) {
                 $i = 0;
                 $user = new Match($row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++],
-                    $row[$i++],$row[$i++],$row[$i++],$row[$i++], $row[$i++], $row[$i++], $row[$i++]);
+                    $row[$i++],$row[$i++],$row[$i++],$row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++]);
 
                array_push($myobj, $user->jsonSerialize());
             }
@@ -285,7 +286,7 @@ else if(isset($_POST['get_connections_api']) && isset($_POST['user_id'])) {
             while ($row = mysqli_fetch_row($result)) {
                 $i = 0;
                 $user = new SearchUser($row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++],
-                    $row[$i++], $row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
+                    $row[$i++], $row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++], $row[$i++]);
                 array_push($myobj, $user->jsonSerialize());
             }
         }
@@ -356,16 +357,16 @@ else if(isset($_POST['upload_files_api'])) {
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
-        $sql = "SELECT * FROM (SELECT user.id, user.firstname, user.lastname, user.age, user.gender, user.userName, 
-             profile.photoId, profile.location, profile.Description, profile.Drinker, profile.Smoker  FROM user
+        $sql = "SELECT * FROM(SELECT * FROM (SELECT user.id as userId, user.firstname, user.lastname, user.age, user.gender, user.userName,
+             profile.photoId, profile.location, profile.Description, profile.Drinker, profile.Smoker FROM user
             inner join profile
-            on user.id = profile.userID) AS res
-            WHERE id='{$user_id}';";
+            on user.id = profile.userID) AS res INNER JOIN town on town.id = res.location) as ress
+            WHERE ress.userId='{$user_id}';";
 
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
             $row = $result->fetch_row();
-            $user = new Profile($row[0], $row[1]." ".$row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10]);
+            $user = new Profile($row[0], $row[1]." ".$row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], $row[12]);
             $res = $user->jsonSerialize();
     }
         echo $res;
@@ -378,7 +379,7 @@ else if(isset($_POST['upload_files_api'])) {
     $user_desc = $conn->real_escape_string($_POST['userDesc']);
     $user_reason = $conn->real_escape_string($_POST['userReason']);
     $date = $conn->real_escape_string($_POST['date']);
-    $status = $conn->real_escape_string($_POST['date']);
+    $status = $conn->real_escape_string($_POST['status']);
     $number = "";
     $archieved = $conn->real_escape_string(false);
 
@@ -413,6 +414,112 @@ else if(isset($_POST['upload_files_api'])) {
     session_destroy();
     //header("Location: index.php");
     echo 'logged out';
+} else if(isset($_POST['filter_get_users'])){
+    $resultantArray = [];
+    $sql = "";$newStringBuilder = "";
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+
+        $sex = $conn->real_escape_string($_POST['gender']);
+        $seeking = $conn->real_escape_string($_POST['seeking']);
+        $userId = $conn->real_escape_string($_POST['userId']);
+
+        if(isset($_POST['interests'])){
+            if ($sex === $seeking) {
+                $sql = " SELECT * FROM (SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
+                 ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker,
+                 ress.userId, ress.town, aI.name FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age,
+                 profile.photoId, profile.location, profile.Description,
+                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender, user.userName, user.email
+                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking = '{$seeking}' AND res.gender = '{$sex}')
+                 as res INNER JOIN town on res.location = town.id) as ress INNER JOIN interests on interests.userID = ress.userId INNER JOIN availableInterests aI on interests.interestID = aI.id) as ress";
+            } else {
+                $sql = "SELECT * FROM (SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
+                 ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker,
+                 ress.userId, ress.town, aI.name FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age,
+                 profile.photoId, profile.location, profile.Description,
+                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender, user.userName, user.email
+                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking <> '{$seeking}' AND res.gender <> '{$sex}')
+                 as res INNER JOIN town on res.location = town.id) as ress INNER JOIN interests on interests.userID = ress.userId INNER JOIN availableInterests aI on interests.interestID = aI.id) as ress";
+            }
+        }else {
+            if ($sex === $seeking) {
+                $sql = "SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
+                 ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker, 
+                 ress.userId, ress.town FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age,
+                 profile.photoId, profile.location, profile.Description,
+                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender, user.userName, user.email
+                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking = '{$seeking}' AND res.gender = '{$sex}')
+                 as res INNER JOIN town on res.location = town.id) as ress";
+            } else {
+                $sql = "SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
+                 ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker, 
+                 ress.userId, ress.town FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age,
+                 profile.photoId, profile.location, profile.Description,
+                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender, user.userName, user.email
+                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking <> '{$seeking}' AND res.gender <> '{$sex}')
+                 as res INNER JOIN town on res.location = town.id) as ress";
+            }
+        }
+
+        $stringBuilder = [];
+
+
+        if(isset($_POST['smoker'])){
+            $smoker = $conn->real_escape_string($_POST['smoker']);
+            array_push($stringBuilder," ress.Smoker = '{$smoker}' ");
+        }
+
+        if(isset($_POST['drinker'])){
+            $drinker = $conn->real_escape_string($_POST['drinker']);
+            array_push($stringBuilder," ress.Drinker = '{$drinker}' ");
+        }
+
+        if(isset($_POST['age'])){
+            $age = $conn->real_escape_string($_POST['age']);
+            array_push($stringBuilder, " ress.age = '{$age}' ");
+        }
+
+        if(isset($_POST['city'])){
+            $city = $conn->real_escape_string($_POST['city']);
+            array_push($stringBuilder, " ress.town = '{$city}' ");
+        }
+
+        if(isset($_POST['input'])){
+            $input = $conn->real_escape_string($_POST['input']);
+            array_push($stringBuilder, " firstname LIKE '%{$input}%' ");
+        }
+
+        $size = sizeof($stringBuilder);
+        $newStringBuilder = $newStringBuilder." WHERE ";
+        for($x = 0; $x < sizeof($stringBuilder); $x++){
+            if($x === ($size-1)){
+                $newStringBuilder = $newStringBuilder.$stringBuilder[$x];
+            }else{
+                $newStringBuilder = $newStringBuilder.$stringBuilder[$x]."AND";
+            }
+        }
+        $newStringBuilder = $newStringBuilder.";";
+
+        $sql = $sql.$newStringBuilder;
+
+
+
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = mysqli_fetch_row($result)){
+                if(isset($_POST['interests'])) {
+                    $res = new UserInfo($row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], $row[11], $row[12], $row[13]);
+                    array_push($resultantArray, $res->jsonSerialize());
+                }else {
+                    $res = new UserInfo($row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], $row[11], $row[12], null);
+                    array_push($resultantArray, $res->jsonSerialize());
+                }
+            }
+        }
+    }
+    echo json_encode($resultantArray);
 }
 ob_start();
 

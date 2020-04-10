@@ -17,20 +17,12 @@ if(isset($_POST['userId']) && isset($_POST['photoUrl'])) {
     }else {
 
         $url = $conn->real_escape_string($_POST['photoUrl']);
-        $name = $conn->real_escape_string("userProfilePhoto");
         $userId = $conn->real_escape_string($_POST['userId']);
 
-
-        $sqlInsert = "INSERT INTO photo (name, user_id, url) VALUES('{$name}','{$userId}','{$url}');";
-
-        $sqlUpdate = "UPDATE photo SET url = '{$url}' WHERE id = {$userId} AND name = '{$name}'";
-
-        $sql = "SELECT name FROM photo WHERE id='{$userId}'";
-
-        $sqlSmnt = $conn->query($sql)->num_rows > 0 ? $sqlUpdate : $sqlInsert;
+        $sql = "UPDATE profile SET photoId = '{$url}' WHERE userID = '{$userId}'";
 
 
-        if (mysqli_query($conn, $sqlSmnt)) {
+        if ($conn->query($sql) === TRUE) {
 
             $resp = new SweetalertResponse(1,
                 'Photo Changed Successfully',
@@ -38,16 +30,16 @@ if(isset($_POST['userId']) && isset($_POST['photoUrl'])) {
                 SweetalertResponse::SUCCESS
             );
 
-            $resp->setImg($url);
 
 
             $sql = "SELECT userName FROM user WHERE id='{$userId}';";
             $result = $conn->query($sql);
-            $res = $result->fetch_row()[0];
-
-            $mongo = new MongoConnect();
-            $mongo->historyUpdate($res, 'Profile Picture Change', 'Picture Added');
-
+            if($result->num_rows > 0){
+                $res = $result->fetch_row()[0];
+                $mongo = new MongoConnect();
+                $mongo->historyUpdate($res, 'Profile Picture Change', 'Picture Added');
+                $resp->setImg($url);
+            }
         } else {
             $resp = new SweetalertResponse(2,
                 'Failed To Changed Profile Picture',

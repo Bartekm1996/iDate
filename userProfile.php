@@ -30,7 +30,7 @@
                     <div id="buttons" class="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4 mr-1 ml-1">
                         <div class="d-flex justify-content-between">
                             <a href="#" id="connect_button" class="btn btn-sm btn-info mr-4"  onclick="connect('\''+$('#upro_img').attr('data-id')+'\',\''+$('#username-header').attr('user-id')+'\')" hidden>Connect</a>
-                            <a href="#" id="card_report_button" class="btn btn-sm btn-default float-right" hidden>Report</a>
+                            <a href="#" id="card_report_button" class="btn btn-sm btn-default float-right" onclick="openReportPane($('#profile_input_user_name').val())" hidden>Report</a>
                             <button id="card_message_button" class="btn btn-sm btn-default float-right" onclick="showUserChar($('#profile_input_user_name').val())"  hidden>Message</button>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                             <h3 id="profile_user_card_name">
                             </h3>
                             <div class="h5 font-weight-300">
-                                <i class="ni location_pin mr-2"></i>City, Country
+                                <i class="ni location_pin mr-2" id="city_selected"></i>
                             </div>
                             <div class="h5 mt-4">
                                 <span id="seeking"></span>
@@ -73,6 +73,8 @@
                                     </div>
                                 </div>
                             </div>
+                            <hr class="my-4">
+                            <button id="close_account_button" class="btn btn-danger" style="width: 100%;" onclick="closeAccount('\''+$('#upro_img').attr('data-id')+'\'')">Close Account</button>
                         </div>
                     </div>
                 </div>
@@ -122,38 +124,25 @@
                                     </div>
                                 </div>
                             </div>
-                            <hr class="my-4">f
+                            <hr class="my-4">
                             <!-- Address -->
                             <div class="container" style="width: 100%;">
                                 <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">Contact information</h6>
-                                <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_contact_save_button" onclick="save">Save</a>
+                                <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_contact_save_button" onclick="saveCity()">Save</a>
                             </div>
                             <div class="pl-lg-4">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group focused">
-                                            <label class="form-control-label" for="input-address">Address</label>
-                                            <input id="input-address" class="form-control form-control-alternative" placeholder="Home Address" type="text">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <div class="form-group focused">
                                             <label class="form-control-label" for="input-city">City</label>
-                                            <input type="text" id="input-city" class="form-control form-control-alternative" placeholder="City">
+                                            <select class="form-control" name="input_city" id="city_select">
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <div class="form-group focused">
                                             <label class="form-control-label" for="input-country">Country</label>
-                                            <input type="text" id="input-country" class="form-control form-control-alternative" placeholder="Country">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-country">Postal code</label>
-                                            <input type="number" id="input-postal-code" class="form-control form-control-alternative" placeholder="Postal code">
+                                            <input type="text" id="input-country" class="form-control form-control-alternative" value="Ireland" readonly placeholder="Country">
                                         </div>
                                     </div>
                                 </div>
@@ -176,51 +165,43 @@
                                 <h6 style="display: inline-block;" class="heading-small text-muted mb-4 pull-left">Info</h6>
                                 <a  style="display: inline-block;" href="#!" class="btn btn-sm btn-primary pull-right" id="user_profile_info_save_button" onclick="saveUserInfo()">Save</a>
                             </div>
-                            <div class="pl-lg-4" >
-                                <div class="form-group focused row ml-5">
-                                    <div style="display: inline-block;" class="col-sm-5">
-                                        <ul class="about">
-                                            <li class="about-items mb-3">
-                                                <i class="mdi mdi-account icon-sm "></i><span class="about-item-name"><strong>Gender</strong> </span>
-                                                <select id="gender_picker" class="ml-3">
-                                                    <option value="Male">Male</option>
-                                                    <option value="Female">Female</option>
-                                                    <option value="Other">Can't Decide</option>
-                                                </select>
-                                            </li>
-                                            <li class="about-items">
-                                                <i class="mdi mdi-account icon-sm "></i><span class="about-item-name"><strong>Seeking</strong></span>
-                                                <select id="seeking_picker" class="ml-3">
-                                                    <option value="male">Male</option>
-                                                    <option value="female">Female</option>
-                                                    <option value="other">Can't Decide</option>
-                                                </select>
-                                            </li>
-                                        </ul>
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <i class="mdi mdi-account icon-sm "></i><span class="form-control-label mb-2"><strong>Gender</strong> </span>
+                                        <select id="gender_picker" class="form-control mb-3">
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Can't Decide</option>
+                                        </select>
                                     </div>
-                                    <div style="display: inline-block;" class="col-sm-5">
-                                        <ul class="about">
-                                            <li class="about-items mb-3">
-                                                <i class="mdi mdi-account icon-sm "></i><span class="about-item-name"><strong>Drinker</strong></span>
-                                                <select id="drinker_picker" class="ml-3">
-                                                    <option value="yes">Yes</option>
-                                                    <option value="no">No</option>
-                                                    <option value="ocasionally">Ocasionally</option>
-                                                    <option value="party smoker">Party Smoker</option>
-                                                </select>
-                                            </li>
-                                            <li class="about-items">
-                                                <div>
-                                                    <i class="mdi mdi-account icon-sm "></i><span class="about-item-name"><strong>Smoker</strong></span>
-                                                    <select id="smoking_picker" class="ml-3">
-                                                        <option value="yes">Yes</option>
-                                                        <option value="no">No</option>
-                                                        <option value="ocasionally">Ocasionally</option>
-                                                        <option value="party drinker">Party Drinker</option>
-                                                    </select>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                    <div class="col-lg-6">
+                                        <i class="mdi mdi-account icon-sm "></i><span class="form-control-label mb-2"><strong>Seeking</strong></span>
+                                        <select id="seeking_picker" class="form-control">
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Can't Decide</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <i class="mdi mdi-account icon-sm "></i><span class="form-control-label mb-2"><strong>Drinker</strong></span>
+                                        <select id="drinker_picker" class="form-control mb-3">
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                            <option value="ocasionally">Ocasionally</option>
+                                            <option value="party smoker">Party Smoker</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <i class="mdi mdi-account icon-sm "></i><span class="form-control-label mb-2"><strong>Smoker</strong></span>
+                                        <select id="smoking_picker" class="form-control">
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                            <option value="ocasionally">Ocasionally</option>
+                                            <option value="party drinker">Party Drinker</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>

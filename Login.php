@@ -68,7 +68,7 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
             if (strpos($uname, "@") !== false) {
                 $sql = "SELECT registered, id, firstname, lastname, userName FROM user where email='{$uname}' AND password='{$upass}' LIMIT 1;";
             } else {
-                $sql = "SELECT registered, id, firstname, lastname FROM user where userName='{$uname}' AND password='{$upass}' LIMIT 1;";
+                $sql = "SELECT registered, id, firstname, lastname, email FROM user where userName='{$uname}' AND password='{$upass}' LIMIT 1;";
             }
 
 
@@ -86,7 +86,9 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
                 $_SESSION['userid'] = $row[1];
                 $_SESSION['firstname'] = $row[2] . " " . $row[3];
                 $uname = strpos($uname, "@") !== false ? $row[4] : $uname;
+                $email = strpos($uname, "@") !== false ? $uname : $row[4];
 
+                $_SESSION['email'] = $email;
                 $_SESSION['username'] = $uname;
 
 

@@ -318,7 +318,7 @@ function getUserMatches(user_id) {
                         '</div>'+
                         '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
                         '<div class="d-flex justify-content-between">'+
-                        '<a href="#" class="btn btn-sm btn-info mr-4" >Report</a>'+
+                        '<a href="#" class="btn btn-sm btn-info mr-4" onclick="openReportPane(\''+res.username+'\')">Report</a>'+
                         '<a href="#" onclick="showProfile(\''+res.id+'\',\''+$('#username-header').attr('user-name')+'\',true)" class="btn btn-sm btn-default float-right">Profile</a>'+
                         '</div>'+
                         '</div>'+
@@ -340,7 +340,7 @@ function getUserMatches(user_id) {
                         '<div class="text-center">'+
                         '<h3>'+res.name+'<span class="font-weight-light">, '+res.age+'</span> </h3>'+
                         '<div class="h5 font-weight-300">'+
-                        '<i class="ni location_pin mr-2"></i>City, Country'+
+                        '<i class="ni location_pin mr-2"></i>'+res.town+', Ireland'+
                         '</div>'+
                         '<div class="h5 mt-4">'+
                         '</div>'+
@@ -368,9 +368,6 @@ function getUserMatches(user_id) {
     });
 }
 
-function reportUser() {
-
-}
 
 function getAllProfiles(smoker, drinker, age) {
 
@@ -513,7 +510,7 @@ function getAllProfiles(smoker, drinker, age) {
                  '<div class="text-center text-desc mainflip" ontouchstart="this.classList.toggle(\'hover\');">'+
                  '<h3>'+ress.name+'<span class="font-weight-light">, '+ress.age+'</span> </h3>'+
                  '<div class="h5 font-weight-300">'+
-                 '<i class="ni location_pin mr-2"></i>City, Country'+
+                 '<i class="ni location_pin mr-2"></i>'+ress.town+', Ireland'+
                  '</div>'+
                  '<div class="h5 mt-4">'+
                  '</div>'+
@@ -715,14 +712,14 @@ $(document).ready(function() {
         $(this).tab('show')
     })
 
-    loadMyProfile();
+
 });
 
 function loadMyProfile() {
 
-    var request = {};
+    const request = {};
     request.get_user_profile_api = true;
-    request.userId = userID;
+    request.userId = $('#username-header').attr('user-id');
     console.log('request:loadMyProfile->', request);
     $.ajax({
         method: "POST",
@@ -732,7 +729,7 @@ function loadMyProfile() {
             console.log('loadMyProfile:response->', response);
             let res = JSON.parse(response);
 
-            var defImage = res.photoId;
+            let defImage = res.photoId;
 
             if(defImage == null || defImage.length == 0) {
                 defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
@@ -748,4 +745,175 @@ function loadMyProfile() {
         }
     });
 
+}
+
+function openReportPane(name) {
+    if($('#report_pane').attr('hidden')){
+        $('#report_pane').attr('hidden', false);
+    }else{
+        $('#report_pane').attr('hidden', true);
+    }
+
+    $('#user_report_username').val(name);
+    $('#user_report_name').val($('#username-header').attr('user-name'));
+    $('#user_report_email').val( $('#username-header').attr('user_email'));
+}
+
+function profileFilterButton() {
+
+    document.getElementById("searchResults").innerHTML = '';
+
+    const request = {};
+
+    let input = $('#searchFilter').val();
+
+    let smoker = $('#smoker_select_picker').val();
+    let drinker = $('#drinker_select_picker').val();
+    let age = $('#ageSlider').val();
+    let interest = $('#interest_box').children();
+    let city = $('#city_select_picker').val();
+    let ints = [];
+
+
+
+    if(drinker !== null && drinker.length > 0){
+        request.drinker = drinker;
+    }
+    if(smoker !== null && smoker.length > 0){
+        request.smoker = smoker;
+    }
+    if(city !== null && city.length > 0){
+        request.city = city;
+    }
+    if(input !== null && input.length > 0){
+        request.input = input;
+    }
+
+
+    console.log("Drinker " + drinker + " smoker " + smoker + " age " + age);
+
+    request.filter_get_users = true;
+    request.userId = $('#username-header').attr('user-id');
+    request.age = age;
+    request.gender = $('#upro_img').attr('data-gender');
+    request.seeking = $('#upro_img').attr('data-seeking');
+
+    for(let i = 0; i < interest.length; i++){
+        let childs = $(interest[i]).children();
+        for(let j = 0; j < childs.length; j++){
+            if($(childs[j]).hasClass('active')){
+                ints.push($(childs[j]).text());
+            }
+        }
+    }
+
+    if(ints.length > 0){
+        request.interests = true;
+    }
+
+    let names = [];
+
+
+    $.ajax({
+        method: "POST",
+        url: "api.php",
+        data: request,
+        success: function (response) {
+            console.log(response);
+            if(response.length > 0) {
+                $('#my_matches_place_holder').attr('hidden', true);
+                $('#searchResults').prop('hidden', false);
+                $('#matching').prop('hidden', true);
+                let res = JSON.parse(response);
+                if (ints.length > 0) {
+                    let name = "";
+                    let obj = [];
+                    for (let i = 0; i < res.length; i++) {
+                        let ress = JSON.parse(res[i]);
+                        name = ress.firstName;
+                        if (ints.includes(ress.interest)) {
+                            if (!names.includes(ress.firstName)) {
+                                names.push(ress.firstName);
+                                obj.push(ress);
+                            }
+                        }
+                    }
+                    for (let i = 0; i < obj.length; i++) {
+                        append(obj[i]);
+                    }
+                }else{
+                    for (let i = 0; i < res.length; i++) {
+                        let ress = JSON.parse(res[i]);
+                        append(ress);
+                    }
+                }
+
+            }else {
+                $('#my_matches_place_holder').attr('hidden', false);
+                $('#my_matches_place_holder').text("No Results");
+            }
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+
+}
+
+function append(ress) {
+    let test =
+        '<div style="width: 300px; height: 100%;">' +
+        '<div class="image-flip" >' +
+        '<div >' +
+        '<div class="frontside">' +
+        '<div class="card card-profile shadow">' +
+        '<div class="row justify-content-center">' +
+        '<div class="col-lg-3 order-lg-2">' +
+        '<div class="card-profile-image">' +
+        '<img src="' + (ress.photoId === null ? (ress.gender === "Male" ? "images/male.png" : "images/female.png") : ress.photoId) + '" style="width: 118px; height: 118px;" class="rounded-circle avatar">' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">' +
+        '<div class="d-flex justify-content-between">' +
+        '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\'' + ress.id + '\',\'' + $('#username-header').attr('user-id') + '\')">Connect</a>' +
+        '<a href="#" onclick="showProfile(\'' + ress.id + '\',\'' + $('#username-header').attr('user-name') + '\',false)" class="btn btn-sm btn-default float-right">Profile</a>' +
+        '</div>' +
+        '</div>' +
+        '<div class="card-body pt-0 pt-md-4">' +
+        '<div class="row">' +
+        '<div class="col">' +
+        '<div class="card-profile-stats d-flex justify-content-center mt-md-5">' +
+        '<div>' +
+        '<span class="heading">' + ress.smoker + '</span>' +
+        '<span class="description">Smoker</span>' +
+        '</div>' +
+        '<div>' +
+        '<span class="heading">' + ress.dinker + '</span>' +
+        '<span class="description">Drinker</span>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="text-center text-desc mainflip" ontouchstart="this.classList.toggle(\'hover\');">' +
+        '<h3>' + (ress.firstName + " " + ress.lastName) + '<span class="font-weight-light">, ' + ress.age + '</span> </h3>' +
+        '<div class="h5 font-weight-300">' +
+        '<i class="ni location_pin mr-2"></i>' + ress.town + ', Ireland' +
+        '</div>' +
+        '<div class="h5 mt-4">' +
+        '</div>' +
+        '<div>' +
+        '</div>' +
+        '<hr class="my-4">' +
+        '<p>' + ress.descripion + '</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+    $('#searchResults').append(test);
 }

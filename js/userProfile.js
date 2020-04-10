@@ -1,20 +1,24 @@
 function showProfile(currentProfile, username, matched) {
+
+    console.log(currentProfile + " currentProfile");
+
     hideMatchArea();
     hideUserManagment();
     hideMatching();
     hideChat();
     hideTickets();
 
+    console.log($('#person_fullname').attr('data-id'));
 
 
     if(username !== null){
         $('#user_ints').attr('hidden',true);
-        getMyInterest($('#person_fullname').attr('data-id'));
         if(matched === true){
             $('#card_message_button').attr('hidden', false);
             $('#card_report_button').attr('hidden', false);
             $('#connect_button').attr('hidden',true);
         }else{
+            $('#card_report_button').attr('hidden', true);
             $('#connect_button').attr('hidden', false);
         }
         disableFields();
@@ -27,6 +31,7 @@ function showProfile(currentProfile, username, matched) {
         $('#card_report_button').attr('hidden',true);
         getMyInterest($('#username-header').attr('user-id'));
         enableFields();
+        getCitites();
     }
 
     $('#user_profile').attr('hidden', false);
@@ -36,18 +41,21 @@ function showProfile(currentProfile, username, matched) {
     request.get_user_info = true;
     request.username = currentProfile;
 
+
     $.ajax({
         method: "POST",
         url: "userManagmentApi.php",
         data: request,
         success: function (response) {
-            console.log(JSON.parse(response));
+            console.log(response);
             let res = JSON.parse(response);
             let defImage = res.photoId;
 
             if(defImage === null) {
                 defImage = res.gender === 'Male' ? 'images/male.png' : 'images/female.png';
             }
+            getMyInterest(res.id);
+
             $('#user_profile_name').text("Hello " + res.firstName + " " + res.lastName);
             $('#profile_input_user_name').val(res.userName);
             $('#profile_input_user_email').val(res.email);
@@ -59,6 +67,10 @@ function showProfile(currentProfile, username, matched) {
             $('#smoking_picker').val(res.smoker);
             $('#gender_picker').val(res.gender);
             $('#upro_img').attr('data-id',res.id);
+            $('#upro_img').attr('data-gender', res.gender);
+            $('#upro_img').attr('data-seeking', res.seeking);
+            $('#city_select').val(res.town);
+            $('#city_selected').text(res.town + ",Ireland");
             $('#profile_card_description').text(res.descripion);
             $('#profile_user_card_name').attr('user_age', res.age);
             $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);
@@ -101,6 +113,97 @@ function saveUserInfo() {
             console.log('error:' + JSON.stringify(response));
         }
     });
+}
+
+function closeAccount(id) {
+
+    const request = {};
+    request.update_user = true;
+    request.userId = id;
+
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                method: "POST",
+                url: "userManagmentApi.php",
+                data: request,
+                success: function (response) {
+                    console.log(JSON.parse(response));
+                    let timerInterval
+                    Swal.fire({
+                        title: 'You\'re Account Is Being Closed!',
+                        html: 'You will be redirect to Login Page In <b></b> milliseconds.',
+                        timer: 2000,
+                        icon: 'success',
+                        timerProgressBar: true,
+                        onBeforeOpen: () => {
+                        Swal.showLoading()
+                        timerInterval = setInterval(() => {
+                            const content = Swal.getContent()
+                            if (content) {
+                                const b = content.querySelector('b')
+                                if (b) {
+                                    b.textContent = Swal.getTimerLeft()
+                                }
+                            }
+                        }, 100)
+                    },
+                        onClose: () => {
+                            clearInterval(timerInterval);
+                            killSessiosn();
+                            window.location.href = 'index.php';
+                        }
+                    }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log('Your Account Was Closed We\'re Sad to see you go')
+                            }
+                    })
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+
+        } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+        ) {
+            swalWithBootstrapButtons.fire(
+                'Cancelled',
+                'Your profile is safe :)',
+                'error'
+            )
+        }
+    })
+
+
+}
+
+function killSessiosn() {
+    let request = {};
+    request.logout_api = true;
+    sendDataTest(request, 'api.php');
 }
 
 
@@ -159,6 +262,9 @@ function loadHistoryTable(username) {
 }
 
 function getMyInterest(userid) {
+
+    console.log("User id " + userid);
+
     const request = {};
     request.get_my_interests_api = true;
     request.userid = userid;
@@ -298,6 +404,8 @@ function disableFields() {
     $('#seeking_picker').attr('disabled',true);
     $('#drinker_picker').attr('disabled',true);
     $('#smoking_picker').attr('disabled',true);
+    $('#close_account_button').attr('hidden',true);
+    $('#city_select').attr('disabled',true);
 }
 
 function enableFields(){
@@ -324,6 +432,8 @@ function enableFields(){
     $('#gender_picker').attr('disabled',false);
     $('#drinker_picker').attr('disabled',false);
     $('#smoking_picker').attr('disabled',false);
+    $('#close_account_button').attr('hidden',false);
+    $('#city_select').attr('disabled',false);
 }
 
 function hideUserProfile() {
@@ -423,4 +533,60 @@ function editInterests(action) {
     }else{
         inter.attr('hidden',true);
     }
+}
+
+function saveCity(){
+
+    const request = {};
+    request.save_user_city = true;
+    request.userId =  $('#username-header').attr('user-id');
+    request.city = $('#city_select').val();
+
+    $.ajax({
+        method: "POST",
+        url: "userManagmentApi.php",
+        data: request,
+        success: function (response) {
+            let res = JSON.parse(response);
+            Swal.fire(res.title, res.message, res.type);
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+
+}
+
+function getCitites(){
+    const request = {};
+    request.get_citites = true;
+    $.ajax({
+        method: "POST",
+        url: "userManagmentApi.php",
+        data: request,
+        success: function (response) {
+            let res = JSON.parse(response);
+            let city = $('#city_select');
+            let cities = $('#city_select_picker');
+            console.log(response);
+            for(let i = 0; i < res.length; i++){
+                city.append(
+                    '<option value="'+res[i]+'">'+res[i]+'</option>'
+                );
+                cities.append(
+                    '<option value="'+res[i]+'">'+res[i]+'</option>'
+                );
+            }
+
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
 }
