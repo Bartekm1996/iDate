@@ -593,8 +593,7 @@
                                     '</div></li>'.
                                     '<li><a onclick="showSearch()"><i class="fas fa-users""></i><span>Find Love</span></a></li>';
                             }else{
-                                echo '<li><a onclick="showSearch()"><i class="fas fa-users""></i><span>Find Love</span></a></li>'.
-                                     '<li><a onclick="showUerMatches('.$id.')"><i class="fas fa-heart"></i><span>My Matches</span></a></li>';
+                                echo '<li><a onclick="showSearch()"><i class="fas fa-users""></i><span>Find Love</span></a></li>';
                             }
                             ?>
                             <li>

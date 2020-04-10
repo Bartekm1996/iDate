@@ -22,28 +22,26 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
     } else {
         $heart = "";$matched = false;
         $date = date("Y/m/d");
-        $sqlCheckMatch = "SELECT userID1,userID2 FROM connections WHERE userID1 = '{$_POST['id1']}' AND userID2 = '{$_POST['id2']}';";
-        $sql = "INSERT INTO connections (userID1, userID2, connectionDate) "
-            ."VALUES({$_POST['id1']}, {$_POST['id2']}, '{$date}');";
+        $sqlCheckMatch = "SELECT userID1,userID2 FROM connections WHERE userID1 = '{$_POST['id2']}' AND userID2 = '{$_POST['id1']}';";
+        $sql = "INSERT INTO connections (userID1, userID2, connectionDate) VALUES({$_POST['id1']}, {$_POST['id2']}, '{$date}');";
 
+        $i = 0;
         $res = $conn->query($sqlCheckMatch);
         if($res->num_rows > 0){
-            for($x = 0; $x < $res->num_rows; $x++){
-                $ress = $res->fetch_row()[$x];
-                if($ress[0] === $_POST['id2'] && $ress[1] === $_POST['id1']){
+            while($row = mysqli_fetch_row($res)){
+                if($row[0] === $_POST['id2'] && $row[1] === $_POST['id1']){
                     $matched = true;
                 }
             }
         }
+        $conn->query($sql);
 
-        if(!$matched){
-            if ($conn->query($sql) === TRUE) {
-                $heart = new SweetalertResponse(2,
-                    'Congratulations ',
-                    "Hopefully you'll match",
-                    SweetalertResponse::SUCCESS
-                );
-            }
+        if($matched === false){
+            $heart = new SweetalertResponse(2,
+                'Congratulations ',
+                "Hopefully you'll match",
+                SweetalertResponse::SUCCESS
+            );
         }else{
             $heart = new SweetalertResponse(1,
                 'Congratulations !!!!!',
