@@ -851,7 +851,7 @@
                     showCancelButton: true,
                     showLoaderOnConfirm: true,
                     preConfirm: (file) => {
-                        if (Math.ceil(file.size / 1000) > 38) {
+                        if (Math.ceil(file.size / 1000) > 256) {
                             Swal.showValidationMessage(
                                 `Picture cannot be bigger than 38KB`
                             );
