@@ -20,29 +20,38 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
-        $heart = "";
+        $heart = "";$matched = false;
         $date = date("Y/m/d");
+        $sqlCheckMatch = "SELECT userID1,userID2 FROM connections WHERE userID1 = '{$_POST['id1']}' AND userID2 = '{$_POST['id2']}';";
         $sql = "INSERT INTO connections (userID1, userID2, connectionDate) "
             ."VALUES({$_POST['id1']}, {$_POST['id2']}, '{$date}');";
-        if ($conn->query($sql) === TRUE) {
-            $sql = "SELECT userID2 FROM connections WHERE userID1 = '{$_POST['id1']}' AND userID2 = '{$_POST['id2']}' OR userID2 = '{$_POST['id1']}' AND userID1 = '{$_POST['id1']}'";
-            $res = $conn->query($sql);
-            if($res->num_rows > 0){
-                $matched = true;
-                $heart = new SweetalertResponse(1,
-                    'Congratulations !!!!!',
-                    "We have a match",
+
+        $res = $conn->query($sqlCheckMatch);
+        if($res->num_rows > 0){
+            for($x = 0; $x < $res->num_rows; $x++){
+                $ress = $res->fetch_row()[$x];
+                if($ress[0] === $_POST['id2'] && $ress[1] === $_POST['id1']){
+                    $matched = true;
+                }
+            }
+        }
+
+        if(!$matched){
+            if ($conn->query($sql) === TRUE) {
+                $heart = new SweetalertResponse(2,
+                    'Congratulations ',
+                    "Hopefully you'll match",
                     SweetalertResponse::SUCCESS
                 );
             }
-        }
-        if($matched !== true) {
-            $heart = new SweetalertResponse(2,
-                'Congratulations ',
-                "Hopefully you'll match",
+        }else{
+            $heart = new SweetalertResponse(1,
+                'Congratulations !!!!!',
+                "We have a match",
                 SweetalertResponse::SUCCESS
             );
         }
+
 
         echo $heart->jsonSerialize();
 

@@ -19,19 +19,16 @@ if(isset($_POST['get_all_users'])){
                 FROM user as a LEFT JOIN(select userID, blocked,photoId from profile group by userID) as b on a.id = b.userID) as users";
 
         $result = $conn->query($sql);
-        $res = "[";
+        $res = [];
         if ($result->num_rows > 0) {
             while ($row = mysqli_fetch_row($result)) {
                 $i = 0;
                 $user = new UserManagment($row[$i++], $row[$i++], $row[$i++]." ".$row[$i++], $row[$i++], $row[$i++],
                     $row[$i++], $row[$i++], $row[$i++], $row[$i++]);
-                $res = $res.$user->jsonSerialize().",";
+                array_push($res, $user->jsonSerialize());
             }
-
-            $res = substr($res, 0,strlen($res)-1);
         }
-        $res = $res."]";
-        echo $res;
+        echo json_encode($res);
     }
 }else if(isset($_POST['update_user_info'])){
     if ($conn->connect_error) {
@@ -216,6 +213,7 @@ else if(isset($_POST['resend_verification_email'])){
 
     }
 }else if(isset($_POST['update_user'])){
+    $resp = "";
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
@@ -231,10 +229,10 @@ else if(isset($_POST['resend_verification_email'])){
             $name = $conn->real_escape_string($_POST['name']);
             $sender_name = $_POST['sender_name'];
             $reason = $_POST['reason'];
-            $date = getdate((new DateTime())->getTimestamp());
+            $date = date("Y/m/d");
 
             if ($action === 'block') {
-                $sql = "update profile set blocked = '1' where userID = (select id from user where username = '{$username}')"."insert into blocked (blocked_user, blocked_date, blockee, reason) values ('{$username}', '{$date}', '{$sender_name}', '{$reason}')";
+                $sql = "update profile set blocked = '1' where userID = (select id from user where username = '{$username}');"."insert into blocked (blocked_user, blocked_date, blockee, reason) values ('{$username}', '{$date}', '{$sender_name}', '{$reason}');";
             } else if ($action === 'delete') {
                 $sqlDisableForeignKeys = "SET FOREIGN_KEY_CHECKS = 0";
                 $sqlDeleteProfile = "DELETE FROM profile where userID = '{$username}';";
@@ -255,6 +253,8 @@ else if(isset($_POST['resend_verification_email'])){
                             "" ,
                             SweetalertResponse::SUCCESS
                         );
+
+
                 } else if ($reason === 'delete') {
                     $resp = new SweetalertResponse(2,
                         '',
@@ -268,9 +268,9 @@ else if(isset($_POST['resend_verification_email'])){
             if($action === 'activate'){
                 $sql = "update user set registered = '1' where userName ='{$username}';";
             }else if($action === 'unblock'){
-                $sql = "update profile set blocked = '0' where userID = (select id from user where username = '{$username}');";
+                $sql = "update profile set blocked = '0' where userID = (select id from user where username = '{$username}');"."DELETE FROM blocked WHERE blocked_user = '{$username}';";
             }
-            if ($conn->query($sql) === TRUE) {
+            if ($conn->multi_query($sql) === TRUE) {
 
                 if($action === 'activate'){
                     $email = new Email($email, $username);
@@ -293,11 +293,9 @@ else if(isset($_POST['resend_verification_email'])){
                 );
             }
         }
-
-        echo $resp->jsonSerialize();
-
-
     }
+    echo $resp->jsonSerialize();
+
 }else if(isset($_POST['get_block_reason'])){
 
     if ($conn->connect_error) {
@@ -310,8 +308,8 @@ else if(isset($_POST['resend_verification_email'])){
 
         if ($result->num_rows > 0) {
             $res = $result->fetch_row();
-            $blocked = new BlockReason($res[0], $res[1], $res[2], $res[4]);
-            echo $res->jsonSerialize();
+            $blocked = new BlockReason($res[1], $res[2], $res[3], $res[4]);
+            echo $blocked->jsonSerialize();
         }
     }
 }else if(isset($_POST['save_user_info'])){

@@ -45,7 +45,12 @@ function getBlockedInfo(username){
         data: request,
         success: function (response) {
             console.log('success:' + JSON.stringify(response));
-            Swal.fire(username + " has been blocked for " + response.reason + " on the " + response.date);
+            let res =JSON.parse(response);
+            Swal.fire({
+                title: 'Blocked Info',
+                text :  username + " has been blocked for " + res.reason + " on the " + res.date,
+                icon: 'info'
+            });
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
@@ -198,7 +203,6 @@ function editProfile(elem) {
     let userName = $(elem).find("#userName").text();
     let name = $(elem).find("#user_name").text().split(" ");
     let email = $(elem).find('#userEmail').text();
-
 
     $('#user_profile_header').text(userName);
     $('#user_email_input').val(email);
@@ -465,47 +469,51 @@ function getUserData(verified) {
         url: 'userManagmentApi.php',
         data: request,
         success: function (response) {
-            console.log('success:' + JSON.parse(response)[0].userId);
+
+            console.log(response);
 
             let res = JSON.parse(response);
 
             for(let i = 0; i < res.length; i++)
             {
+
+                let def = JSON.parse(res[i]);
                 let node =
-                    '<tr data-id='+i+' class="clickable-row" onclick="editProfile(this)"  data-gender="'+res[i].gender+'" data-photoId="'+res[i].photoId+'" style="padding-top: 5px;">' +
-                    '<td>'+(parseInt(res[i].registered) === 0 ? "<span class=\"label label-warning\" id='status'>Pending</span>" : (parseInt(res[i].blocked) === 0 ? "<span class=\"label label-success\" id='status'>Active</span>" : "<span class=\"label label-danger\" id='status'>Blocked</span>"))+'</small></td>'+
-                    '<td><small id="userName">'+res[i].userName+'</small></td>'+
-                    '<td><small id="user_name">'+res[i].name+'</small></td>'+
-                    '<td><small id="userEmail">'+res[i].email+'</small></td>'+
-                    '<td><small>'+(parseInt(res[i].admin) === 0 ? "<span class=\"label label-primary\" id='role'>User</span>" : "<span class=\"label label-info\" id='role'>Admin</span>")+'</small></td>'+
+                    '<tr data-id='+i+' class="clickable-row" onclick="editProfile(this)"  data-status='+def.blocked+' data-gender="'+def.gender+'" data-photoId="'+def.photoId+'" style="padding-top: 5px;">' +
+                    '<td>'+(parseInt(def.registered) === 0 ? "<span class=\"label label-warning\" id='status'>Pending</span>" : (parseInt(def.blocked) === 0 ? "<span class=\"label label-success\" id='status'>Active</span>" : "<span class=\"label label-danger\" id='status'>Blocked</span>"))+'</small></td>'+
+                    '<td><small id="userName">'+def.userName+'</small></td>'+
+                    '<td><small id="user_name">'+def.name+'</small></td>'+
+                    '<td><small id="userEmail">'+def.email+'</small></td>'+
+                    '<td><small>'+(parseInt(def.admin) === 0 ? "<span class=\"label label-primary\" id='role'>User</span>" : "<span class=\"label label-info\" id='role'>Admin</span>")+'</small></td>'+
                     '<td>';
-                if(res[i].userName !== $('#username-header').attr('user-name')) {
+                if(def.userName !== $('#username-header').attr('user-name')) {
                     node += '<div class="btn-group">' +
                         '<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>' +
                         '<div class="dropdown-menu">';
 
-                    if (parseInt(res[i].registered) === 0) {
-                        node += '<a class="dropdown-item" href="#" onclick="activateUser(\'' + res[i].userName + '\',\''+res[i].email+'\')"><i class="fas fa-user-plus mr-2"></i>Activate</a>';
+                    if (parseInt(def.registered) === 0) {
+                        node += '<a class="dropdown-item" href="#" onclick="activateUser(\'' + def.userName + '\',\''+def.email+'\')"><i class="fas fa-user-plus mr-2"></i>Activate</a>';
                     }
 
-                    if (parseInt(res[i].blocked) === 1) {
-                            node += '<a class="dropdown-item" href="#" onclick="unblockUser(\'' + res[i].userName + '\',\''+res[i].email+'\')"><i class="fas fa-user-lock mr-2"></i>Unblock</a>';
-                    } else node += '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\'' + res[i].userName + '\',\'' + res[i].name + '\',\'' + res[i].email + '\')"><i class="fas fa-user-lock mr-2"></i>Block</a>';
+                    if (parseInt(def.blocked) === 1) {
+                        node += '<a class="dropdown-item" href="#" onclick="getBlockedInfo(\'' + def.userName + '\')"><i class="fas fa-user-lock mr-2"></i>Block Info</a>'+
+                                '<a class="dropdown-item" href="#" onclick="unblockUser(\'' + def.userName + '\',\''+def.email+'\')"><i class="fas fa-user-lock mr-2"></i>Unblock</a>';
+                    } else node += '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\'' + def.userName + '\',\'' + def.name + '\',\'' + def.email + '\')"><i class="fas fa-user-lock mr-2"></i>Block</a>';
 
 
                     node +=
-                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\'' + res[i].userId + '\',\'' + res[i].name + '\',\'' + res[i].email + '\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
+                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\'' +def.userId + '\',\'' + def.name + '\',\'' + def.email + '\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
 
-                    if (parseInt(res[i].admin) === 0) {
-                        node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + res[i].userName + '\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';
+                    if (parseInt(def.admin) === 0) {
+                        node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + def.userName + '\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';
                     } else {
-                        node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + res[i].userName + '\',\'Remove\')"><i class="fas fa-user-minus"></i>Remove User a Admin</a>';
+                        node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + def.userName + '\',\'Remove\')"><i class="fas fa-user-minus"></i>Remove User a Admin</a>';
                     }
 
-                    if (parseInt(res[i].registered) === 0) {
+                    if (parseInt(def.registered) === 0) {
                         node +=
                             '<div class="dropdown-divider"></div>' +
-                            '<a class="dropdown-item" href="#" onclick="sendVerificationEmail(\'' + res[i].email + '\',\'' + res[i].userName + '\')"><i class="fas fa-paper-plane mr-2"></i>Resend Activation Email</a>';
+                            '<a class="dropdown-item" href="#" onclick="sendVerificationEmail(\'' + def.email + '\',\'' + def.userName + '\')"><i class="fas fa-paper-plane mr-2"></i>Resend Activation Email</a>';
                     }
                 }
 
@@ -514,10 +522,10 @@ function getUserData(verified) {
                             '</td>'+
                             '</tr>';
 
-                    if(verified !== null && parseInt(res[i].registered) === 0 && verified === 0){
+                    if(verified !== null && parseInt(def.registered) === 0 && verified === 0){
                         $('#tableBody').append(node);
                         counter++;
-                    }else if(verified !== null && verified === 1 && parseInt(res[i].blocked) === 1){
+                    }else if(verified !== null && verified === 1 && parseInt(def.blocked) === 1){
                         $('#tableBody').append(node);
                         counter++;
                     }else if(verified === null){
