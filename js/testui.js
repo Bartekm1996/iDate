@@ -793,7 +793,11 @@ function profileFilterButton() {
 
     request.filter_get_users = true;
     request.userId = $('#username-header').attr('user-id');
-    request.age = age;
+
+    if($('#age_check_box').val() === true){
+        request.age = age;
+    }
+
     request.gender = $('#upro_img').attr('data-gender');
     request.seeking = $('#upro_img').attr('data-seeking');
 

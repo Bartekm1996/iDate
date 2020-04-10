@@ -742,11 +742,14 @@
                         </select>
                     </div>
                 </div>
-                <div class="d-flex mt-4">
-                    <span class="text-white font-weight-bold">Select Age : <span class="text-white font-weight-bold blue-text mr-2 mt-1 ml-3">18</span></span>
-                    <form class="range-field" style="width: 50%;"><input type="range" class="bg-secondary shadow-sm form-control-range border-0" id="ageSlider" min="18" max="65" onchange="changeValue($(this).val())" /></form>
-                    <span class="text-white font-weight-bold blue-text ml-2 mt-1mr-3">65+</span>
-                    <span class="text-white font-weight-bold blue-text ml-2 mt-1mr-3" id="current_slider_value">Age</span>
+                <div class="row mt-4">
+                        <div class="form-check ml-4 mr-5" >
+                            <input type="checkbox" class="form-check-input mr-2" id="age_check_box" />
+                        </div>
+                        <strong class="ml-5 text-white">18</strong>
+                        <input  type="range" style="width: 150px;" class="ml-2" id="ageSlider" min="18" max="65" onchange="changeValue($(this).val())"  />
+                        <strong class="ml-3 text-white">65+</strong></span>
+                        <strong class="ml-3 text-white" id="current_slider_value">Age</strong>
                 </div>
                 <div style="margin-top: 20px;">
                     <label class="text-left text-white d-none d-lg-flex ml-2 mt-2 mb-2" for="interest_box">Interests</label>

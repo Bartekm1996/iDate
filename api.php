@@ -504,7 +504,9 @@ else if(isset($_POST['upload_files_api'])) {
         }
 
         $size = sizeof($stringBuilder);
-        $newStringBuilder = $newStringBuilder." WHERE ";
+        if($size > 0){
+            $newStringBuilder = $newStringBuilder." WHERE ";
+        }
         for($x = 0; $x < sizeof($stringBuilder); $x++){
             if($x === ($size-1)){
                 $newStringBuilder = $newStringBuilder.$stringBuilder[$x];
