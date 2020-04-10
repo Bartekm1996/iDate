@@ -392,7 +392,7 @@
             }else{
                 request.userId = index;
             }
-            
+
 
             $.ajax({
                 method: "POST",

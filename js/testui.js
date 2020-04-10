@@ -295,7 +295,6 @@ function getUserMatches(user_id) {
                     $('#my_matches_place_holder').attr('hidden', true);
                 }
                 $('#searchResults').empty();
-                debugger;
                 for(let i = 0; i < obj.length; i++) {
 
                     let res = JSON.parse(obj[i]);
