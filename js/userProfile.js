@@ -29,7 +29,6 @@ function showProfile(currentProfile, username, matched) {
         $('#card_message_button').attr('hidden', true);
         $('#history_user_table').attr('hidden',false);
         $('#card_report_button').attr('hidden',true);
-        getMyInterest($('#username-header').attr('user-id'));
         enableFields();
         getCitites();
     }
