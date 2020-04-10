@@ -16,6 +16,7 @@ require("model/UserInfo.php");
 /* Create a match with current logged in user and match_id user */
 if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id2'])) {
 
+    $matched = false;
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
@@ -27,20 +28,24 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
             $sql = "SELECT userID2 FROM connections WHERE userID1 = '{$_POST['id1']}' AND userID2 = '{$_POST['id2']}' OR userID2 = '{$_POST['id1']}' AND userID1 = '{$_POST['id1']}'";
             $res = $conn->query($sql);
             if($res->num_rows > 0){
+                $matched = true;
                 $heart = new SweetalertResponse(1,
                     'Congratulations !!!!!',
                     "We have a match",
                     SweetalertResponse::SUCCESS
                 );
-            }else{
-                $heart = new SweetalertResponse(2,
-                    'Congratulations ',
-                    "Hopefully you'll match",
-                    SweetalertResponse::SUCCESS
-                );
             }
-            echo $heart->jsonSerialize();
         }
+        if($matched !== true) {
+            $heart = new SweetalertResponse(2,
+                'Congratulations ',
+                "Hopefully you'll match",
+                SweetalertResponse::SUCCESS
+            );
+        }
+
+        echo $heart->jsonSerialize();
+
     }
 } else if(isset($_POST['get_all_users_api'])) {
 
