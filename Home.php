@@ -383,9 +383,8 @@
 
             if($('#person_fullname').attr('data-index') !== undefined || index === null){
                 let tmp = $('#person_fullname').attr('data-matches').split(',');
-                console.log(tmp);
                 let tmpIndex = parseInt($('#person_fullname').attr('data-index'))+1;
-                if(tmpIndex === tmp.length-1){
+                if(tmpIndex > tmp.length-1){
                     tmpIndex = 0;
                 }
                 request.userId = tmp[tmpIndex];
@@ -393,9 +392,7 @@
             }else{
                 request.userId = index;
             }
-
-            console.log(parseInt($('#person_fullname').attr('data-index'))+1);
-
+            
 
             $.ajax({
                 method: "POST",
