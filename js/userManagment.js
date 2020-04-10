@@ -193,6 +193,7 @@ function clearValues() {
 
 function editProfile(elem) {
 
+    document.getElementById('mang_pro').src = "";
     showAllEditButton();
     let userName = $(elem).find("#userName").text();
     let name = $(elem).find("#user_name").text().split(" ");
@@ -205,15 +206,15 @@ function editProfile(elem) {
     $('#user_last_name_input').val(name[1]);
     $('#location').val("Unknown");
 
-    let defImage = "";
     let gender = $(elem).attr('data-gender');
+    let photoId = $(elem).attr('data-photoId');
 
-    defImage = gender === 'Male' ? 'images/male.png' : 'images/female.png';
+    if(photoId !== "null"){
+        document.getElementById('mang_pro').src = photoId;
+    }else{
+        document.getElementById('mang_pro').src = (gender === 'Male' ? 'images/male.png' : 'images/female.png');
+    }
 
-
-    console.log(defImage);
-
-    document.getElementById('mang_pro').src = defImage;
 
 
     let res = $('#tableBody').find('.active');
@@ -493,7 +494,7 @@ function getUserData(verified) {
 
 
                     node +=
-                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\'' + res[i].userName + '\',\'' + res[i].name + '\',\'' + res[i].email + '\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
+                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\'' + res[i].userId + '\',\'' + res[i].name + '\',\'' + res[i].email + '\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
 
                     if (parseInt(res[i].admin) === 0) {
                         node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + res[i].userName + '\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';

@@ -118,85 +118,83 @@ function saveUserInfo() {
 function closeAccount(id) {
 
     const request = {};
-    request.update_user = true;
+    request.delete_user = true;
     request.userId = id;
 
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
 
-    const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-danger'
-        },
-        buttonsStyling: false
-    })
-
-    swalWithBootstrapButtons.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'No, cancel!',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                method: "POST",
-                url: "userManagmentApi.php",
-                data: request,
-                success: function (response) {
-                    console.log(JSON.parse(response));
-                    let timerInterval
-                    Swal.fire({
-                        title: 'You\'re Account Is Being Closed!',
-                        html: 'You will be redirect to Login Page In <b></b> milliseconds.',
-                        timer: 2000,
-                        icon: 'success',
-                        timerProgressBar: true,
-                        onBeforeOpen: () => {
-                        Swal.showLoading()
-                        timerInterval = setInterval(() => {
-                            const content = Swal.getContent()
-                            if (content) {
-                                const b = content.querySelector('b')
-                                if (b) {
-                                    b.textContent = Swal.getTimerLeft()
-                                }
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    method: "POST",
+                    url: "userManagmentApi.php",
+                    data: request,
+                    success: function (response) {
+                        console.log(JSON.parse(response));
+                        let timerInterval
+                        Swal.fire({
+                            title: 'You\'re Account Is Being Closed!',
+                            html: 'You will be redirect to Login Page In <b></b> milliseconds.',
+                            timer: 2000,
+                            icon: 'success',
+                            timerProgressBar: true,
+                            onBeforeOpen: () => {
+                                Swal.showLoading()
+                                timerInterval = setInterval(() => {
+                                    const content = Swal.getContent()
+                                    if (content) {
+                                        const b = content.querySelector('b')
+                                        if (b) {
+                                            b.textContent = Swal.getTimerLeft()
+                                        }
+                                    }
+                                }, 100)
+                            },
+                            onClose: () => {
+                                clearInterval(timerInterval);
+                                killSessiosn();
+                                window.location.href = 'index.php';
                             }
-                        }, 100)
-                    },
-                        onClose: () => {
-                            clearInterval(timerInterval);
-                            killSessiosn();
-                            window.location.href = 'index.php';
-                        }
-                    }).then((result) => {
+                        }).then((result) => {
                             /* Read more about handling dismissals below */
                             if (result.dismiss === Swal.DismissReason.timer) {
-                                console.log('Your Account Was Closed We\'re Sad to see you go')
+                                console.log('Account Was Closed We\'re Sad to see you go')
                             }
-                    })
-                },
-                failure: function (response) {
-                    console.log('failure:' + JSON.stringify(response));
-                },
-                error: function (response) {
-                    console.log('error:' + JSON.stringify(response));
-                }
-            });
+                        })
+                    },
+                    failure: function (response) {
+                        console.log('failure:' + JSON.stringify(response));
+                    },
+                    error: function (response) {
+                        console.log('error:' + JSON.stringify(response));
+                    }
+                });
 
-        } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
-        ) {
-            swalWithBootstrapButtons.fire(
-                'Cancelled',
-                'Your profile is safe :)',
-                'error'
-            )
-        }
-    })
-
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Your profile is safe :)',
+                    'error'
+                )
+            }
+        })
 
 }
 
