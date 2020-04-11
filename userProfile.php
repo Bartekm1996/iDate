@@ -29,7 +29,7 @@
                     </div>
                     <div id="buttons" class="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4 mr-1 ml-1">
                         <div class="d-flex justify-content-between">
-                            <a href="#" id="connect_button" class="btn btn-sm btn-info mr-4"  onclick="connect('\''+$('#upro_img').attr('data-id')+'\',\''+$('#username-header').attr('user-id')+'\')" hidden>Connect</a>
+                            <a href="#" id="connect_button" class="btn btn-sm btn-info mr-4"  onclick="connect($('#upro_img').attr('data-id'),$('#username-header').attr('user-id'))" hidden>Connect</a>
                             <a href="#" id="card_report_button" class="btn btn-sm btn-default float-right" onclick="openReportPane($('#profile_input_user_name').val())" hidden>Report</a>
                             <button id="card_message_button" class="btn btn-sm btn-default float-right" onclick="showUserChar($('#profile_input_user_name').val())"  hidden>Message</button>
                         </div>
