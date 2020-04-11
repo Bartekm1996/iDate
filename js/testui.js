@@ -26,6 +26,7 @@ function showMatching() {
 
 function hideMatching() {
     epxand ($('#expandable'));
+    $('#filter').attr('hidden', true);
     $('#matching').prop('hidden', true);
 }
 
