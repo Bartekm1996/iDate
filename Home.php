@@ -714,7 +714,7 @@
                     <label class="text-white">Smoker </label>
                     <select id="smoker_select_picker" class="form-control" >
                         <optgroup label="Select A Smoker">
-                            <option value="" disabled selected>Select your option</option>
+                            <option value=""selected>Select your option</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                             <option value="ocasionally">Ocasionally</option>
@@ -726,7 +726,7 @@
                     <label class="text-white">Drinker </label>
                     <select id="drinker_select_picker" class="form-control">
                         <optgroup label="Select A Drinking">
-                            <option value="" disabled selected>Select your option</option>
+                            <option value=""selected>Select your option</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                             <option value="ocasionally">Ocasionally</option>
@@ -738,7 +738,7 @@
                     <div class="form-group focused">
                         <label class="text-white">City </label>
                         <select id="city_select_picker" class="form-control">
-                            <option value="" disabled selected>Select your option</option>
+                            <option value=""selected>Select your option</option>
                         </select>
                     </div>
                 </div>
