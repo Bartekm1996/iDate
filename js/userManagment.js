@@ -208,7 +208,7 @@ function editProfile(elem) {
     $('#user_email_input').val(email);
     $('#first_name').val(name[0]);
     $('#user_last_name_input').val(name[1]);
-    $('#location').val("Unknown");
+    $('#location').val(($(elem).attr('data-town') === null ? "Unknown" : ($(elem).attr('data-town'))));
 
     let gender = $(elem).attr('data-gender');
     let photoId = $(elem).attr('data-photoId');
@@ -479,7 +479,7 @@ function getUserData(verified) {
 
                 let def = JSON.parse(res[i]);
                 let node =
-                    '<tr data-id='+i+' class="clickable-row" onclick="editProfile(this)"  data-status='+def.blocked+' data-gender="'+def.gender+'" data-photoId="'+def.photoId+'" style="padding-top: 5px;">' +
+                    '<tr data-id='+i+' class="clickable-row" onclick="editProfile(this)"  data-town='+def.town+' data-status='+def.blocked+' data-gender="'+def.gender+'" data-photoId="'+def.photoId+'" style="padding-top: 5px;">' +
                     '<td>'+(parseInt(def.registered) === 0 ? "<span class=\"label label-warning\" id='status'>Pending</span>" : (parseInt(def.blocked) === 0 ? "<span class=\"label label-success\" id='status'>Active</span>" : "<span class=\"label label-danger\" id='status'>Blocked</span>"))+'</small></td>'+
                     '<td><small id="userName">'+def.userName+'</small></td>'+
                     '<td><small id="user_name">'+def.name+'</small></td>'+

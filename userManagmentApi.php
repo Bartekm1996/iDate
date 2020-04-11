@@ -14,9 +14,9 @@ if(isset($_POST['get_all_users'])){
         die("Connection failed: " . $conn->connect_error);
     } else {
 
-        $sql = "SELECT id,userName,firstname,lastname,email,blocked,registered,admin,photoId,gender FROM
-                (SELECT a.id, a.userName, a.firstname, a.lastname, a.email, a.registered,a.admin, b.userID, b.blocked, b.photoId,a.gender
-                FROM user as a LEFT JOIN(select userID, blocked,photoId from profile group by userID) as b on a.id = b.userID) as users";
+        $sql = "SELECT user_id,userName,firstname,lastname,email,blocked,registered,admin,photoId,gender, town FROM
+                (SELECT a.id as user_id, a.userName, a.firstname, a.lastname, a.email, a.registered,a.admin, b.userID, b.blocked, b.photoId,a.gender, b.location
+                FROM user as a LEFT JOIN(select userID, blocked,photoId, location from profile group by userID) as b on a.id = b.userID) as users INNER JOIN town on town.id = users.location;";
 
         $result = $conn->query($sql);
         $res = [];
@@ -24,7 +24,7 @@ if(isset($_POST['get_all_users'])){
             while ($row = mysqli_fetch_row($result)) {
                 $i = 0;
                 $user = new UserManagment($row[$i++], $row[$i++], $row[$i++]." ".$row[$i++], $row[$i++], $row[$i++],
-                    $row[$i++], $row[$i++], $row[$i++], $row[$i++]);
+                    $row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++]);
                 array_push($res, $user->jsonSerialize());
             }
         }

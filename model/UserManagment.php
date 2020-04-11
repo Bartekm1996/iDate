@@ -12,8 +12,9 @@ class UserManagment implements JsonSerializable
     private $admin;
     private $photoId;
     private $gender;
+    private $town;
 
-    public function __construct($userId,$userName,$name,$email,$blocked,$registered,$admin, $photoId, $gender)
+    public function __construct($userId,$userName,$name,$email,$blocked,$registered,$admin, $photoId, $gender, $town)
     {
         $this->userId = $userId;
         $this->userName = $userName;
@@ -24,6 +25,7 @@ class UserManagment implements JsonSerializable
         $this->admin = $admin;
         $this->photoId=$photoId;
         $this->gender=$gender;
+        $this->town = $town;
     }
 
     public function jsonSerialize()
