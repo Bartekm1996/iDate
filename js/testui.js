@@ -1,5 +1,6 @@
 
 function showUserChar(user) {
+    $('.filter').attr('hidden', true);
     $('#placeholder').css({"display": 'none'});
     $('.contact-profile').css({"display": 'block'});
     $('.messages').css({"display": 'block'});
@@ -10,6 +11,7 @@ function showUserChar(user) {
 
 
 function hideChat() {
+    $('.filter').attr('hidden', true);
     $('#frame').prop('hidden', true);
 }
 
@@ -21,13 +23,13 @@ function showMatching() {
     hideUserProfile();
     hideTickets();
     hideMatchArea();
-    $('#matching').prop('hidden', false);
+    $('#matching').attr('hidden', false);
 }
 
 function hideMatching() {
     epxand ($('#expandable'));
     $('#filter').attr('hidden', true);
-    $('#matching').prop('hidden', true);
+    $('#matching').attr('hidden', true);
 }
 
 function showMatchArea() {
@@ -36,7 +38,7 @@ function showMatchArea() {
     hideMatching();
     hideUserProfile();
     hideTickets();
-    $('#matcharea').prop('hidden', false);
+    $('#matcharea').attr('hidden', false);
 }
 
 function hideMatchArea() {
@@ -50,6 +52,7 @@ function showUserManagment(verified) {
     hideMatching();
     hideUserProfile();
     hideTickets();
+    $('.filter').attr('hidden', true);
     $('#usermng').attr('hidden', false);
     getUserData(verified);
 }
@@ -68,6 +71,7 @@ function showTickets(status) {
     hideChat();
     hideUserManagment();
     hideUserProfile();
+    $('.filter').attr('hidden', true);
     $('#main_cont').attr('hidden',false);
     getAllTickets(status);
 }
@@ -231,7 +235,6 @@ function showSearch() {
 function showUerMatches(user_id) {
     $('#searchFilter').attr('data-matches', true);
     $('#my_matches_place_holder').attr('hidden', false);
-    $('#matcharea').attr('hidden', false);
     getUserMatches(user_id);
     hideUserManagment();
     hideMatching();
@@ -279,6 +282,9 @@ function epxand (elem) {
 
 
 function getUserMatches(user_id) {
+    $('#matcharea').attr('hidden', false);
+    $('#searchResults').empty();
+
     const request = {};
     request.get_user_matches_api = true;
     request.user_id = user_id;
@@ -295,13 +301,12 @@ function getUserMatches(user_id) {
                 }else{
                     $('#my_matches_place_holder').attr('hidden', true);
                 }
-                $('#searchResults').empty();
                 for(let i = 0; i < obj.length; i++) {
 
                     let res = JSON.parse(obj[i]);
 
                     console.log(res);
-                    let defImage = res.gender === 'Male' ? 'images/male.png' : 'images/female.png';
+                    let defImage = (res.photoId === null ? (res.gender === 'Male' ? 'images/male.png' : 'images/female.png') : res.photoId);
 
 
                     let test = '<div style="width: 300px; height: 100%;">'+

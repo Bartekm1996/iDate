@@ -7,6 +7,7 @@ function showProfile(currentProfile, username, matched) {
     hideMatching();
     hideChat();
     hideTickets();
+    $('.filter').attr('hidden', true);
 
     console.log($('#person_fullname').attr('data-id'));
 
