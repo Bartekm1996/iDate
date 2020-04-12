@@ -28,7 +28,7 @@ function getAllTickets(status) {
 
 
             let index = 0;
-
+            let test = "";
             let unqiues = [];
 
             for(let i = 0; i < res.length; i++) {
@@ -65,11 +65,12 @@ function getAllTickets(status) {
 
                 let id = "#response_" + i;
 
+
                 if (res[i].status === status) {
 
                     if (!unqiues.includes(index)) {
-                        $('#complaints').append(
-                            '<tr class="clickable-row" data-number="' + res[i].number + '" data-query="' + index + '" onclick="expand(\'#collapseme_' + i + '\')" data-status="' + reason + '">' +
+
+                             test += '<tr class="clickable-row" data-number="' + res[i].number + '" data-query="' + index + '" onclick="expand(\'#collapseme_' + i + '\')" data-status="' + reason + '">' +
                             '<td>' +
                             '<div class="ckbox">' +
                             '<input type="checkbox" id="checkbox5">' +
@@ -91,9 +92,12 @@ function getAllTickets(status) {
                             '<td>' +
                             '<div class="btn-group" style="display: block; height: 50px;">' +
                             '<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>' +
-                            '<div class="dropdown-menu" id="drop-menu-' + i + '">' +
-                            '<a class="dropdown-item" href="#" onclick="updateTicket(\'' + res[i].number + '\',\'Closed\')"><i class="fas fa-times-circle"></i> Mark as Closed</a>' +
-                            '<a class="dropdown-item" href="#" onclick="deleteTicket(\'' + res[i].number + '\')"><i class="fas fa-trash-alt"></i> Delete Ticket</a>' +
+                            '<div class="dropdown-menu" id="drop-menu-' + i + '">';
+
+                            if(res[i].status !== "Closed") {
+                                test += '<a class="dropdown-item" href="#" onclick="updateTicket(\'' + res[i].number + '\',\'Closed\')"><i class="fas fa-times-circle"></i> Mark as Closed</a>';
+                            }
+                                test += '<a class="dropdown-item" href="#" onclick="deleteTicket(\'' + res[i].number + '\')"><i class="fas fa-trash-alt"></i> Delete Ticket</a>' +
                             '</div>' +
                             '</div>' +
                             '</td>' +
@@ -111,8 +115,12 @@ function getAllTickets(status) {
                             '</div>' +
                             '</div>' +
                             '</td>' +
-                            '</tr>'
-                        );
+                            '</tr>';
+
+                        $('#complaints').append(test);
+
+                        test = "";
+
 
 
                         let menu_id = "#drop-menu-" + i;
@@ -163,6 +171,8 @@ function deleteTicket(number) {
         url: "userManagmentApi.php",
         data: request,
         success: function (response) {
+
+            let res = JSON.parse(response);
             console.log('success:' + JSON.stringify(response));
             $('#complaints tr').each(function (index, tr) {
                 if(parseInt($(this).attr('data-number')) === number){
@@ -170,7 +180,9 @@ function deleteTicket(number) {
                 }
             });
 
-            Swal.fire(response.title, response.message, response.type);
+            Swal.fire(res.title, res.message, res.type);
+            fillTicketsNumbers();
+            getAllTickets('Opened');
 
         },
         failure: function (response) {
@@ -187,6 +199,8 @@ function updateTicket(number, status) {
     const request = {};
     request.updateTicket = true;
     request.number = parseInt(number);
+
+    console.log(number);
 
     switch (status) {
         case "Archived":{
@@ -209,13 +223,16 @@ function updateTicket(number, status) {
         data: request,
         success: function (response) {
             console.log('success:' + JSON.stringify(response));
+
             $('#complaints tr').each(function (index, tr) {
                 if(parseInt($(this).attr('data-number')) === number){
                     $('#complaints').removeChild(tr);
                 }
             });
 
-            Swal.fire(response.title, response.message, response.type);
+            fillTicketsNumbers();
+            let res = JSON.parse(response);
+            Swal.fire(res.title, res.message, res.type);
 
         },
         failure: function (response) {

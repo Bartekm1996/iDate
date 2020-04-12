@@ -164,7 +164,7 @@ function fillTicketsNumbers(){
 
             for(let i = 0; i < unqiues.length; i++){
                 for(let j = 0; j < obj.length; j++){
-                    if(unqiues.includes(obj[j].status) && csr !== parseInt(obj[j].number)){
+                    if(unqiues[i] === obj[j].status && csr !== parseInt(obj[j].number)){
                         counter++;
                     }
                     csr = parseInt(obj[j].number);
@@ -494,7 +494,7 @@ function getAllProfiles(smoker, drinker, age) {
                  '</div>'+
                  '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
                  '<div class="d-flex justify-content-between">'+
-                 '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\''+ress.id+'\',\''+$('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.name + " " + ress.lastname) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>'+
+                 '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\''+ress.id+'\',\''+$('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.name + ' ' + ress.lastname) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>'+
                  '<a href="#" onclick="showProfile(\''+ress.id+'\',\''+$('#username-header').attr('user-name')+'\',false)" class="btn btn-sm btn-default float-right">Profile</a>'+
                  '</div>'+
                  '</div>'+
@@ -610,6 +610,10 @@ function getAllProfiles(smoker, drinker, age) {
  */
 
 function connect(user_id, logged_in_id, src, name, username, matchingPane, searchpane) {
+
+
+    console.log(user_id + " " + logged_in_id + " " + src + " " + name + " " + username + " " + matchingPane + " " + searchpane);
+
     const request = {};
     request.create_match_api = true;
     request.id1 = user_id;
@@ -653,7 +657,7 @@ function connect(user_id, logged_in_id, src, name, username, matchingPane, searc
                             rgba(0,0,123,0.4)
                             url("https://media.giphy.com/media/d3MK2JGObFW0NPSE/giphy.gif")
                             center
-                            repeat
+                            no-repeat
                           `
                     }).then((result) => {
                         if (result.value) {
@@ -928,7 +932,7 @@ function append(ress) {
         '</div>' +
         '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">' +
         '<div class="d-flex justify-content-between">' +
-        '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\'' + ress.id + '\',\'' + $('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.firstName + " " + ress.lastName) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>' +
+        '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\'' + ress.id + '\',\'' + $('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.firstName + ' ' + ress.lastName) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>' +
         '<a href="#" onclick="showProfile(\'' + ress.id + '\',\'' + $('#username-header').attr('user-name') + '\',false)" class="btn btn-sm btn-default float-right">Profile</a>' +
         '</div>' +
         '</div>' +

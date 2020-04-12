@@ -117,17 +117,17 @@ else if(isset($_POST['get_all_tickets'])){
         $number = $_POST['number'];
         if(isset($_POST['archived_ticket'])){
             $sql = $conn->real_escape_string($_POST['archived_ticket']);
-            $sqlQuery = "UPDATE queries SET archived = 'True' WHERE id='{$number}'";
+            $sqlQuery = "UPDATE queries SET archived = 1 WHERE queryNumber='{$number}'";
         }else if(isset($_POST['close_ticket'])){
             $sql = $conn->real_escape_string($_POST['close_ticket']);
-            $sqlQuery = "UPDATE queries SET status = 'Closed' WHERE id='{$number}'";
+            $sqlQuery = "UPDATE queries SET status = 'Closed' WHERE queryNumber='{$number}'";
         }else if(isset($_POST['unresolved_ticket'])){
             $sql = $conn->real_escape_string($_POST['unresolved_ticket']);
-            $sqlQuery = "UPDATE queries SET status = 'Unresolved' WHERE id='{$number}'";
+            $sqlQuery = "UPDATE queries SET status = 'Unresolved' WHERE queryNumber='{$number}'";
         }
 
 
-        if ($conn->query($sql) === TRUE) {
+        if ($conn->query($sqlQuery) === TRUE) {
             $resp = new SweetalertResponse(3,
                 'Updated ticket successfully',
                 "Updated ticket ".$number." Successfully",

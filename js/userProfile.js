@@ -539,6 +539,7 @@ function saveCity(){
     request.save_user_city = true;
     request.userId =  $('#username-header').attr('user-id');
     request.city = $('#city_select').val();
+    $('#city_selected').text(request.city + ", Ireland");
 
     $.ajax({
         method: "POST",

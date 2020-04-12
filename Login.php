@@ -51,13 +51,13 @@ if(isset($_POST['reset_uname']) && isset($_POST['reset_email'])) {
 
         $sql = "";
         if (strpos($uname, "@") !== false) {
-            $sql = "select blocked from profile where userID = (select id from user where email = '{$uname}');";
+            $sql = "select Blocked from profile where userID = (select id from user where email = '{$uname}') AND Blocked = 1;";
         } else {
-            $sql = "select blocked from profile where userID = (select id from user where userName = '{$uname}');";
+            $sql = "select Blocked from profile where userID = (select id from user where userName = '{$uname}') AND Blocked = 1;";
         }
 
         $res = $conn->query($sql);
-        if($res->num_rows > 0 && $res->fetch_row()[0] === 1){
+        if($res->num_rows > 0){
             $resp = new SweetalertResponse(5,
                 'Account Blocked',
                 "Please contact our team at customercareteam@iDate.ie to solve this issue",
