@@ -235,12 +235,13 @@ function showSearch() {
 function showUerMatches(user_id) {
     $('#searchFilter').attr('data-matches', true);
     $('#my_matches_place_holder').attr('hidden', false);
-    getUserMatches(user_id);
+    $('#searchResults').attr('hidden',false);
     hideUserManagment();
     hideMatching();
     hideUserProfile();
     hideTickets();
     hideChat();
+    getUserMatches(user_id);
 }
 
 function  openUserProfile(event) {
@@ -493,7 +494,7 @@ function getAllProfiles(smoker, drinker, age) {
                  '</div>'+
                  '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
                  '<div class="d-flex justify-content-between">'+
-                 '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\''+ress.id+'\',\''+$('#username-header').attr('user-id')+'\')">Connect</a>'+
+                 '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\''+ress.id+'\',\''+$('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.name + " " + ress.lastname) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>'+
                  '<a href="#" onclick="showProfile(\''+ress.id+'\',\''+$('#username-header').attr('user-name')+'\',false)" class="btn btn-sm btn-default float-right">Profile</a>'+
                  '</div>'+
                  '</div>'+
@@ -608,8 +609,7 @@ function getAllProfiles(smoker, drinker, age) {
 
  */
 
-function connect(user_id, logged_in_id) {
-
+function connect(user_id, logged_in_id, src, name, username, matchingPane, searchpane) {
     const request = {};
     request.create_match_api = true;
     request.id1 = user_id;
@@ -621,17 +621,57 @@ function connect(user_id, logged_in_id) {
         success: function (response) {
             let les = JSON.parse(response);
             console.log(response);
-            switch (response.statusCode) {
+            switch (les.statusCode) {
                 case 1:{
                     $('#card_message_button').attr('hidden', false);
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                            confirmButton: 'btn btn-success',
+                            cancelButton: 'btn btn-danger'
+                        },
+                        buttonsStyling: false
+                    })
+
+                    if(matchingPane === true){
+                        nextMatch(null);
+                    }
+
+                    if(searchpane === true){
+                        getAllProfiles();
+                    }
+
+                    swalWithBootstrapButtons.fire({
+                        title: 'You just matched with ' + name,
+                        html: '<img src="'+src+'" alt="" style="width: 150px; height: 150px; border-radius: 75px; border: 2px solid gray;" class="avatar img-thumbnail">',
+                        showCancelButton: true,
+                        confirmButtonText: 'View Profile',
+                        cancelButtonText: 'Message',
+                        reverseButtons: true,
+                        width: 400,
+                        height: 400,
+                        backdrop: `
+                            rgba(0,0,123,0.4)
+                            url("https://media.giphy.com/media/d3MK2JGObFW0NPSE/giphy.gif")
+                            center
+                            repeat
+                          `
+                    }).then((result) => {
+                        if (result.value) {
+                            showProfile(user_id,username, true);
+                        } else if (
+                            /* Read more about handling dismissals below */
+                            result.dismiss === Swal.DismissReason.cancel
+                        ) {
+                            showUserChar(username);
+                        }
+                    })
                     break;
                 }
                 case 2:{
-
+                    Swal.fire(les.title, les.message, les.type);
                     break;
                 }
             }
-            Swal.fire(les.title, les.message, les.type);
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
@@ -888,7 +928,7 @@ function append(ress) {
         '</div>' +
         '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">' +
         '<div class="d-flex justify-content-between">' +
-        '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\'' + ress.id + '\',\'' + $('#username-header').attr('user-id') + '\')">Connect</a>' +
+        '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\'' + ress.id + '\',\'' + $('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.firstName + " " + ress.lastName) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>' +
         '<a href="#" onclick="showProfile(\'' + ress.id + '\',\'' + $('#username-header').attr('user-name') + '\',false)" class="btn btn-sm btn-default float-right">Profile</a>' +
         '</div>' +
         '</div>' +

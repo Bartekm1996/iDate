@@ -25,6 +25,7 @@ class Email
 
 
         $subject = "";
+        $emailRes = "";
         switch ($type){
             case self::BLOCKED:{
                 $subject = "Your Account Has Been Blocked";
@@ -44,11 +45,34 @@ class Email
             }
         }
 
+        switch ($reason){
+            case "breach_of_terms_and_conditiosn":{
+                $emailRes = "Breach Of Terms And Conditions";
+                break;
+            }
+            case "inactive_account":{
+                $emailRes = "Inactive Account";
+                break;
+            }
+            case "reported_by_several_users":{
+                $emailRes = "Reported By Several Users";
+                break;
+            }
+            case "continous_incmopliance":{
+                $emailRes = "Continous Incompliance";
+                break;
+            }
+            case "reported_by_use":{
+                $emailRes = "Reported By Users";
+                break;
+            }
+        }
+
         $template = "/emailTemplates/message.html";
         $cont = file_get_contents(__DIR__.$template);
         $res = str_replace("{{user_name}}", $this->name, $cont);
         $res_one = str_replace( "{{action}}", $action, $res);
-        $res_two = str_replace( "{{reason}}", $reason, $res_one);
+        $res_two = str_replace( "{{reason}}", $emailRes, $res_one);
         $res_three = str_replace( "{{sender_name}}", $sender_name, $res_two);
 
         $this->sendEmail($subject, $res_three, $this->getTo());

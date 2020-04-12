@@ -699,8 +699,8 @@
                             <a class="mc-btn-next" onclick="nextMatch(null)"><i class="fas fa-angle-double-right"></i></a>
                             <a class="mc-btn-previous" onclick="nextMatch(null)"><i class="fas fa-angle-double-left"></i></a>
                             <div class="mc-footer">
-                                <button class="btn btn-danger mt-2"><i class="fas fa-user-plus"  onclick="connect($('#person_fullname').attr('data-id'),$('#username-header').attr('user-id'))" ></i></button>
-                                <button class="ml-3 btn btn-success mt-2" onclick="showProfile($('#person_fullname').attr('data-user-name'),$('#username-header').attr('user-name'),false)"><i class="fas fa-user-alt"></i></button>
+                                <button class="btn btn-danger mt-2"><i class="fas fa-user-plus mr-2"  onclick="connect($('#person_fullname').attr('data-id'), $('#username-header').attr('user-id'), document.getElementById('person_image').src, $('#person_fullname').text(), $('#person_fullname').attr('data-user-name'), true)" ></i>Connect</button>
+                                <button class="ml-3 btn btn-success mt-2" onclick="showProfile($('#person_fullname').attr('data-user-name'),$('#username-header').attr('user-name'),false)"><i class="fas fa-user-alt mr-2"></i> View Profile</button>
                             </div>
                         </article>
                     </div>
