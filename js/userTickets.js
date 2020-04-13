@@ -111,7 +111,7 @@ function getAllTickets(status) {
                             '</div>' +
                             '   <textarea class="form-control counted" name="message" placeholder="Reply to user" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
                             '   <h6 class="pull-right" id="counter">320 characters remaining</h6>' +
-                            '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + $('#response_'+i).val() + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\')" type="submit">Reply</button>' +
+                            '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + i + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\')" type="submit">Reply</button>' +
                             '</div>' +
                             '</div>' +
                             '</td>' +
@@ -246,9 +246,11 @@ function updateTicket(number, status) {
 }
 
 function sendMessage(id, message, username,number, reason) {
+
+    let msg = '#response_'+message;
     const request = {};
     request.send_query_message = true;
-    request.userDesc = message;
+    request.userDesc = $(msg).val();
     request.userName = username;
     request.userEmail = username+'@idate.ie';
     request.number = number;
@@ -271,7 +273,7 @@ function sendMessage(id, message, username,number, reason) {
                 '<img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo pull-right">' +
                 '</div>' +
                 '<div style="display: inline-block; margin-top: 20px;">' +
-                '   <p><span>'+message+'</span></p>' +
+                '   <p><span>'+$(msg).val()+'</span></p>' +
                 '<hr>'+
                 '<span class="media-meta pull-left" style="margin-bottom: 20px;">'+request.date+'</span>'+
                 '</div> '+
