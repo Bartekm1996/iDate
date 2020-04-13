@@ -64,7 +64,7 @@ function showProfile(currentProfile, username, matched) {
             $('#profile_input_user_last_name').val(res.lastName);
             $('#profile_bio').val(res.descripion);
             $('#seeking_picker').val(res.seeking);
-            $('#drinker_picker').val(res.drinker);
+            $('#drinker_picker').val(res.dinker);
             $('#smoking_picker').val(res.smoker);
             $('#gender_picker').val(res.gender);
             $('#upro_img').attr('data-id',res.id);
