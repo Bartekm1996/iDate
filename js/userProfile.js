@@ -433,6 +433,7 @@ function disableFields() {
     $('#smoking_picker').attr('disabled',true);
     $('#close_account_button').attr('hidden',true);
     $('#city_select').attr('disabled',true);
+    $('#age_picker').attr('disabled',true);
 }
 
 function enableFields(){
@@ -461,6 +462,7 @@ function enableFields(){
     $('#smoking_picker').attr('disabled',false);
     $('#close_account_button').attr('hidden',false);
     $('#city_select').attr('disabled',false);
+    $('#age_picker').attr('disabled',false);
 }
 
 function hideUserProfile() {
