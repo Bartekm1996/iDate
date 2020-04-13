@@ -212,13 +212,13 @@ else if(isset($_POST['resend_verification_email'])){
 
     }
 }else if(isset($_POST['update_user'])){
-    $resp = "";
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
 
         $sql = "";
         $res = "";
+        $resp = "";
         $sqlQuery = "";
         $action = $_POST['action'];
         $username = $conn->real_escape_string($_POST['user']);
@@ -246,21 +246,12 @@ else if(isset($_POST['resend_verification_email'])){
             if ($conn->multi_query($sql) === TRUE) {
                 $email = new Email($email, $name);
                 $email->sendMessage($reason === 'delete' ? 3 : 2, $reason, $action, $sender_name);
-                if ($reason === 'block') {
-                        $resp = new SweetalertResponse(1,
+                $resp = new SweetalertResponse(1,
                             '',
                             "" ,
                             SweetalertResponse::SUCCESS
-                        );
+                );
 
-
-                } else if ($reason === 'delete') {
-                    $resp = new SweetalertResponse(2,
-                        '',
-                        '',
-                        SweetalertResponse::SUCCESS
-                    );
-                }
 
             }
         }else{
@@ -292,8 +283,8 @@ else if(isset($_POST['resend_verification_email'])){
                 );
             }
         }
+        echo $resp->jsonSerialize();
     }
-    echo $resp->jsonSerialize();
 
 }else if(isset($_POST['get_block_reason'])){
 
