@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="css/cardV2.css">
     <link rel="stylesheet" href="css/userProfile.css"/>
     <link rel="stylesheet" type="text/css" href="css/profileCard.css">
+    <!-- Compiled and minified CSS -->
+
     <script src="js/userProfile.js"></script>
     <script src="js/support.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -784,6 +786,7 @@
                         <input  type="range" style="width: 150px;" class="ml-2" id="ageSlider" min="18" max="65" onchange="changeValue($(this).val())"  />
                         <strong class="ml-3 text-white">65+</strong></span>
                         <strong class="ml-3 text-white" id="current_slider_value">Age</strong>
+
                 </div>
                 <div style="margin-top: 20px;">
                     <label class="text-left text-white d-none d-lg-flex ml-2 mt-2 mb-2" for="interest_box">Interests</label>
@@ -853,6 +856,8 @@
              https://firebase.google.com/docs/web/setup#available-libraries -->
         <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-storage.js"></script>
         <script>
+            $('input').popup();
+
             // Your web app's Firebase configuration
             var firebaseConfig = {
                 apiKey: "AIzaSyDYlh0TCY0b6KaHCzkf8HHTaGLwI38-LHc",
@@ -941,6 +946,7 @@
                     reader.readAsDataURL(file);
                 }
             }
+
 
 
         </script>
