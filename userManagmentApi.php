@@ -21,10 +21,9 @@ if(isset($_POST['get_all_users'])){
 
         $result = $conn->query($sql);
         if ($result->num_rows > 0) {
-            while ($row = mysqli_fetch_row($result)) {
-                $i = 0;
-                $user = new UserManagment($row[$i++], $row[$i++], $row[$i++]." ".$row[$i++], $row[$i++], $row[$i++],
-                    $row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++]);
+            while ($row = $result->fetch_row()) {
+                $user = new UserManagment($row[0], $row[1], $row[2]." ".$row[3], $row[4], $row[5],
+                    $row[6], $row[7], $row[8], $row[9], $row[10]);
                 array_push($res, $user->jsonSerialize());
             }
         }

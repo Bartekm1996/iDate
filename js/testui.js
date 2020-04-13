@@ -77,19 +77,11 @@ function fillMembersNumbers(){
         url: "userManagmentApi.php",
         data: request,
         success: function (response) {
+            console.log(response);
 
             // preserve newlines, etc - use valid JSON
-            let ress = response.replace(/\\n/g, "\\n")
-                .replace(/\\'/g, "\\'")
-                .replace(/\\"/g, '\\"')
-                .replace(/\\&/g, "\\&")
-                .replace(/\\r/g, "\\r")
-                .replace(/\\t/g, "\\t")
-                .replace(/\\b/g, "\\b")
-                .replace(/\\f/g, "\\f");
-// remove non-printable and other non-valid JSON chars
-            ress = ress.replace(/[\u0000-\u0019]+/g,"]");
-            console.log(ress);
+
+            let ress = response.replace(/.$/,"]");
             let obj = JSON.parse(ress);
 
             let un_reg = 0, blocked = 0;
@@ -412,6 +404,7 @@ function getAllProfiles(smoker, drinker, age) {
     $.ajax({
         method: "POST",
         url: "api.php",
+        dataType: 'json',
         data: request,
         success: function (response) {
 
@@ -424,7 +417,13 @@ function getAllProfiles(smoker, drinker, age) {
                 .replace(/\\b/g, "\\b")
                 .replace(/\\f/g, "\\f");
 // remove non-printable and other non-valid JSON chars
-            resTwo = resTwo.replace(/[\u0000-\u0019]+/g,'}"]');
+
+            resTwo = resTwo.replace(/[\u0000-\u0019]+/g, "");
+
+            if(resTwo.endsWith('\"') || resTwo.endsWith("}") || resTwo.endsWith("")){
+                resTwo = resTwo.replace(/[\u0000-\u0019]+/g,'}"]');
+            }
+
             console.log(resTwo);
             let obj = JSON.parse(resTwo);
             document.getElementById("searchResults").innerHTML = '';

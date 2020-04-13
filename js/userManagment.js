@@ -471,17 +471,7 @@ function getUserData(verified) {
         data: request,
         success: function (response) {
 
-            let ress = response.replace(/\\n/g, "\\n")
-                .replace(/\\'/g, "\\'")
-                .replace(/\\"/g, '\\"')
-                .replace(/\\&/g, "\\&")
-                .replace(/\\r/g, "\\r")
-                .replace(/\\t/g, "\\t")
-                .replace(/\\b/g, "\\b")
-                .replace(/\\f/g, "\\f");
-// remove non-printable and other non-valid JSON chars
-            ress = ress.replace(/[\u0000-\u0019]+/g,'}"]');
-
+            let ress = response.replace(/.$/,"]");
             let res = JSON.parse(ress);
             console.log(res);
 
