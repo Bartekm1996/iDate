@@ -1,19 +1,5 @@
 
-function showUserChar(user) {
-    $('.filter').attr('hidden', true);
-    $('#placeholder').css({"display": 'none'});
-    $('.contact-profile').css({"display": 'block'});
-    $('.messages').css({"display": 'block'});
-    $('.message-input').css({"display": 'block'});
-    showChat();
-    $('#contact_name').text(user);
-}
 
-
-function hideChat() {
-    $('.filter').attr('hidden', true);
-    $('#frame').prop('hidden', true);
-}
 
 function showMatching() {
     loadMatches();
@@ -91,8 +77,21 @@ function fillMembersNumbers(){
         url: "userManagmentApi.php",
         data: request,
         success: function (response) {
-            console.log(response);
-            let obj = JSON.parse(response);
+
+            // preserve newlines, etc - use valid JSON
+            let ress = response.replace(/\\n/g, "\\n")
+                .replace(/\\'/g, "\\'")
+                .replace(/\\"/g, '\\"')
+                .replace(/\\&/g, "\\&")
+                .replace(/\\r/g, "\\r")
+                .replace(/\\t/g, "\\t")
+                .replace(/\\b/g, "\\b")
+                .replace(/\\f/g, "\\f");
+// remove non-printable and other non-valid JSON chars
+            ress = ress.replace(/[\u0000-\u0019]+/g,"]");
+            console.log(ress);
+            let obj = JSON.parse(ress);
+
             let un_reg = 0, blocked = 0;
 
 
@@ -415,8 +414,19 @@ function getAllProfiles(smoker, drinker, age) {
         url: "api.php",
         data: request,
         success: function (response) {
-            console.log(response);
-            let obj = JSON.parse(response);
+
+            let resTwo = response.replace(/\\n/g, "\\n")
+                .replace(/\\'/g, "\\'")
+                .replace(/\\"/g, '\\"')
+                .replace(/\\&/g, "\\&")
+                .replace(/\\r/g, "\\r")
+                .replace(/\\t/g, "\\t")
+                .replace(/\\b/g, "\\b")
+                .replace(/\\f/g, "\\f");
+// remove non-printable and other non-valid JSON chars
+            resTwo = resTwo.replace(/[\u0000-\u0019]+/g,'}"]');
+            console.log(resTwo);
+            let obj = JSON.parse(resTwo);
             document.getElementById("searchResults").innerHTML = '';
             //TODO: where are the images going to be stored
             if(obj != null) {

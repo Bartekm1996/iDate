@@ -89,14 +89,29 @@
             showProfile( $('#username-header').attr('user-name'), null, false);
             loadMyProfile();
             loadHistoryTable($('#username-header').attr('user-name'));
-            fillTicketsNumbers();
             fillMembersNumbers();
-            interval = setInterval(function() {
-               loadConversations();
-            }, 5000);
-
-
+            fillTicketsNumbers()
         };
+
+        function showUserChar(user) {
+            $('.filter').attr('hidden', true);
+            $('#placeholder').css({"display": 'none'});
+            $('.contact-profile').css({"display": 'block'});
+            $('.messages').css({"display": 'block'});
+            $('.message-input').css({"display": 'block'});
+            showChat();
+            $('#contact_name').text(user);
+            interval = setInterval(function() {
+                loadConversations();
+            }, 3000);
+        }
+
+
+        function hideChat() {
+            $('.filter').attr('hidden', true);
+            $('#frame').prop('hidden', true);
+            clearInterval(interval);
+        }
 
         //let interval = setInterval(() => getMessage(),2000);
 
@@ -514,6 +529,10 @@
         };
 
 
+        function proxy() {
+            connect($('#person_fullname').attr('data-id'), $('#username-header').attr('user-id'), $('#person_image').attr('src'), $('#person_fullname').text(), $('#person_fullname').attr('data-user-name'), true, false);
+        }
+
         function changeValue(val){
             $('#current_slider_value').text(val);
         }
@@ -700,7 +719,7 @@
                             <a class="mc-btn-next" onclick="nextMatch(null)"><i class="fas fa-angle-double-right"></i></a>
                             <a class="mc-btn-previous" onclick="nextMatch(null)"><i class="fas fa-angle-double-left"></i></a>
                             <div class="mc-footer">
-                                <button class="btn btn-danger mt-2"><i class="fas fa-user-plus mr-2"  onclick="connect($('#person_fullname').attr('data-id'), $('#username-header').attr('user-id'), $('#person_image').attr('src'), $('#person_fullname').text(), $('#person_fullname').attr('data-user-name'), true, false)" ></i>Connect</button>
+                                <button class="btn btn-danger mt-2" onclick="proxy()"><i class="fas fa-user-plus mr-2" ></i>Connect</button>
                                 <button class="ml-3 btn btn-success mt-2" onclick="showProfile($('#person_fullname').attr('data-user-name'),$('#username-header').attr('user-name'),false)"><i class="fas fa-user-alt mr-2"></i> View Profile</button>
                             </div>
                         </article>

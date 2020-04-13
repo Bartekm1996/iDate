@@ -121,8 +121,6 @@ async function userActionTwo(action, user, name, email) {
             url: 'userManagmentApi.php',
             data: inputOptions,
             success: function (response) {
-                showUserManagment(null);
-                fillMembersNumbers();
 
                 if(action === 'block'){
                     Swal.fire({
@@ -137,6 +135,9 @@ async function userActionTwo(action, user, name, email) {
                         icon : "success"
                     });
                 }
+                showUserManagment(null);
+                fillMembersNumbers();
+
                 console.log('success:' + JSON.stringify(response));
             },
             failure: function (response) {
@@ -442,7 +443,7 @@ function unblockUser(username, email) {
                     icon: 'error'
                 })
             }
-            showUserManagment(1);
+            showUserManagment(null);
             fillMembersNumbers();
             console.log('success:' + JSON.stringify(response));
         },
@@ -470,9 +471,20 @@ function getUserData(verified) {
         data: request,
         success: function (response) {
 
-            console.log(response);
+            let ress = response.replace(/\\n/g, "\\n")
+                .replace(/\\'/g, "\\'")
+                .replace(/\\"/g, '\\"')
+                .replace(/\\&/g, "\\&")
+                .replace(/\\r/g, "\\r")
+                .replace(/\\t/g, "\\t")
+                .replace(/\\b/g, "\\b")
+                .replace(/\\f/g, "\\f");
+// remove non-printable and other non-valid JSON chars
+            ress = ress.replace(/[\u0000-\u0019]+/g,'}"]');
 
-            let res = JSON.parse(response);
+            let res = JSON.parse(ress);
+            console.log(res);
+
 
             for(let i = 0; i < res.length; i++)
             {
@@ -499,10 +511,6 @@ function getUserData(verified) {
                         node += '<a class="dropdown-item" href="#" onclick="getBlockedInfo(\'' + def.userName + '\')"><i class="fas fa-user-lock mr-2"></i>Block Info</a>'+
                                 '<a class="dropdown-item" href="#" onclick="unblockUser(\'' + def.userName + '\',\''+def.email+'\')"><i class="fas fa-user-lock mr-2"></i>Unblock</a>';
                     } else node += '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\'' + def.userName + '\',\'' + def.name + '\',\'' + def.email + '\')"><i class="fas fa-user-lock mr-2"></i>Block</a>';
-
-
-                    node +=
-                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\'' +def.userId + '\',\'' + def.name + '\',\'' + def.email + '\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
 
                     if (parseInt(def.admin) === 0) {
                         node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + def.userName + '\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';

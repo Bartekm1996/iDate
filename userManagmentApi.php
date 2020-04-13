@@ -10,16 +10,16 @@ require ("model/BlockReason.php");
 
 
 if(isset($_POST['get_all_users'])){
+    $res = [];
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
 
-        $sql = "SELECT user_id,userName,firstname,lastname,email,blocked,registered,admin,photoId,gender, town FROM
-                (SELECT a.id as user_id, a.userName, a.firstname, a.lastname, a.email, a.registered,a.admin, b.userID, b.blocked, b.photoId,a.gender, b.location
+        $sql = "SELECT uId,userName,firstname,lastname,email,blocked,registered,admin,photoId,gender, town FROM
+                (SELECT a.id as uId, a.userName, a.firstname, a.lastname, a.email, a.registered,a.admin, b.userID, b.blocked, b.photoId,a.gender, b.location
                 FROM user as a LEFT JOIN(select userID, blocked,photoId, location from profile group by userID) as b on a.id = b.userID) as users INNER JOIN town on town.id = users.location;";
 
         $result = $conn->query($sql);
-        $res = [];
         if ($result->num_rows > 0) {
             while ($row = mysqli_fetch_row($result)) {
                 $i = 0;
@@ -239,7 +239,7 @@ else if(isset($_POST['resend_verification_email'])){
                 $sqlDeleteConnections = "DELETE FROM connections WHERE userID1 = '{$username}' OR userID2 = '{$username}';";
                 $sqlDeleteFromInterest = "DELETE FROM interests WHERE userID = '{$username}';";
                 $sqlDeleteUser = "DELETE FROM user WHERE id = '{$username}';";
-                $sqlEnableForeignKeyChecks = "SET FOREIGN_KEY_CHECKS = 0;";
+                $sqlEnableForeignKeyChecks = "SET FOREIGN_KEY_CHECKS = 1;";
                 $sqlQuery = $sqlDisableForeignKeys.$sqlDeleteFromInterest.$sqlDeleteConnections.$sqlDeleteProfile.$sqlDeleteUser;
             }
 
