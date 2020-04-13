@@ -46,9 +46,24 @@ function getBlockedInfo(username){
         success: function (response) {
             console.log('success:' + JSON.stringify(response));
             let res =JSON.parse(response);
+            let reason = "";
+            switch (res.reason) {
+                case "breach_of_terms_and_conditiosn":{
+                    reason = "Breach of Terms And Conditions";
+                    break;
+                }
+                case "continous_incmopliance":{
+                    reason = "Continous Incompliance";
+                    break;
+                }
+                case "reported_by_use":{
+                    reason = "Reported By Users";
+                    break;
+                }
+            }
             Swal.fire({
                 title: 'Blocked Info',
-                text :  username + " has been blocked for " + res.reason + " on the " + res.date,
+                text :  username + " has been blocked for " + reason + " on the " + res.date,
                 icon: 'info'
             });
         },
