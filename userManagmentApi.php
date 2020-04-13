@@ -15,8 +15,8 @@ if(isset($_POST['get_all_users'])){
         die("Connection failed: " . $conn->connect_error);
     } else {
 
-        $sql = "SELECT uId,userName,firstname,lastname,email,blocked,registered,admin,photoId,gender, town FROM
-                (SELECT a.id as uId, a.userName, a.firstname, a.lastname, a.email, a.registered,a.admin, b.userID, b.blocked, b.photoId,a.gender, b.location
+        $sql = "SELECT uId,userName,firstname,lastname,email,Blocked,registered,admin,photoId,gender, town FROM
+                (SELECT a.id as uId, a.userName, a.firstname, a.lastname, a.email, a.registered,a.admin, b.userID, b.Blocked, b.photoId,a.gender, b.location
                 FROM user as a LEFT JOIN(select userID, blocked,photoId, location from profile group by userID) as b on a.id = b.userID) as users INNER JOIN town on town.id = users.location;";
 
         $result = $conn->query($sql);
