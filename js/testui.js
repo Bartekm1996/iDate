@@ -87,10 +87,11 @@ function fillMembersNumbers(){
 
 
                 for(let i = 0; i < obj.length; i++){
-                    if(parseInt(obj[i].registered) === 0){
+                    let res = JSON.parse(obj[i]);
+                    if(parseInt(res.registered) === 0){
                         un_reg++;
                     }
-                    if(parseInt(obj[i].blocked) === 1){
+                    if(parseInt(res.blocked) === 1){
                         blocked++;
                     }
 
