@@ -96,8 +96,8 @@ function fillMembersNumbers(){
                 }
 
                 $('#all_users').text(obj.length);
-                $('#unverified_users').text(0);
-                $('#blocked_users').text(0);
+                $('#unverified_users').text(un_reg);
+                $('#blocked_users').text(blocked);
 
 
                 if(un_reg > 0){
