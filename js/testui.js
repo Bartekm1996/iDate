@@ -89,7 +89,8 @@ function fillMembersNumbers(){
                 for(let i = 0; i < obj.length; i++){
                     if(parseInt(obj[i].registered) === 0){
                         un_reg++;
-                    }else if(parseInt(obj[i].blocked) === 1){
+                    }
+                    if(parseInt(obj[i].blocked) === 1){
                         blocked++;
                     }
 
