@@ -81,8 +81,7 @@ function fillMembersNumbers(){
 
             // preserve newlines, etc - use valid JSON
 
-            let ress = response.replace(/.$/,"]");
-            let obj = JSON.parse(ress);
+            let obj = JSON.parse(response);
 
             let un_reg = 0, blocked = 0;
 
