@@ -90,7 +90,11 @@
             loadMyProfile();
             loadHistoryTable($('#username-header').attr('user-name'));
             fillMembersNumbers();
-            fillTicketsNumbers()
+            fillTicketsNumbers();
+
+            interval = setInterval(function() {
+                loadConversations();
+            }, 3000);
         };
 
         function showUserChar(user) {
@@ -101,16 +105,13 @@
             $('.message-input').css({"display": 'block'});
             showChat();
             $('#contact_name').text(user);
-            interval = setInterval(function() {
-                loadConversations();
-            }, 3000);
+
         }
 
 
         function hideChat() {
             $('.filter').attr('hidden', true);
             $('#frame').prop('hidden', true);
-            clearInterval(interval);
         }
 
         //let interval = setInterval(() => getMessage(),2000);
