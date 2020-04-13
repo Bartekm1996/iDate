@@ -404,12 +404,11 @@ function getAllProfiles(smoker, drinker, age) {
     $.ajax({
         method: "POST",
         url: "api.php",
-        dataType: 'json',
         data: request,
         success: function (response) {
 
 
-
+            console.log(response);
             let obj = JSON.parse(response);
             document.getElementById("searchResults").innerHTML = '';
             //TODO: where are the images going to be stored
