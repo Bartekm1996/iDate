@@ -56,8 +56,12 @@ function showProfile(currentProfile, username, matched) {
             }
 
             getMyInterest(res.id);
+            if(username !== null){
+                $('#user_profile_name').text(res.firstName + " " + res.lastName);
+            }else{
+                $('#user_profile_name').text("Hello " + res.firstName + " " + res.lastName);
+            }
 
-            $('#user_profile_name').text("Hello " + res.firstName + " " + res.lastName);
             $('#profile_input_user_name').val(res.userName);
             $('#profile_input_user_email').val(res.email);
             $('#profile_input_user_first_name').val(res.firstName);
