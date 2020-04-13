@@ -185,8 +185,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <i class="mdi mdi-account icon-sm "></i><span class="form-control-label mb-2"><strong>Drinker</strong></span>
-                                        <select id="smoker_picker" class="form-control mb-3">
+                                        <i class="mdi mdi-account icon-sm "></i><span class="form-control-label mb-2"><strong>Smoker</strong></span>
+                                        <select id="smoking_picker" class="form-control mb-3">
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                             <option value="ocasionally">Ocasionally</option>
@@ -194,7 +194,7 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-6">
-                                        <i class="mdi mdi-account icon-sm "></i><span class="form-control-label mb-2"><strong>Smoker</strong></span>
+                                        <i class="mdi mdi-account icon-sm "></i><span class="form-control-label mb-2"><strong>Drinker</strong></span>
                                         <select id="drinker_picker" class="form-control">
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>

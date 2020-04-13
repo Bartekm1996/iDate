@@ -35,6 +35,7 @@ function showProfile(currentProfile, username, matched) {
 
     $('#user_profile').attr('hidden', false);
 
+    loadAgePicker();
 
     const request = {};
     request.get_user_info = true;
@@ -53,6 +54,7 @@ function showProfile(currentProfile, username, matched) {
             if(defImage === null) {
                 defImage = res.gender === 'Male' ? 'images/male.png' : 'images/female.png';
             }
+
             getMyInterest(res.id);
 
             $('#user_profile_name').text("Hello " + res.firstName + " " + res.lastName);
@@ -68,14 +70,13 @@ function showProfile(currentProfile, username, matched) {
             $('#upro_img').attr('data-id',res.id);
             $('#upro_img').attr('data-gender', res.gender);
             $('#upro_img').attr('data-seeking', res.seeking);
-            $('#age_picker').val(res.age);
+            $('#age_picker').val(parseInt(res.age));
             $('#city_select').val((res.town === null ? "Unknown" : res.town));
             $('#city_selected').text((res.town === null ? "Unknown" : res.town) + ",Ireland");
             $('#profile_card_description').text(res.descripion);
             $('#profile_user_card_name').attr('user_age', res.age);
             $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);
             $('#seeking').text("Seeking : " + (res.seeking === "female" ? "Women" : (res.seeking === "male" ? "Man" : "Other [Maybe Even Sheep]")));
-            loadAgePicker();
 
             document.getElementById("upro_img").src = defImage;
 
