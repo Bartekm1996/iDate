@@ -111,7 +111,7 @@ function getAllTickets(status) {
                             '</div>' +
                             '   <textarea class="form-control counted" name="message" placeholder="Reply to user" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
                             '   <h6 class="pull-right" id="counter">320 characters remaining</h6>' +
-                            '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + $(id).val() + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\')" type="submit">Reply</button>' +
+                            '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + $('#response_'+i).val() + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\')" type="submit">Reply</button>' +
                             '</div>' +
                             '</div>' +
                             '</td>' +
