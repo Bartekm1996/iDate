@@ -408,24 +408,9 @@ function getAllProfiles(smoker, drinker, age) {
         data: request,
         success: function (response) {
 
-            let resTwo = response.replace(/\\n/g, "\\n")
-                .replace(/\\'/g, "\\'")
-                .replace(/\\"/g, '\\"')
-                .replace(/\\&/g, "\\&")
-                .replace(/\\r/g, "\\r")
-                .replace(/\\t/g, "\\t")
-                .replace(/\\b/g, "\\b")
-                .replace(/\\f/g, "\\f");
-// remove non-printable and other non-valid JSON chars
 
-            resTwo = resTwo.replace(/[\u0000-\u0019]+/g, "");
 
-            if(resTwo.endsWith('\"') || resTwo.endsWith("}") || resTwo.endsWith("")){
-                resTwo = resTwo.replace(/[\u0000-\u0019]+/g,'}"]');
-            }
-
-            console.log(resTwo);
-            let obj = JSON.parse(resTwo);
+            let obj = JSON.parse(response);
             document.getElementById("searchResults").innerHTML = '';
             //TODO: where are the images going to be stored
             if(obj != null) {
