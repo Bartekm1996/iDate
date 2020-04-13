@@ -1,5 +1,4 @@
 
-
 <div class="main-content" id="user_profile" style="height: 100%; width: 100%; overflow-y: scroll;" >
     <!-- Top navbar -->
     <!-- Header -->
@@ -203,6 +202,13 @@
                                             <option value="party drinker">Party Drinker</option>
                                         </select>
                                     </div>
+                                </div>
+                                <div class="row">
+                                        <div class="col-lg-6">
+                                            <i class="mdi mdi-account icon-sm "></i><span class="form-control-label mb-2"><strong>Age</strong></span>
+                                            <select id="age_picker" class="form-control" >
+                                            </select>
+                                        </div>
                                 </div>
                             </div>
                             <!-- Interests -->

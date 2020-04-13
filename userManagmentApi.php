@@ -39,8 +39,9 @@ if(isset($_POST['get_all_users'])){
         $gender = $conn->real_escape_string($_POST['gender']);
         $smoking = $conn->real_escape_string($_POST['smoker']);
         $drinking = $conn->real_escape_string($_POST['drinker']);
+        $age = $conn->real_escape_string($_POST['age']);
         $sql = "UPDATE profile SET Seeking = '{$seeking}', Drinker = '{$drinking}', Smoker = '{$smoking}' WHERE userID = '{$userid}'";
-        $sqlQuery = "UPDATE user SET gender = '{$gender}' WHERE id = '{$userid}';";
+        $sqlQuery = "UPDATE user SET age = '{$age}', gender = '{$gender}' WHERE id = '{$userid}';";
         $result = $conn->query($sql);
         if ($conn->query($sql) === TRUE) {
             if ($conn->query($sqlQuery) === TRUE) {
@@ -414,5 +415,8 @@ else if(isset($_POST['resend_verification_email'])){
 
     }
     echo $resp->jsonSerialize();
+}else if($_POST['query_update']){
+    $email = new Email($_POST['email'],$_POST['name']);
+
 }
 ob_end_flush();

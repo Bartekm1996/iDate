@@ -111,7 +111,7 @@ function getAllTickets(status) {
                             '</div>' +
                             '   <textarea class="form-control counted" name="message" placeholder="Reply to user" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
                             '   <h6 class="pull-right" id="counter">320 characters remaining</h6>' +
-                            '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + i + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\')" type="submit">Reply</button>' +
+                            '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + i + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\',\'' + res[i].email + '\')" type="submit">Reply</button>' +
                             '</div>' +
                             '</div>' +
                             '</td>' +
@@ -245,20 +245,21 @@ function updateTicket(number, status) {
 
 }
 
-function sendMessage(id, message, username,number, reason) {
 
-    let msg = '#response_'+message;
+function sendMessage(id, message, username,number, reason, email) {
+
+    let msg = '#response_' + message;
     const request = {};
     request.send_query_message = true;
     request.userDesc = $(msg).val();
     request.userName = username;
-    request.userEmail = username+'@idate.ie';
+    request.userEmail = username + '@idate.ie';
     request.number = number;
     request.userReason = reason;
     request.date = getDate();
     request.archived = false;
 
-    let message_id = "#"+id;
+    let message_id = "#" + id;
 
     $.ajax({
         method: "POST",
@@ -269,14 +270,14 @@ function sendMessage(id, message, username,number, reason) {
             $(message_id).append(
                 '<div>' +
                 '<div style="display: inline-block;" class="pull-right">' +
-                '<h4 class="title" style="margin-bottom: 20px;" ">'+username+'</h4>' +
+                '<h4 class="title" style="margin-bottom: 20px;" ">' + username + '</h4>' +
                 '<img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo pull-right">' +
                 '</div>' +
                 '<div style="display: inline-block; margin-top: 20px;">' +
-                '   <p><span>'+$(msg).val()+'</span></p>' +
-                '<hr>'+
-                '<span class="media-meta pull-left" style="margin-bottom: 20px;">'+request.date+'</span>'+
-                '</div> '+
+                '   <p><span>' + $(msg).val() + '</span></p>' +
+                '<hr>' +
+                '<span class="media-meta pull-left" style="margin-bottom: 20px;">' + request.date + '</span>' +
+                '</div> ' +
                 '</div>'
             );
         },
@@ -287,7 +288,6 @@ function sendMessage(id, message, username,number, reason) {
             console.log('error:' + JSON.stringify(response));
         }
     });
-
 
 }
 

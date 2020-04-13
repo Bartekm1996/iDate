@@ -1,7 +1,6 @@
 function showProfile(currentProfile, username, matched) {
 
     console.log(currentProfile + " currentProfile");
-
     hideMatchArea();
     hideUserManagment();
     hideMatching();
@@ -69,12 +68,14 @@ function showProfile(currentProfile, username, matched) {
             $('#upro_img').attr('data-id',res.id);
             $('#upro_img').attr('data-gender', res.gender);
             $('#upro_img').attr('data-seeking', res.seeking);
+            $('#age_picker').val(res.age);
             $('#city_select').val((res.town === null ? "Unknown" : res.town));
             $('#city_selected').text((res.town === null ? "Unknown" : res.town) + ",Ireland");
             $('#profile_card_description').text(res.descripion);
             $('#profile_user_card_name').attr('user_age', res.age);
             $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);
             $('#seeking').text("Seeking : " + (res.seeking === "female" ? "Women" : (res.seeking === "male" ? "Man" : "Other [Maybe Even Sheep]")));
+            loadAgePicker();
 
             document.getElementById("upro_img").src = defImage;
 
@@ -97,6 +98,7 @@ function saveUserInfo() {
     request.drinker = $('#drinker_picker').val();
     request.gender = $('#gender_picker').val();
     request.seeking = $('#seeking_picker').val();
+    request.age = $('#age_picker').val();
 
     $.ajax({
         method: "POST",
@@ -335,13 +337,39 @@ function msg(txt){
     })
 }
 
+function loadAgePicker() {
+    let age = $('#age_picker');
+    for(let i = 18; i < 100; i++ ){
+        age.append('<option value="'+i+'">'+i+'</option>');
+    }
+}
+
 function saveuserinformation() {
     const request = {};
     request.save_user_info = true;
     request.firstname = $('#profile_input_user_first_name').val();
     request.email = $('#profile_input_user_email').val();
     request.lastname = $('#profile_input_user_last_name').val();
-    saveDate(request);
+
+    console.log("Age" + request.age);
+
+    if(request.firstname.length === 0 || request.email.length === 0 || request.lastname.length === 0){
+        Swal.fire({
+            title: "Please Fill In All Fields",
+            text: "All Fields Have To Be Filled In",
+            icon: "warning"
+        });
+    }else{
+        if($('#profile_input_user_last_name').val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
+            Swal.fire({
+                title: "Email Error",
+                text: "Email is not valid",
+                icon: "warning"
+            });
+        }else{
+            saveDate(request);
+        }
+    }
 }
 
 function saveaboutme() {

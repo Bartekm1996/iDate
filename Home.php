@@ -545,6 +545,19 @@
             }
         });
 
+        function cal(){
+            let date_input = $('input[name="date"]'); //our date input has the name "date"
+            let container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+            let options = {
+                format: 'mm/dd/yyyy',
+                container: container,
+                todayHighlight: true,
+                autoclose: true,
+            };
+            date_input.datepicker(options);
+        }
+
+
     </script>
 
 
