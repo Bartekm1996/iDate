@@ -81,7 +81,7 @@
 
        
             //console.log("UD " + <?php echo $userid?>);
-            $('#username-header').text('<?php echo $firstname?>');
+            $('#username-header').text('<?php echo $username ?>');
             $('#username-header').attr('user-id', <?php echo $userid ?>);
             $('#username-header').attr('user-name', "<?php echo $username ?>");
             $('#username-header').attr('user_name', "<? $_SESSION['user_name']?>")
@@ -856,7 +856,6 @@
              https://firebase.google.com/docs/web/setup#available-libraries -->
         <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-storage.js"></script>
         <script>
-            $('input').popup();
 
             // Your web app's Firebase configuration
             var firebaseConfig = {

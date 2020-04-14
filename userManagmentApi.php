@@ -67,7 +67,7 @@ if(isset($_POST['get_all_users'])){
 else if(isset($_POST['get_user_info'])){
 
     $uname = $conn->real_escape_string($_POST['username']);
-
+    $user = null;
     $mode = ctype_digit($uname) ? "res.id='{$uname}';" : "res.userName='{$uname}';";
 
     $sql = "SELECT res.id, userName,firstname,lastname,email, Description, age, Seeking, photoId, gender, Smoker, Drinker, town.town
@@ -81,8 +81,22 @@ else if(isset($_POST['get_user_info'])){
     if ($result->num_rows > 0) {
             $res = $result->fetch_row();
             $user = new UserInfo($res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8], $res[9], $res[10], $res[11], $res[0],$res[12], null) ;
-            echo $user->jsonSerialize();
+    }else{
+        $sql = "SELECT res.id, userName,firstname,lastname,email, Description, age, Seeking, photoId, gender, Smoker, Drinker
+                 FROM (SELECT user.id, user.firstname, user.lastname,
+                 user.age, user.gender, user.userName,user.email,
+             profile.photoId, profile.location, profile.Description, profile.Seeking, profile.Smoker, profile.Drinker  FROM user
+            inner join profile
+            on user.id = profile.userID) as res WHERE ".$mode;
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            $res = $result->fetch_row();
+            $user = new UserInfo($res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8], $res[9], $res[10], $res[11], $res[0], null, null);
+        }
     }
+
+    echo $user->jsonSerialize();
+
 }
 else if(isset($_POST['get_all_tickets'])){
     if ($conn->connect_error) {
@@ -315,18 +329,16 @@ else if(isset($_POST['resend_verification_email'])){
             $fname = $conn->real_escape_string($_POST['firstname']);
             $lname = $conn->real_escape_string($_POST['lastname']);
             $email = $conn->real_escape_string($_POST['email']);
-            $sql = "UPDATE user SET userName = '{$username}', email = '{$email}', firstname = '{$fname}', lastname = '{$lname}' WHERE userName = '{$username}'";
+            $sql = "UPDATE user SET firstname = '{$fname}', lastname = '{$lname}' WHERE userName = '{$username}'";
         }else if(isset($_POST['about_me'])){
             $id = $conn->real_escape_string($_POST['user_id']);
             $me = $conn->real_escape_string($_POST['about_me']);
             $sql = "UPDATE profile SET Description = '{$me}' WHERE userID = '{$id}' ";
-        }else if(isset($_POST['seeking'])){
-
         }
 
         $result = $conn->query($sql);
 
-        if ($result === true) {
+        if ($result === TRUE) {
             $resp = new SweetalertResponse(1,
                 'Success',
                 "Information Saved",

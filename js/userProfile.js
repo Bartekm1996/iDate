@@ -56,30 +56,54 @@ function showProfile(currentProfile, username, matched) {
             }
 
             getMyInterest(res.id);
-            if(username !== null){
-                $('#user_profile_name').text(res.firstName + " " + res.lastName);
+
+            console.log("Firstnameo " + res.firstName);
+            $('#upro_img').attr('details', 'true');
+
+
+            if(res.firstName === null){
+                $('#age_picker').val(parseInt(res.age));
+                $('#gender_picker').val(res.gender);
+                $('#profile_user_card_name').text(res.userName + " , " +res.age);
+                $('#profile_input_user_name').val(res.userName);
+                $('#profile_input_user_email').val(res.email);
+                $('#seeking_picker').val(res.seeking);
+                $('#upro_img').attr('data-id',res.id);
+                $('#upro_img').attr('data-gender', res.gender);
+                $('#upro_img').attr('data-user-name', res.userName);
+                $('#upro_img').attr('details', 'false');
+                if(username !== null){
+                    $('#user_profile_name').text(res.firstName + " " + res.lastName);
+                }else{
+                    $('#user_profile_name').text("Hello " + res.userName);
+                }
             }else{
-                $('#user_profile_name').text("Hello " + res.firstName + " " + res.lastName);
+                if(username !== null){
+                    $('#user_profile_name').text(res.firstName + " " + res.lastName);
+                }else{
+                    $('#user_profile_name').text("Hello " + res.firstName + " " + res.lastName);
+                }
+                $('#profile_input_user_name').val(res.userName);
+                $('#profile_input_user_email').val(res.email);
+                $('#profile_input_user_first_name').val(res.firstName);
+                $('#profile_input_user_last_name').val(res.lastName);
+                $('#profile_bio').val(res.descripion);
+                $('#seeking_picker').val(res.seeking);
+                $('#drinker_picker').val(res.dinker);
+                $('#smoking_picker').val(res.smoker);
+                $('#gender_picker').val(res.gender);
+                $('#upro_img').attr('data-id',res.id);
+                $('#upro_img').attr('data-gender', res.gender);
+                $('#upro_img').attr('data-seeking', res.seeking);
+                $('#upro_img').attr('data-user-name', res.userName);
+                $('#age_picker').val(parseInt(res.age));
+                $('#city_select').val((res.town === null ? "Unknown" : res.town));
+                $('#city_selected').text((res.town === null ? "Unknown" : res.town) + ",Ireland");
+                $('#profile_card_description').text(res.descripion);
+                $('#profile_user_card_name').attr('user_age', res.age);
+                $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);
             }
 
-            $('#profile_input_user_name').val(res.userName);
-            $('#profile_input_user_email').val(res.email);
-            $('#profile_input_user_first_name').val(res.firstName);
-            $('#profile_input_user_last_name').val(res.lastName);
-            $('#profile_bio').val(res.descripion);
-            $('#seeking_picker').val(res.seeking);
-            $('#drinker_picker').val(res.dinker);
-            $('#smoking_picker').val(res.smoker);
-            $('#gender_picker').val(res.gender);
-            $('#upro_img').attr('data-id',res.id);
-            $('#upro_img').attr('data-gender', res.gender);
-            $('#upro_img').attr('data-seeking', res.seeking);
-            $('#age_picker').val(parseInt(res.age));
-            $('#city_select').val((res.town === null ? "Unknown" : res.town));
-            $('#city_selected').text((res.town === null ? "Unknown" : res.town) + ",Ireland");
-            $('#profile_card_description').text(res.descripion);
-            $('#profile_user_card_name').attr('user_age', res.age);
-            $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);
             $('#seeking').text("Seeking : " + (res.seeking === "female" ? "Women" : (res.seeking === "male" ? "Man" : "Other [Maybe Even Sheep]")));
 
             document.getElementById("upro_img").src = defImage;
@@ -112,6 +136,7 @@ function saveUserInfo() {
         success: function (response) {
             let res = JSON.parse(response);
             Swal.fire(res.title, res.message, res.type);
+            $('#upro_img').attr('details',true);
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
@@ -355,8 +380,8 @@ function saveuserinformation() {
     request.firstname = $('#profile_input_user_first_name').val();
     request.email = $('#profile_input_user_email').val();
     request.lastname = $('#profile_input_user_last_name').val();
+    request.username = $('#upro_img').attr('data-user-name');
 
-    console.log("Age" + request.age);
 
     if(request.firstname.length === 0 || request.email.length === 0 || request.lastname.length === 0){
         Swal.fire({
@@ -365,7 +390,7 @@ function saveuserinformation() {
             icon: "warning"
         });
     }else{
-        if($('#profile_input_user_last_name').val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
+        if($('#profile_input_user_email').val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
             Swal.fire({
                 title: "Email Error",
                 text: "Email is not valid",
@@ -391,6 +416,7 @@ function saveDate(request) {
         url: "userManagmentApi.php",
         data: request,
         success: function (response) {
+            console.log(response);
             let res = JSON.parse(response);
             Swal.fire(res.title, res.message, res.type);
             if(request.firstname !== " "){
@@ -446,7 +472,7 @@ function enableFields(){
     $('#profile_input_user_first_name').removeClass('hide-input');
     $('#profile_input_user_first_name').attr('disabled',false);
     $('#profile_input_user_email').removeClass('hide-input');
-    $('#profile_input_user_email').attr('disabled',false);
+    $('#profile_input_user_email').attr('disabled',true);
     $('#profile_input_user_name').removeClass('hide-input');
     $('#profile_input_user_name').attr('disabled',false);
     $('#user_profile_save_button').attr('hidden', false);

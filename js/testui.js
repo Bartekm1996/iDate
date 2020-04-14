@@ -203,37 +203,57 @@ function addTicketLabel(node, counter){
 
 
 function showSearch() {
-    $('#searchFilter').attr('data-matches', false);
-    loadMatches();
-    getAllProfiles();
+    if($('#upro_img').attr('details') === 'true') {
 
-    if($('#searchFilter').val().length > 0){
-        $('#searchFilter').val("");
-        $('#searchResults').prop('hidden', true);
-    }else {
-        if($('#matching').attr('hidden')){
-            $('#searchResults').prop('hidden', false);
+        $('#searchFilter').attr('data-matches', false);
+        loadMatches();
+        getAllProfiles();
+
+        if ($('#searchFilter').val().length > 0) {
+            $('#searchFilter').val("");
+            $('#searchResults').prop('hidden', true);
+        } else {
+            if ($('#matching').attr('hidden')) {
+                $('#searchResults').prop('hidden', false);
+            }
         }
+
+        hideChat();
+        hideUserManagment();
+        hideUserProfile();
+        hideTickets();
+        $('#matcharea').prop('hidden', false);
+        $('#matching').prop('hidden', false);
+    }else {
+        Swal.fire({
+            title: "Fill In Profile Information",
+            text: "Please Fill In Your Profile Information before accessing other services",
+            icon: "warning"
+        });
     }
 
-    hideChat();
-    hideUserManagment();
-    hideUserProfile();
-    hideTickets();
-    $('#matcharea').prop('hidden', false);
-    $('#matching').prop('hidden', false);
 }
 
+
 function showUerMatches(user_id) {
-    $('#searchFilter').attr('data-matches', true);
-    $('#my_matches_place_holder').attr('hidden', false);
-    $('#searchResults').attr('hidden',false);
-    hideUserManagment();
-    hideMatching();
-    hideUserProfile();
-    hideTickets();
-    hideChat();
-    getUserMatches(user_id);
+    console.log("True " + $('#upro_img').attr('details'));
+    if($('#upro_img').attr('details') === 'true') {
+        $('#searchFilter').attr('data-matches', true);
+        $('#my_matches_place_holder').attr('hidden', false);
+        $('#searchResults').attr('hidden', false);
+        hideUserManagment();
+        hideMatching();
+        hideUserProfile();
+        hideTickets();
+        hideChat();
+        getUserMatches(user_id);
+    }else {
+        Swal.fire({
+            title: "Fill In Profile Information",
+            text:"Please Fill In Your Profile Information before accessing other services",
+            icon: "warning"
+        });
+    }
 }
 
 function  openUserProfile(event) {

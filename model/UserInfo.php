@@ -4,10 +4,10 @@
 class UserInfo implements JsonSerializable
 {
 
-    private String $userName;
-    private String $firstName;
-    private String $lastName;
-    private String $email;
+    private $userName;
+    private $firstName;
+    private $lastName;
+    private $email;
     private $descripion;
     private $age;
     private $seeking;
