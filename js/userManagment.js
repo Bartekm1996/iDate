@@ -76,10 +76,10 @@ function getBlockedInfo(username){
     });
 }
 
-async function userActionTwo(action, user, name, email) {
+async function userActionTwo(action, user, name, email, id) {
+
 
     let inputOptions = {};
-    inputOptions.user = user;
     inputOptions.sender_name = "iDate Customer Service Team";
     inputOptions.update_user = true;
     inputOptions.name = name;
@@ -95,12 +95,15 @@ async function userActionTwo(action, user, name, email) {
     let ops = {};
 
     if(action === 'delete'){
+        inputOptions.user = id;
+        console.log("fjwkbfuweufuweugfigew "  + id);
         ops = {
             inactive_account: 'Inactive Account',
             breach_of_terms_and_conditiosn: 'Breach Of Terms And Conditions',
             reported_by_several_users: 'Reported By Several Users',
         }
     }else if(action === 'block'){
+        inputOptions.user = user;
         ops = {
             breach_of_terms_and_conditiosn: 'Breach Of Terms And Conditions',
             continous_incmopliance: 'Continous Incompliance',
@@ -137,6 +140,7 @@ async function userActionTwo(action, user, name, email) {
             data: inputOptions,
             success: function (response) {
 
+                console.log(response);
                 if(action === 'block'){
                     Swal.fire({
                         title : "User Blocked",
@@ -492,7 +496,32 @@ function unblockUser(username, email) {
     });
 }
 
+function resetEmail(username, email) {
 
+    const request = {};
+    request.password_reset_email = true;
+    request.reset_uname = username;
+    request.reset_email = email;
+    $.ajax({
+        method: "POST",
+        url: 'api.php',
+        data: request,
+        success: function (response) {
+            console.log(response);
+                Swal.fire({
+                    title: "Password reset sent",
+                    text: 'Password reset email sent successfully',
+                    icon: 'success'
+                });
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+}
 
 function getUserData(verified) {
 
@@ -538,7 +567,8 @@ function getUserData(verified) {
                     if (parseInt(def.blocked) === 1) {
                         node += '<a class="dropdown-item" href="#" onclick="getBlockedInfo(\'' + def.userName + '\')"><i class="fas fa-user-lock mr-2"></i>Block Info</a>'+
                                 '<a class="dropdown-item" href="#" onclick="unblockUser(\'' + def.userName + '\',\''+def.email+'\')"><i class="fas fa-user-lock mr-2"></i>Unblock</a>';
-                    } else node += '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\'' + def.userName + '\',\'' + def.name + '\',\'' + def.email + '\')"><i class="fas fa-user-lock mr-2"></i>Block</a>';
+                    } else node += '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\'' + def.userName + '\',\'' + def.name + '\',\'' + def.email + '\',\'' + null + '\')"><i class="fas fa-user-lock mr-2"></i>Block</a>'+
+                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\'' + def.userName + '\',\'' + def.name + '\',\'' + def.email + '\',' + def.userId + ')"><i class="fas fa-user-lock mr-2"></i>Delete</a>';
 
                     if (parseInt(def.admin) === 0) {
                         node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + def.userName + '\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';
@@ -551,6 +581,10 @@ function getUserData(verified) {
                             '<div class="dropdown-divider"></div>' +
                             '<a class="dropdown-item" href="#" onclick="sendVerificationEmail(\'' + def.email + '\',\'' + def.userName + '\')"><i class="fas fa-paper-plane mr-2"></i>Resend Activation Email</a>';
                     }
+
+                    node +=
+                        '<a class="dropdown-item" href="#" onclick="resetEmail(\'' + def.userName + '\',\'' + def.email + '\')"><i class="fas fa-paper-plane mr-2"></i>Send Password Reset Email</a>';
+
                 }
 
                     node +='</div>'+

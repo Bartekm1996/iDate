@@ -16,16 +16,16 @@
 <div class="container" id="main_cont" hidden>
     <div class="row">
         <div class="panel">
-            <div style="display: inline-block;">
+            <div style="width: 200px;">
                 <input class="form-control ml-2 mt-4" placeholder="Enter ticket number" onkeyup="filterTickets(this)">
             </div>
-            <div class="pull-right" style="display: inline-block;">
-                <div class="btn-group">
+            <div class="pull-right mb-5 mt-3">
+                <div style="display: grid; grid-template-columns: auto auto auto; grid-gap: 5px;">
                     <button type="button" class="btn btn-success btn-filter" data-target="other">Other</button>
                     <button type="button" class="btn btn-warning btn-filter" data-target="not_receiving_verification_Email">Not Receiving Verification Email</button>
-                    <button type="button" class="btn btn-danger btn-filter" data-target="cannot_login">Cannot Login</button>
+                    <button type="button" class="btn btn-warning btn-filter" data-target="cannot_login">Cannot Login</button>
                     <button type="button" class="btn btn-danger btn-filter" data-target="abusive_messages">Abusive Messages</button>
-                    <button type="button" class="btn btn-warning btn-filter" data-target="continous_stalking">Continous Stalking</button>
+                    <button type="button" class="btn btn-danger btn-filter" data-target="continous_stalking">Continous Stalking</button>
                     <button type="button" class="btn btn-danger btn-filter" data-target="inapropiate_behaviour">Inappropiate Behaviour</button>
                     <button type="button" class="btn btn-default btn-filter" data-target="all">All</button>
                 </div>
@@ -40,86 +40,6 @@
     </div>
 
 </div>
-<script>
-    (function($) {
-
-        $.fn.charCounter = function (max, settings) {
-            max = max || 100;
-            settings = $.extend({
-                container: "<span></span>",
-                classname: "charcounter",
-                format: "(%1 characters remaining)",
-                pulse: true,
-                delay: 0
-            }, settings);
-            var p, timeout;
-
-            function count(el, container) {
-                el = $(el);
-                if (el.val().length > max) {
-                    el.val(el.val().substring(0, max));
-                    if (settings.pulse && !p) {
-                        pulse(container, true);
-                    };
-                };
-                if (settings.delay > 0) {
-                    if (timeout) {
-                        window.clearTimeout(timeout);
-                    }
-                    timeout = window.setTimeout(function () {
-                        container.html(settings.format.replace(/%1/, (max - el.val().length)));
-                    }, settings.delay);
-                } else {
-                    container.html(settings.format.replace(/%1/, (max - el.val().length)));
-                }
-            };
-
-            function pulse(el, again) {
-                if (p) {
-                    window.clearTimeout(p);
-                    p = null;
-                };
-                el.animate({ opacity: 0.1 }, 100, function () {
-                    $(this).animate({ opacity: 1.0 }, 100);
-                });
-                if (again) {
-                    p = window.setTimeout(function () { pulse(el) }, 200);
-                };
-            };
-
-            return this.each(function () {
-                var container;
-                if (!settings.container.match(/^<.+>$/)) {
-                    // use existing element to hold counter message
-                    container = $(settings.container);
-                } else {
-                    // append element to hold counter message (clean up old element first)
-                    $(this).next("." + settings.classname).remove();
-                    container = $(settings.container)
-                        .insertAfter(this)
-                        .addClass(settings.classname);
-                }
-                $(this)
-                    .unbind(".charCounter")
-                    .bind("keydown.charCounter", function () { count(this, container); })
-                    .bind("keypress.charCounter", function () { count(this, container); })
-                    .bind("keyup.charCounter", function () { count(this, container); })
-                    .bind("focus.charCounter", function () { count(this, container); })
-                    .bind("mouseover.charCounter", function () { count(this, container); })
-                    .bind("mouseout.charCounter", function () { count(this, container); })
-                    .bind("paste.charCounter", function () {
-                        var me = this;
-                        setTimeout(function () { count(me, container); }, 10);
-                    });
-                if (this.addEventListener) {
-                    this.addEventListener('input', function () { count(this, container); }, false);
-                };
-                count(this, container);
-            });
-        };
-
-    })(jQuery);
-</script>
 
 
 

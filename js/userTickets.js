@@ -73,7 +73,7 @@ function getAllTickets(status) {
                              test += '<tr class="clickable-row" data-number="' + res[i].number + '" data-query="' + index + '" onclick="expand(\'#collapseme_' + i + '\')" data-status="' + reason + '">' +
                             '<td>' +
                             '<div class="ckbox">' +
-                            '<input type="checkbox" id="checkbox5">' +
+                            '<input type="checkbox" id="checkbox5" >' +
                             '<label for="checkbox5"></label>' +
                             '</div>' +
                             '</td>' +
@@ -109,7 +109,7 @@ function getAllTickets(status) {
                             '<div>' +
                             '<div id="message_pane' + i + '">' +
                             '</div>' +
-                            '   <textarea class="form-control counted" name="message" placeholder="Reply to user" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
+                            '   <textarea class="form-control counted" name="message" placeholder="Add Notes" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
                             '   <h6 class="pull-right" id="counter">320 characters remaining</h6>' +
                             '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + i + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\',\'' + res[i].email + '\')" type="submit">Reply</button>' +
                             '</div>' +
@@ -141,7 +141,7 @@ function getAllTickets(status) {
                                 '<div style="margin-top: 20px;">' +
                                 '   <p><span>' + res[j].description + '</span></p>' +
                                 '<hr>' +
-                                '<span class="media-meta pull-right" style="margin-bottom: 20px;">' + res[j].date + '</span>' +
+                                '<span class="media-meta" style="margin-bottom: 20px;">' + res[j].date + '</span>' +
                                 '</div> '
                             );
                         }

@@ -13,6 +13,7 @@ require("model/Connection.php");
 require("SweetalertResponse.php");
 require("model/Profile.php");
 require("model/UserInfo.php");
+require ("Email.php");
 /* Create a match with current logged in user and match_id user */
 if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id2'])) {
 
@@ -329,7 +330,7 @@ else if(isset($_POST['upload_files_api'])) {
             $row = mysqli_fetch_row($result);
                 $i = 0;
                 $user = new SearchUser($row[$i++], $row[$i++], $row[$i++], $row[$i++], $row[$i++],
-                    $row[$i++], $row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
+                    $row[$i++], $row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++], null);
                 echo  $user->jsonSerialize();
         } else {
             echo "{}";
@@ -488,9 +489,10 @@ else if(isset($_POST['upload_files_api'])) {
             array_push($stringBuilder," ress.Drinker = '{$drinker}' ");
         }
 
-        if(isset($_POST['age'])){
-            $age = $conn->real_escape_string($_POST['age']);
-            array_push($stringBuilder, " ress.age = '{$age}' ");
+        if(isset($_POST['minValue'])){
+            $age = $conn->real_escape_string($_POST['minValue']);
+            $ageMax = $conn->real_escape_string($_POST['maxValue']);
+            array_push($stringBuilder, " ress.age >= '{$age}' AND ress.age < '{$ageMax}' ");
         }
 
         if(isset($_POST['city'])){
@@ -534,6 +536,26 @@ else if(isset($_POST['upload_files_api'])) {
         }
     }
     echo json_encode($resultantArray);
+}else if(isset($_POST['get_picture'])){
+    $user_id = $conn->real_escape_string($_POST['username']);
+
+    $res = "";
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } else {
+        $sql = "SELECT photoId FROM profile WHERE userID = (SELECT id FROM user WHERE userName = '{$user_id}')";
+
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            $res = $result->fetch_row()[0];
+        }
+        echo $res;
+    }
+}else if(isset($_POST['password_reset_email'])) {
+    $rname = $_POST['reset_uname'];
+    $remail = $_POST['reset_email'];
+    $semail = new Email($remail, $rname);
+    $semail->sendRegisterEmail(Email::RESET_PASSWORD);
 }
 ob_start();
 

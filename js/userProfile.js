@@ -68,6 +68,8 @@ function showProfile(currentProfile, username, matched) {
                 $('#profile_input_user_name').val(res.userName);
                 $('#profile_input_user_email').val(res.email);
                 $('#seeking_picker').val(res.seeking);
+                $('#drinker_header').text(res.dinker);
+                $('#smoker_header').text(res.smoker);
                 $('#upro_img').attr('data-id',res.id);
                 $('#upro_img').attr('data-gender', res.gender);
                 $('#upro_img').attr('data-user-name', res.userName);
@@ -101,6 +103,8 @@ function showProfile(currentProfile, username, matched) {
                 $('#city_selected').text((res.town === null ? "Unknown" : res.town) + ",Ireland");
                 $('#profile_card_description').text(res.descripion);
                 $('#profile_user_card_name').attr('user_age', res.age);
+                $('#drinker_header').text(res.dinker);
+                $('#smoker_header').text(res.smoker);
                 $('#profile_user_card_name').text(res.firstName + " " + res.lastName + " , " +res.age);
             }
 
@@ -137,6 +141,8 @@ function saveUserInfo() {
             let res = JSON.parse(response);
             Swal.fire(res.title, res.message, res.type);
             $('#upro_img').attr('details',true);
+            $('#drinker_header').text(request.drinker);
+            $('#smoker_header').text(request.smoker);
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
@@ -152,6 +158,8 @@ function closeAccount(id) {
     const request = {};
     request.delete_user = true;
     request.userId = id;
+
+    console.log("User id    cdss " + id);
 
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
@@ -176,7 +184,7 @@ function closeAccount(id) {
                     url: "userManagmentApi.php",
                     data: request,
                     success: function (response) {
-                        console.log(JSON.parse(response));
+                        console.log(response);
                         let timerInterval
                         Swal.fire({
                             title: 'You\'re Account Is Being Closed!',
@@ -202,7 +210,6 @@ function closeAccount(id) {
                                 window.location.href = 'index.php';
                             }
                         }).then((result) => {
-                            /* Read more about handling dismissals below */
                             if (result.dismiss === Swal.DismissReason.timer) {
                                 console.log('Account Was Closed We\'re Sad to see you go')
                             }
@@ -215,6 +222,8 @@ function closeAccount(id) {
                         console.log('error:' + JSON.stringify(response));
                     }
                 });
+
+
 
             } else if (
                 /* Read more about handling dismissals below */
@@ -487,8 +496,8 @@ function enableFields(){
     $('#input-country').attr('disabled',false);
     $('#input-postal-code').attr('disabled',false);
     $('#gender_picker').attr('disabled',false);
-    $('#gender_picker').attr('disabled',false);
     $('#drinker_picker').attr('disabled',false);
+    $('#seeking_picker').attr('disabled',false);
     $('#smoking_picker').attr('disabled',false);
     $('#close_account_button').attr('hidden',false);
     $('#city_select').attr('disabled',false);

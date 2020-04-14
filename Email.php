@@ -89,22 +89,6 @@ class Email
     }
 
 
-    public function sendUpdateMessage($number){
-
-        $cont = file_get_contents(__DIR__.$template);
-        $res = str_replace("{{user_name}}", $this->name, $cont);
-        $res_one = str_replace( "{{action}}", $action, $res);
-
-        if($type === self::BLOCKED || $type === self::DELETED){
-            $res_two = str_replace( "{{reason}}", $emailRes, $res_one);
-        }
-
-        $res_three = str_replace( "{{sender_name}}", $sender_name, $res_two);
-
-        $this->sendEmail($subject, $res_three, $this->getTo());
-    }
-
-
     public function sendRegisterEmail($type){
         $template = "";
         $key = "";

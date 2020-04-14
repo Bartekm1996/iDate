@@ -20,7 +20,10 @@
     <link rel="stylesheet" href="css/usermatch.css">
     <link rel="stylesheet" href="css/cardV2.css">
     <link rel="stylesheet" href="css/userProfile.css"/>
+    <link rel="stylesheet" href="css/multirange.css"/>
     <link rel="stylesheet" type="text/css" href="css/profileCard.css">
+    <link rel="stylesheet" type="text/css" href="css/wrunner-default-theme.css">
+
     <!-- Compiled and minified CSS -->
 
     <script src="js/userProfile.js"></script>
@@ -240,10 +243,33 @@
 
             $('#contact_name').text($('ul#contactsList').find('li.active').attr("data-username"));
 
+            getPicture($(elem).attr('data-username'));
             getMessage()
 
         };
 
+
+        function getPicture(username) {
+            const request = {};
+            request.get_picture = true;
+            request.username = username;
+
+            $.ajax({
+                method: "POST",
+                url: "api.php",
+                data: request,
+                success: function (response) {
+                    document.getElementById('chat_img').src = response;
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+
+        }
 
         function getMessage(){
             clearInterval(interval);
@@ -334,8 +360,8 @@
                             + '<div class="wrap">'
                             + '<img src="https://source.unsplash.com/random" alt="">'
                             + '<div class="meta">'
-                            + '<p class="name"><strong>' +res[0]._conversations[i].username+'</strong></p>'
-                            + '<p class="preview">'+res[0]._conversations[i].messages[res[0]._conversations[i].messages.length-1].message+'</p>'
+                            + '<p class="name text-white" style="font-size: 13px; font-weight: bold;"><strong>' +res[0]._conversations[i].username+'</strong></p>'
+                            + '<p class="preview text-white">'+res[0]._conversations[i].messages[res[0]._conversations[i].messages.length-1].message+'</p>'
                             + '</div></div></li>').appendTo($('#contactsList'));
 
                         console.log("Cse");
@@ -429,12 +455,12 @@
                     console.log("Town " + res.town);
                      $('#person_location_outter').text(res.town !== undefined ? res.town : "Location: Hidden");
 //
-                    $('#user_full_age').html('<strong>Age </strong>' + res.age);
-                    $('#user_full_name').html('<strong>Name </strong>' + res.name);
-                    $('#user_gender').html('<strong>Gender </strong>' + res.gender);
-                    $('#user_card_bio').html('<strong>Bio </strong><br>' + res.desc);
-                    $('#user_smoking').html('<strong>Smoking </strong>' + res.smoking);
-                    $('#user_drinking').html('<strong>Drinking </strong>' + res.drinking);
+                    $('#user_full_age').html('<i class="fas fa-calendar-week"></i><strong> Age </strong>' + res.age);
+                    $('#user_full_name').html('<i class="fas fa-signature"></i><strong> Name </strong>' + res.name);
+                    $('#user_gender').html('<i class="fas fa-venus-mars"></i><strong> Gender </strong>' + res.gender);
+                    $('#user_card_bio').html('<i class="fas fa-address-card"></i><strong> Bio </strong><br>' + res.desc);
+                    $('#user_smoking').html('<i class="fas fa-smoking"></i><strong> Smoking </strong>' + res.smoking);
+                    $('#user_drinking').html('<i class="fas fa-cocktail"></i><strong> Drinking </strong>' + res.drinking);
 
                     let defImage = res.photoId;
                     if(defImage == null || defImage.length == 0) {
@@ -537,7 +563,8 @@
         }
 
         function changeValue(val){
-            $('#current_slider_value').text(val);
+            console.log("Value " + $(val).val())
+            console.log("Value low " + $(val).valueLow)
         }
 
         $(window).on('keydown', function(e) {
@@ -558,6 +585,7 @@
             };
             date_input.datepicker(options);
         }
+
 
 
     </script>
@@ -770,7 +798,7 @@
                         </optgroup>
                     </select>
                 </div>
-                <div style="width: 100%;">
+                <div style="width: 100%;" class="mt-2">
                     <div class="form-group focused">
                         <label class="text-white">City </label>
                         <select id="city_select_picker" class="form-control">
@@ -778,15 +806,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="row mt-4">
-                        <div class="form-check ml-4 mr-5" >
-                            <input type="checkbox" class="form-check-input mr-2" id="age_check_box" />
-                        </div>
-                        <strong class="ml-5 text-white">18</strong>
-                        <input  type="range" style="width: 150px;" class="ml-2" id="ageSlider" min="18" max="65" onchange="changeValue($(this).val())"  />
-                        <strong class="ml-3 text-white">65+</strong></span>
-                        <strong class="ml-3 text-white" id="current_slider_value">Age</strong>
-
+                <div class="row mt-4 ml-1">
+                    <label class="text-white ml-3">Age</label>
+                    <div class="my-js-slider mb-2" style="width: 100%; padding-left: 30px; padding-right: 30px;"></div>
                 </div>
                 <div style="margin-top: 20px;">
                     <label class="text-left text-white d-none d-lg-flex ml-2 mt-2 mb-2" for="interest_box">Interests</label>
@@ -816,8 +838,9 @@
                             <h3 style="position: absolute; top: 50%; left: 35%;">Select User To Start Chat</h3>
                         </div>
                         <div class="contact-profile" id="contact-profile" style="display: none;">
-                            <img src="images/icons/userIcon.png" alt="" />
-                            <strong><p class="mt-3" id="contact_name"></p></strong>
+                            <img src="images/icons/userIcon.png" alt="" id="chat_img" />
+                            <strong><p class="mt-3" id="contact_name" style="font-size: 15px; font-weight: bold;"></p></strong>
+                            <button class="btn btn-danger pull-right mt-3 mr-3" onclick="openReportPane($('#contact_name').text())">Report User</button>
                         </div>
                         <div class="messages" id="messages" style="display: none;">
                             <ul id="messages">
@@ -832,7 +855,7 @@
                     </div>
                 </div>
 
-            <section id="report_pane" style="width: 550px;padding: 20px;height: 500px;background: lightgray;border-radius: 20px; border: 2px solid rgb(85,31,31);  position: absolute; left: 20%; right: 20%; bottom: 20%; z-index: 100;" hidden>
+            <section id="report_pane" style="width: 550px;padding: 20px;height: 500px;background: lightgray;border-radius: 20px; border: 2px solid rgb(85,31,31);  position: absolute; left: 30%; right: 20%; bottom: 20%; z-index: 100;" hidden>
                 <button class="btn btn-primary" onclick="openReportPane()" style="width: 25px;height: 25px;border-radius: 12px;background: red;position: absolute;top: 5px;left: 5px;border: 2px; text-align: center;"></button>
                 <div class="col mt-4">
                     <div class="row">
@@ -851,11 +874,29 @@
         </main>
 
         <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
+        <script src="js/wrunner-native.js"></script>
 
         <!-- TODO: Add SDKs for Firebase products that you want to use
              https://firebase.google.com/docs/web/setup#available-libraries -->
         <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-storage.js"></script>
         <script>
+
+            const setting = {
+                roots: document.querySelector('.my-js-slider'),
+                type: 'range',
+                rangeValue: {
+                    minValue: 18,
+                    maxValue: 65,
+                },
+                limits: {
+                    minLimit: 18,
+                    maxLimit: 65
+                },
+                valueNoteDisplay: true,
+                step: 1,
+            };
+            const slider = wRunner(setting);
+
 
             // Your web app's Firebase configuration
             var firebaseConfig = {
@@ -947,9 +988,9 @@
             }
 
 
-
         </script>
 
+        <script src="js/multirange.js"></script>
         <script src="https://kit.fontawesome.com/2530adff57.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
         <script src="vendorv/animsition/js/animsition.min.js"></script>

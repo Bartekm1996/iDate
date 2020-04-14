@@ -24,12 +24,11 @@
                         <div class=flex-w>
                             <label class="flex-grow-1 h" for="last_name" style="float: left;"><h4>Last name</h4></label>
                             <a href="#" class="flex-grow-1 mt-3" id="user_edit_last_name" style="float: right;" data-id="user_last_name_input" onclick="editField(this)" hidden><i class="fas fa-pen"></i></a>
-                            <input class="hide-input" data-active="false" name="last_name" id="user_last_name_input"/>
+                            <input class="hide-input" data-active="false" name="last_name" id="user_last_name_input" readonly/>
                         </div>
                         <div class="flex-w">
                             <label class="flex-grow-1" for="email" style="float: left;"><h4>Email</h4></label>
-                            <a href="#" class="flex-grow-1 mt-3" id="user_edit_email" style="float: right;" data-id="user_email_input" onclick="editField(this)" hidden><i class="fas fa-pen"></i></a>
-                            <input type="text" class="hide-input" data-active="false" name="email" id="user_email_input" >
+                            <input type="text" class="hide-input" data-active="false" name="email" id="user_email_input" readonly/>
                         </div>
                     </div>
                     </div>

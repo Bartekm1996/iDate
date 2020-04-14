@@ -336,8 +336,8 @@ function getUserMatches(user_id) {
                         '</div>'+
                         '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
                         '<div class="d-flex justify-content-between">'+
-                        '<a href="#" class="btn btn-sm btn-info mr-4" onclick="openReportPane(\''+res.username+'\')">Report</a>'+
-                        '<a href="#" onclick="showProfile(\''+res.id+'\',\''+$('#username-header').attr('user-name')+'\',true)" class="btn btn-sm btn-default float-right">Profile</a>'+
+                        '<a href="#" class="btn btn-sm btn-info mr-4 ml-2" onclick="openReportPane(\''+res.username+'\')">Report</a>'+
+                        '<a href="#" onclick="showProfile(\''+res.id+'\',\''+$('#username-header').attr('user-name')+'\',true)" class="btn btn-sm btn-default float-right mr-2">Profile</a>'+
                         '</div>'+
                         '</div>'+
                         '<div class="card-body pt-0 pt-md-4">'+
@@ -345,12 +345,12 @@ function getUserMatches(user_id) {
                         '<div class="col">'+
                         '<div class="card-profile-stats d-flex justify-content-center mt-md-5">'+
                         '<div>'+
-                        '<span class="heading">'+res.smoker+'</span>'+
-                        '<span class="description">Smoker</span>'+
+                        '<span class="heading"><strong>'+res.smoker+'</strong></span>'+
+                        '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-smoking mr-2"></i>Smoker</strong></span>'+
                         '</div>'+
                         '<div>'+
-                        '<span class="heading">'+res.drinker+'</span>'+
-                        '<span class="description">Drinker</span>'+
+                        '<span class="heading"><strong>'+res.drinker+'</strong></span>'+
+                        '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-cocktail mr-2"></i>Drinker</strong></span>'+
                         '</div>'+
                         '</div>'+
                         '</div>'+
@@ -373,7 +373,6 @@ function getUserMatches(user_id) {
                         '</div>';
 
                     $('#searchResults').append(test);
-                    // let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
                 }
             }
         },
@@ -437,62 +436,7 @@ function getAllProfiles(smoker, drinker, age) {
                 for(let i = 0; i < obj.length; i++) {
 
                     let ress = JSON.parse(obj[i]);
-                    /*
-                let test = '<div >'+
-                 '<div class="row">' +
-                 '<div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">' +
-                 '<div class="card card-profile shadow">'+
-                 '<div class="row justify-content-center">'+
-                 '<div class="col-lg-3 order-lg-2">'+
-                 '<div class="card-profile-image">'+
-                 '<a href="#">'+
-                 '<img src="../images/icons/userIcon.png" class="rounded-circle">'+
-                 '</a>'+
-                 '</div>'+
-                 '</div>'+
-                 '</div>'+
-                 '<div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">'+
-                 '<div class="d-flex justify-content-between">'+
-                 '<a href="#" class="btn btn-sm btn-info mr-4">Connect</a>'+
-                 '<a href="#" class="btn btn-sm btn-default float-right">Message</a>'+
-                 '</div>'+
-                 '</div>'+
-                 '<div class="card-body pt-0 pt-md-4">'+
-                 '<div class="row">'+
-                 '<div class="col">'+
-                 '<div class="card-profile-stats d-flex justify-content-center mt-md-5">'+
-                 '<div>'+
-                 '<span class="heading">22</span>'+
-                 '<span class="description">Matches</span>'+
-                 '</div>'+
-                 '<div>'+
-                 '<span class="heading">10</span>'+
-                 '<span class="description">Photos</span>'+
-                 '</div>'+
-                 '<div>'+
-                 '<span class="heading">89</span>'+
-                 '<span class="description">Connections</span>'+
-                 '</div>'+
-                 '</div>'+
-                 '</div>'+
-                 '</div>'+
-                 '<div class="text-center">'+
-                 '<h3>'+obj[i].name+'<span class="font-weight-light">, '+obj[i].age+'</span> </h3>'+
-                 '<div class="h5 font-weight-300">'+
-                 '<i class="ni location_pin mr-2"></i>City, Country'+
-                 '</div>'+
-                 '<div class="h5 mt-4">'+
-                 '</div>'+
-                 '<div>'+
-                 '</div>'+
-                 '<hr class="my-4">'+
-                 '<p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music.</p>'+
-                 '</div>'+
-                 '</div>'+
-                 '</div>'+
-                 '</div>';
 
-                */
                 let test =
                  '<div style="width: 300px; height: 100%;">'+
                  '<div class="image-flip" >' +
@@ -508,8 +452,8 @@ function getAllProfiles(smoker, drinker, age) {
                  '</div>'+
                  '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
                  '<div class="d-flex justify-content-between">'+
-                 '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\''+ress.id+'\',\''+$('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.name + ' ' + ress.lastname) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>'+
-                 '<a href="#" onclick="showProfile(\''+ress.id+'\',\''+$('#username-header').attr('user-name')+'\',false)" class="btn btn-sm btn-default float-right">Profile</a>'+
+                 '<a href="#" class="btn btn-sm btn-info mr-4 ml-2" onclick="connect(\''+ress.id+'\',\''+$('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.name + ' ' + ress.lastname) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>'+
+                 '<a href="#" onclick="showProfile(\''+ress.id+'\',\''+$('#username-header').attr('user-name')+'\',false)" class="btn btn-sm btn-default float-right mr-2">Profile</a>'+
                  '</div>'+
                  '</div>'+
                  '<div class="card-body pt-0 pt-md-4">'+
@@ -517,12 +461,12 @@ function getAllProfiles(smoker, drinker, age) {
                  '<div class="col">'+
                  '<div class="card-profile-stats d-flex justify-content-center mt-md-5">'+
                  '<div>'+
-                 '<span class="heading">'+ress.smoker+'</span>'+
-                 '<span class="description">Smoker</span>'+
+                 '<span class="heading"><strong>'+ress.smoker+'</strong></span>'+
+                 '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-smoking mr-2"></i>Smoker</strong></span>'+
                  '</div>'+
                  '<div>'+
-                 '<span class="heading">'+ress.drinker+'</span>'+
-                 '<span class="description">Drinker</span>'+
+                 '<span class="heading"><strong>'+ress.drinker+'</strong></span>'+
+                 '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-cocktail mr-2"></i>Drinker</strong></span>'+
                  '</div>'+
                  '</div>'+
                  '</div>'+
@@ -544,38 +488,6 @@ function getAllProfiles(smoker, drinker, age) {
                     '</div>'+
                     '</div>';
 
-
-                /*
-
-                        '<div class="row active-with-click">' +
-                        '<div class="col-xs-12">' +
-                        '<article class="material-card Red">' +
-                        '<h2><span >'+obj[i].name+'</span><strong><i class="fas fa-birthday-cake"><i class="ml-3"></i>' +obj[i].age+ '</i><i class="fas fa-map-pin ml-3"><i class="ml-3">'  + (obj[i].location > 0 ?  obj[i].location : "Unknown" )   + '</i></i></strong></h2>'+
-                        '<div class="mc-content">' +
-                        '<div class="img-container">' +
-                        '<img  id="person_image" style="width: 100%; height: 100%;" src="https://source.unsplash.com/random">' +
-                        '</div>' +
-                        '<div class="mc-description">' +
-                        '<div class="modal-body">' +
-                        '<table id="popup_user_info">' +
-                        '<tr><td></td><td>Name</td><td id="person_fullname">'+obj[i].name+'</td>' +
-                        '<tr><td><td>Age :'+obj[i].age+'</td><td></td></td></tr>' +
-                        '<tr><td><td>Gender : '+obj[i].gender+'</td></td></tr>' +
-                        '</table>' +
-                        '</div>' +
-                        '</div></div>' +
-                        '<a class="mc-btn-action" onclick="epxand(this)">' +
-                        '<i class="fa fa-bars"></i>' +
-                        '</a>' +
-                        '<div class="mc-footer">'+
-                        '<button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i></button>'+
-                        '<button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button"><i class="fas fa-comments"></i></button>'+
-                        '</article></div></div></div>';
-
-                   // let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
-                    document.getElementById("searchResults").innerHTML += test;
-
-                 */
                     document.getElementById("searchResults").innerHTML += test;
 
                 }
@@ -590,38 +502,6 @@ function getAllProfiles(smoker, drinker, age) {
     });
 }
 
-/*
-<section class="container">
-
-    <div class="row active-with-click">
-        <div class="col-md-4 col-sm-6 col-xs-12">
-            <article class="material-card Red">
-                <h2>
-                    <span>Shahnur Alam</span>
-                    <strong>
-                        <i class="fa fa-fw fa-magic"></i>
-                        Qui Maleficus
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://scontent.fcgp2-1.fna.fbcdn.net/v/t1.0-9/64622894_10157744391564026_2243513133849116672_o.jpg?_nc_cat=103&_nc_ohc=3LqOQPKa3LAAQkhNs6IycYd_UEZkq70P1ODj1pCG2E1SdYBAURRB9C5Rg&_nc_ht=scontent.fcgp2-1.fna&oh=64f4a0143ea114c3583a7d0be3114df5&oe=5EAB9485">
-                    </div>
-                    <div class="mc-description">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-
-            </article>
-        </div>
-
-    </div>
-</section>
-
- */
 
 function connect(user_id, logged_in_id, src, name, username, matchingPane, searchpane) {
 
@@ -824,6 +704,7 @@ function openReportPane(name) {
 
 function profileFilterButton() {
 
+
     document.getElementById("searchResults").innerHTML = '';
 
     const request = {};
@@ -832,7 +713,6 @@ function profileFilterButton() {
 
     let smoker = $('#smoker_select_picker').val();
     let drinker = $('#drinker_select_picker').val();
-    let age = $('#ageSlider').val();
     let interest = $('#interest_box').children();
     let city = $('#city_select_picker').val();
     let ints = [];
@@ -853,15 +733,11 @@ function profileFilterButton() {
     }
 
 
-    console.log("Drinker " + drinker + " smoker " + smoker + " age " + age);
 
     request.filter_get_users = true;
     request.userId = $('#username-header').attr('user-id');
-
-    if($('#age_check_box').val() === true){
-        request.age = age;
-    }
-
+    request.minValue = slider.getValue().minValue;
+    request.maxValue = slider.getValue().maxValue;
     request.gender = $('#upro_img').attr('data-gender');
     request.seeking = $('#upro_img').attr('data-seeking');
 
@@ -946,22 +822,22 @@ function append(ress) {
         '</div>' +
         '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">' +
         '<div class="d-flex justify-content-between">' +
-        '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\'' + ress.id + '\',\'' + $('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.firstName + ' ' + ress.lastName) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>' +
-        '<a href="#" onclick="showProfile(\'' + ress.id + '\',\'' + $('#username-header').attr('user-name') + '\',false)" class="btn btn-sm btn-default float-right">Profile</a>' +
+        '<a href="#" class="btn btn-sm btn-info mr-4 ml-2" onclick="connect(\'' + ress.id + '\',\'' + $('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.firstName + ' ' + ress.lastName) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>' +
+        '<a href="#" onclick="showProfile(\'' + ress.id + '\',\'' + $('#username-header').attr('user-name') + '\',false)" class="btn btn-sm btn-default float-right mr-2">Profile</a>' +
         '</div>' +
         '</div>' +
         '<div class="card-body pt-0 pt-md-4">' +
         '<div class="row">' +
         '<div class="col">' +
         '<div class="card-profile-stats d-flex justify-content-center mt-md-5">' +
-        '<div>' +
-        '<span class="heading">' + ress.smoker + '</span>' +
-        '<span class="description">Smoker</span>' +
-        '</div>' +
-        '<div>' +
-        '<span class="heading">' + ress.dinker + '</span>' +
-        '<span class="description">Drinker</span>' +
-        '</div>' +
+        '<div>'+
+        '<span class="heading"><strong>'+ress.smoker+'</strong></span>'+
+        '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-smoking mr-2"></i>Smoker</strong></span>'+
+        '</div>'+
+        '<div>'+
+        '<span class="heading"><strong>'+ress.dinker+'</strong></span>'+
+        '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-cocktail mr-2"></i>Drinker</strong></span>'+
+        '</div>'+
         '</div>' +
         '</div>' +
         '</div>' +

@@ -248,13 +248,13 @@ else if(isset($_POST['resend_verification_email'])){
             if ($action === 'block') {
                 $sql = "update profile set blocked = '1' where userID = (select id from user where username = '{$username}');"."insert into blocked (blocked_user, blocked_date, blockee, reason) values ('{$username}', '{$date}', '{$sender_name}', '{$reason}');";
             } else if ($action === 'delete') {
-                $sqlDisableForeignKeys = "SET FOREIGN_KEY_CHECKS = 0";
+                $sqlDisableForeignKeys = "SET FOREIGN_KEY_CHECKS = 0;";
                 $sqlDeleteProfile = "DELETE FROM profile where userID = '{$username}';";
                 $sqlDeleteConnections = "DELETE FROM connections WHERE userID1 = '{$username}' OR userID2 = '{$username}';";
                 $sqlDeleteFromInterest = "DELETE FROM interests WHERE userID = '{$username}';";
                 $sqlDeleteUser = "DELETE FROM user WHERE id = '{$username}';";
                 $sqlEnableForeignKeyChecks = "SET FOREIGN_KEY_CHECKS = 1;";
-                $sqlQuery = $sqlDisableForeignKeys.$sqlDeleteFromInterest.$sqlDeleteConnections.$sqlDeleteProfile.$sqlDeleteUser;
+                $sql = $sqlDisableForeignKeys.$sqlDeleteFromInterest.$sqlDeleteConnections.$sqlDeleteProfile.$sqlDeleteUser.$sqlEnableForeignKeyChecks;
             }
 
 
@@ -266,8 +266,6 @@ else if(isset($_POST['resend_verification_email'])){
                             "" ,
                             SweetalertResponse::SUCCESS
                 );
-
-
             }
         }else{
             if($action === 'activate'){
@@ -403,14 +401,14 @@ else if(isset($_POST['resend_verification_email'])){
     } else {
 
         $userid = $conn->real_escape_string($_POST['userId']);
-        $sqlDisableForeignKeys = "SET FOREIGN_KEY_CHECKS = 0";
+        $sqlDisableForeignKeys = "SET FOREIGN_KEY_CHECKS = 0;";
         $sqlDeleteProfile = "DELETE FROM profile where userID = '{$userid}';";
         $sqlDeleteConnections = "DELETE FROM connections WHERE userID1 = '{$userid}' OR userID2 = '{$userid}';";
         $sqlDeleteFromInterest = "DELETE FROM interests WHERE userID = '{$userid}';";
-        $sqlDeleteUser = "DELETE FROM user WHERE id = '{$id}';";
-        $sqlEnableForeignKeyChecks = "SET FOREIGN_KEY_CHECKS = 0;";
+        $sqlDeleteUser = "DELETE FROM user WHERE id = '{$userid}';";
+        $sqlEnableForeignKeyChecks = "SET FOREIGN_KEY_CHECKS = 1;";
 
-        $sqlQuery = $sqlDisableForeignKeys.$sqlDeleteFromInterest.$sqlDeleteConnections.$sqlDeleteProfile.$sqlDeleteUser;
+        $sqlQuery = $sqlDisableForeignKeys.$sqlDeleteFromInterest.$sqlDeleteConnections.$sqlDeleteProfile.$sqlDeleteUser.$sqlEnableForeignKeyChecks;
         if($conn->multi_query($sqlQuery) === TRUE){
             $resp = new SweetalertResponse(1,
             'Closed Account Successfully',

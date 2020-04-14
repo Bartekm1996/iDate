@@ -22,7 +22,7 @@ function sendReportMessage(userReport) {
     if(userReport){
         request.userName = $('#user_report_name').val();
         request.userEmail = $('#user_report_email').val();
-        request.userDesc = ($('#user_report_username').val() + (" " + $('#reason_text').text()));
+        request.userDesc = ("User reported : " + $('#user_report_username').val() + ("\n" + $('#reason_text').val()));
         request.userReason = $('#report_select_reason').val();
     }else {
         request.userName = document.getElementById("txtUserName").value;

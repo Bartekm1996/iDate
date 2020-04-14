@@ -52,7 +52,7 @@ if(isset($_GET['userId'])){
         }
 
 
-        if ($result->getInsertedCount() !== null && $result->getInsertedCount() > 0) {
+        if ($result->getInsertedCount() !== null) {
             $resp = new SweetalertResponse(1,
                 'Message Sent',
                 "Message Sent",

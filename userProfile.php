@@ -38,16 +38,12 @@
                             <div class="col">
                                 <div class="card-profile-stats d-flex justify-content-center mt-md-5">
                                     <div>
-                                        <span class="heading">22</span>
-                                        <span class="description">Friends</span>
+                                        <span class="heading" id="smoker_header"><strong></strong></span>
+                                        <span class="description" style="font-size: 14px;"><strong><i class="fas fa-smoking mr-2"></i>Smoker</strong></span>
                                     </div>
                                     <div>
-                                        <span class="heading">10</span>
-                                        <span class="description">Photos</span>
-                                    </div>
-                                    <div>
-                                        <span class="heading">89</span>
-                                        <span class="description">Comments</span>
+                                        <span class="heading" id="drinker_header"><strong></strong></span>
+                                        <span class="description" style="font-size: 14px;"><strong><i class="fas fa-cocktail mr-2"></i>Drinker</strong></span>
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +69,7 @@
                                 </div>
                             </div>
                             <hr class="my-4">
-                            <button id="close_account_button" class="btn btn-danger" style="width: 100%;" onclick="closeAccount('\''+$('#upro_img').attr('data-id')+'\'')">Close Account</button>
+                            <button id="close_account_button" class="btn btn-danger" style="width: 100%;" onclick="closeAccount($('#upro_img').attr('data-id'))">Close Account</button>
                         </div>
                     </div>
                 </div>
