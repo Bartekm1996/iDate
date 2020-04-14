@@ -3,7 +3,6 @@
 function hiddeSupport() {
     $('#contact_form').attr('hidden', true);
 }
-
 function getDate() {
     let m = new Date();
     return m.getUTCFullYear() + "-" +

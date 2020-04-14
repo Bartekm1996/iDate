@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="css/support.css">
+<script src="js/support.js"></script>
 
 <div id="contact_form" class="container contact-form" hidden>
             <button class="close-button" onclick="hiddeSupport()"><i class="zmdi zmdi-close"></i></button>
