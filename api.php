@@ -440,39 +440,75 @@ else if(isset($_POST['upload_files_api'])) {
 
         if(isset($_POST['interests'])){
             if ($sex === $seeking) {
-                $sql = " SELECT * FROM (SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
+                $sql = "SELECT * FROM(SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
                  ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker,
-                 ress.userId, ress.town, aI.name FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age,
+                 ress.userId, ress.town, aI.name FROM(SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
+                 ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker,
+                 ress.userId, ress.town FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age, user.userName, user.email,
                  profile.photoId, profile.location, profile.Description,
-                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender, user.userName, user.email
-                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking = '{$seeking}' AND res.gender = '{$sex}')
-                 as res INNER JOIN town on res.location = town.id) as ress INNER JOIN interests on interests.userID = ress.userId INNER JOIN availableInterests aI on interests.interestID = aI.id) as ress";
+                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
+                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> 66) as res WHERE res.Seeking = '{$seeking}' AND res.gender = '{$sex}')
+                 as res INNER JOIN town on res.location = town.id) as ress WHERE ress.userId not in (select user.id from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
+                 from connections as c1, connections as c2
+                 where (c1.userID1 = c2.userID2 AND
+                 c2.userID1 = c1.userID2) AND
+                 c1.userID2 = '{$userId}')as results
+                 inner join profile on results.userID1 = profile.userID
+                 inner join user on results.userID1 = user.id) AND ress.userId not in (SELECT userID1 FROM
+                 connections WHERE userID2 = '{$userId}') GROUP BY ress.userId) as ress INNER JOIN interests on
+                 interests.userID = ress.userId INNER JOIN availableInterests aI on interests.interestID = aI.id) as ress";
             } else {
-                $sql = "SELECT * FROM (SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
+                $sql = "SELECT * FROM(SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
                  ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker,
-                 ress.userId, ress.town, aI.name FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age,
+                 ress.userId, ress.town, aI.name FROM(SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
+                 ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker,
+                 ress.userId, ress.town FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age, user.userName, user.email,
                  profile.photoId, profile.location, profile.Description,
-                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender, user.userName, user.email
-                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking <> '{$seeking}' AND res.gender <> '{$sex}')
-                 as res INNER JOIN town on res.location = town.id) as ress INNER JOIN interests on interests.userID = ress.userId INNER JOIN availableInterests aI on interests.interestID = aI.id) as ress";
+                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
+                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> 66) as res WHERE res.Seeking <> '{$seeking}' AND res.gender <> '{$sex}')
+                 as res INNER JOIN town on res.location = town.id) as ress WHERE ress.userId not in (select user.id from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
+                 from connections as c1, connections as c2
+                 where (c1.userID1 = c2.userID2 AND
+                 c2.userID1 = c1.userID2) AND
+                 c1.userID2 = '{$userId}')as results
+                 inner join profile on results.userID1 = profile.userID
+                 inner join user on results.userID1 = user.id) AND ress.userId not in (SELECT userID1 FROM
+                 connections WHERE userID2 = '{$userId}') GROUP BY ress.userId) as ress INNER JOIN interests on
+                 interests.userID = ress.userId INNER JOIN availableInterests aI on interests.interestID = aI.id) as ress";
             }
         }else {
             if ($sex === $seeking) {
-                $sql = "SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
-                 ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker, 
-                 ress.userId, ress.town FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age,
+                $sql = " SELECT * FROM(SELECT  ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
+                 ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker,
+                 ress.userId, ress.town FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age, user.userName, user.email,
                  profile.photoId, profile.location, profile.Description,
-                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender, user.userName, user.email
-                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking = '{$seeking}' AND res.gender = '{$sex}')
-                 as res INNER JOIN town on res.location = town.id) as ress";
+                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
+                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> 66) as res WHERE res.Seeking = '{$seeking}' AND res.gender = '{$sex}')
+                 as res INNER JOIN town on res.location = town.id) as ress WHERE ress.userId not in (select user.id from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
+                 from connections as c1, connections as c2
+                 where (c1.userID1 = c2.userID2 AND
+                 c2.userID1 = c1.userID2) AND
+                 c1.userID2 = '{$userId}')as results
+                 inner join profile on results.userID1 = profile.userID
+                 inner join user on results.userID1 = user.id) AND ress.userId not in (SELECT userID1 FROM
+                 connections WHERE userID2 = '{$userId}') GROUP BY ress.userId) as ress";
+
+
             } else {
-                $sql = "SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
-                 ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker, 
-                 ress.userId, ress.town FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age,
+                $sql = " SELECT * FROM(SELECT  ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
+                 ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker,
+                 ress.userId, ress.town FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age, user.userName, user.email,
                  profile.photoId, profile.location, profile.Description,
-                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender, user.userName, user.email
-                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking <> '{$seeking}' AND res.gender <> '{$sex}')
-                 as res INNER JOIN town on res.location = town.id) as ress";
+                 profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
+                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> 66) as res WHERE res.Seeking <> '{$seeking}' AND res.gender <> '{$sex}')
+                 as res INNER JOIN town on res.location = town.id) as ress WHERE ress.userId not in (select user.id from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
+                 from connections as c1, connections as c2
+                 where (c1.userID1 = c2.userID2 AND
+                 c2.userID1 = c1.userID2) AND
+                 c1.userID2 = '{$userId}')as results
+                 inner join profile on results.userID1 = profile.userID
+                 inner join user on results.userID1 = user.id) AND ress.userId not in (SELECT userID1 FROM
+                 connections WHERE userID2 = '{$userId}') GROUP BY ress.userId) as ress";
             }
         }
 
