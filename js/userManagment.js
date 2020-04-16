@@ -568,7 +568,7 @@ function getUserData(verified) {
                         node += '<a class="dropdown-item" href="#" onclick="getBlockedInfo(\'' + def.userName + '\')"><i class="fas fa-user-lock mr-2"></i>Block Info</a>'+
                                 '<a class="dropdown-item" href="#" onclick="unblockUser(\'' + def.userName + '\',\''+def.email+'\')"><i class="fas fa-user-lock mr-2"></i>Unblock</a>';
                     } else node += '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\'' + def.userName + '\',\'' + def.name + '\',\'' + def.email + '\',\'' + null + '\')"><i class="fas fa-user-lock mr-2"></i>Block</a>'+
-                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\'' + def.userName + '\',\'' + def.name + '\',\'' + def.email + '\',' + def.userId + ')"><i class="fas fa-user-lock mr-2"></i>Delete</a>';
+                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\'' + def.userName + '\',\'' + def.name + '\',\'' + def.email + '\',\'' + def.userId + '\')"><i class="fas fa-user-lock mr-2"></i>Delete</a>';
 
                     if (parseInt(def.admin) === 0) {
                         node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + def.userName + '\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';

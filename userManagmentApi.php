@@ -19,7 +19,23 @@ if(isset($_POST['get_all_users'])){
                 (SELECT a.id as uId, a.userName, a.firstname, a.lastname, a.email, a.registered,a.admin, b.userID, b.Blocked, b.photoId,a.gender, b.location
                 FROM user as a LEFT JOIN(select userID, blocked,photoId, location from profile group by userID) as b on a.id = b.userID) as users INNER JOIN town on town.id = users.location;";
 
+
+        $sqlQuery = "SELECT a.id as uId, a.userName, a.firstname, a.lastname, a.email, b.Blocked, a.registered, a.admin,b.photoId,a.gender, b.location
+                FROM user as a LEFT JOIN(select userID, blocked,photoId, location from profile group by userID) as b on a.id = b.userID WHERE a.id NOT IN
+                (SELECT uId FROM (SELECT uId FROM
+                (SELECT a.id as uId, a.userName, a.firstname, a.lastname, a.email, a.registered,a.admin, b.userID, b.Blocked, b.photoId,a.gender, b.location
+                FROM user as a LEFT JOIN(select userID, blocked,photoId, location from profile group by userID) as b on a.id = b.userID) as users INNER JOIN town on town.id = users.location)as ress);";
         $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_row()) {
+                $user = new UserManagment($row[0], $row[1], $row[2]." ".$row[3], $row[4], $row[5],
+                    $row[6], $row[7], $row[8], $row[9], $row[10]);
+                array_push($res, $user->jsonSerialize());
+            }
+        }
+
+
+        $result = $conn->query($sqlQuery);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_row()) {
                 $user = new UserManagment($row[0], $row[1], $row[2]." ".$row[3], $row[4], $row[5],
