@@ -460,7 +460,7 @@ else if(isset($_POST['upload_files_api'])) {
                  ress.userId, ress.town FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age, user.userName, user.email,
                  profile.photoId, profile.location, profile.Description,
                  profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
-                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking = '{$seeking}' AND res.gender <> '{$sex}')
+                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking <> '{$seeking}' AND res.gender = '{$sex}')
                  as res INNER JOIN town on res.location = town.id) as ress WHERE ress.userId not in (select user.id from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
                  from connections as c1, connections as c2
                  where (c1.userID1 = c2.userID2 AND
@@ -495,7 +495,7 @@ else if(isset($_POST['upload_files_api'])) {
                  ress.userId, ress.town FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age, user.userName, user.email,
                  profile.photoId, profile.location, profile.Description,
                  profile.Smoker, profile.Drinker, profile.Seeking, user.lastname, user.gender
-                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking = '{$seeking}' AND res.gender <> '{$sex}')
+                 FROM user INNER JOIN profile on user.id = profile.userID WHERE user.id <> '{$userId}') as res WHERE res.Seeking <> '{$seeking}' AND res.gender = '{$sex}')
                  as res INNER JOIN town on res.location = town.id) as ress WHERE ress.userId not in (select user.id from (select c1.id, c1.userID1, c1.userID2, c1.connectionDate
                  from connections as c1, connections as c2
                  where (c1.userID1 = c2.userID2 AND
