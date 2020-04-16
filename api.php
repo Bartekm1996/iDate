@@ -439,7 +439,7 @@ else if(isset($_POST['upload_files_api'])) {
         $userId = $conn->real_escape_string($_POST['userId']);
 
         if(isset($_POST['interests'])){
-            if ($sex === $seeking) {
+            if (strtolower($sex) === strtolower($seeking)) {
                 $sql = "SELECT * FROM(SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
                  ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker,
                  ress.userId, ress.town, aI.name FROM(SELECT ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
@@ -477,7 +477,7 @@ else if(isset($_POST['upload_files_api'])) {
                  interests.userID = ress.userId INNER JOIN availableInterests aI on interests.interestID = aI.id) as ress";
             }
         }else {
-            if ($sex === $seeking) {
+            if (strtolower($sex) === strtolower($seeking)) {
                 $sql = " SELECT * FROM(SELECT  ress.userName, ress.firstname, ress.lastname, ress.email, ress.Description, ress.age,
                  ress.Seeking, ress.photoId, ress.gender, ress.Smoker, ress.Drinker,
                  ress.userId, ress.town FROM (SELECT * FROM (SELECT * FROM (SELECT user.id as userId, user.firstname, user.age, user.userName, user.email,
