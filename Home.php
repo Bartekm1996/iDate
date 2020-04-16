@@ -399,6 +399,7 @@
                     console.log(response);
                     if(response.length > 0) {
                         let res = response.substring(2).slice(0, -1).split(",");
+                        console.log(res);
                         nextMatch(res[0]);
                         $('#person_fullname').attr('data-matches', res);
                         $('#person_fullname').attr('data-index', 0);
@@ -421,21 +422,23 @@
 
         function nextMatch(index) {
 
-
             const request = {};
             request.get_user_profile_api = true;
 
             if($('#person_fullname').attr('data-index') !== undefined || index === null){
                 let tmp = $('#person_fullname').attr('data-matches').split(',');
+                console.log(tmp);
                 let tmpIndex = parseInt($('#person_fullname').attr('data-index'))+1;
-                if(tmpIndex > tmp.length-1){
+                if(tmpIndex > tmp.length - 2){
                     tmpIndex = 0;
                 }
                 request.userId = tmp[tmpIndex];
-                $('#person_fullname').attr('data-index',tmpIndex+1)
+                $('#person_fullname').attr('data-index',tmpIndex)
             }else{
                 request.userId = index;
             }
+
+            console.log("Index " + request.userId);
 
 
             $.ajax({

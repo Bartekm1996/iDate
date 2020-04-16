@@ -350,18 +350,13 @@ else if(isset($_POST['upload_files_api'])) {
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
-                $resp = $result->fetch_row()[0];
-                $user_interest = $conn->real_escape_string($resp);
-                if ($result->num_rows > 0) {
-                    while ($row = mysqli_fetch_row($result)) {
+                while ($row = mysqli_fetch_row($result)) {
                         $res = $res . $row[0] . ",";
-                    }
-                    $res = $res . "]";
-
                 }
-                $_SESSION['possible_matches'] = $res;
-                echo $res;
+                $res = $res . "]";
             }
+            $_SESSION['possible_matches'] = $res;
+            echo $res;
         }
 }else if(isset($_POST['get_user_profile_api'])){
     $user_id = $conn->real_escape_string($_POST['userId']);
