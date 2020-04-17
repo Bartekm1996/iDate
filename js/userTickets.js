@@ -28,13 +28,14 @@ function getAllTickets(status) {
 
 
             let index = 0;
-
+            let test = "";
             let unqiues = [];
 
             for(let i = 0; i < res.length; i++) {
 
                 index = parseInt(res[i].number);
 
+                console.log(res[i].reason);
                 switch (res[i].reason) {
                     case "Cannot Login": {
                         reason = "cannot_login";
@@ -48,18 +49,31 @@ function getAllTickets(status) {
                         reason = "other";
                         break;
                     }
+                    case "Continous Stalking":{
+                        reason = "continous_stalking";
+                        break;
+                    }
+                    case "Inapropiate Behaviour":{
+                        reason = "inapropiate_behaviour";
+                        break;
+                    }
+                    case "Abusive Messages":{
+                        reason = "abusive_messages";
+                        break;
+                    }
                 }
 
                 let id = "#response_" + i;
 
+
                 if (res[i].status === status) {
 
                     if (!unqiues.includes(index)) {
-                        $('#complaints').append(
-                            '<tr class="clickable-row" data-number="' + res[i].number + '" data-query="' + index + '" onclick="expand(\'#collapseme_' + i + '\')" data-status="' + reason + '">' +
+
+                             test += '<tr class="clickable-row" data-number="' + res[i].number + '" data-query="' + index + '" onclick="expand(\'#collapseme_' + i + '\')" data-status="' + reason + '">' +
                             '<td>' +
                             '<div class="ckbox">' +
-                            '<input type="checkbox" id="checkbox5">' +
+                            '<input type="checkbox" id="checkbox5" >' +
                             '<label for="checkbox5"></label>' +
                             '</div>' +
                             '</td>' +
@@ -78,9 +92,12 @@ function getAllTickets(status) {
                             '<td>' +
                             '<div class="btn-group" style="display: block; height: 50px;">' +
                             '<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>' +
-                            '<div class="dropdown-menu" id="drop-menu-' + i + '">' +
-                            '<a class="dropdown-item" href="#" onclick="updateTicket(\'' + res[i].number + '\',\'Closed\')"><i class="fas fa-times-circle"></i> Mark as Closed</a>' +
-                            '<a class="dropdown-item" href="#" onclick="deleteTicket(\'' + res[i].number + '\')"><i class="fas fa-trash-alt"></i> Delete Ticket</a>' +
+                            '<div class="dropdown-menu" id="drop-menu-' + i + '">';
+
+                            if(res[i].status !== "Closed") {
+                                test += '<a class="dropdown-item" href="#" onclick="updateTicket(\'' + res[i].number + '\',\'Closed\')"><i class="fas fa-times-circle"></i> Mark as Closed</a>';
+                            }
+                                test += '<a class="dropdown-item" href="#" onclick="deleteTicket(\'' + res[i].number + '\')"><i class="fas fa-trash-alt"></i> Delete Ticket</a>' +
                             '</div>' +
                             '</div>' +
                             '</td>' +
@@ -92,14 +109,18 @@ function getAllTickets(status) {
                             '<div>' +
                             '<div id="message_pane' + i + '">' +
                             '</div>' +
-                            '   <textarea class="form-control counted" name="message" placeholder="Reply to user" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
+                            '   <textarea class="form-control counted" name="message" placeholder="Add Notes" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
                             '   <h6 class="pull-right" id="counter">320 characters remaining</h6>' +
-                            '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + $(id).val() + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\')" type="submit">Reply</button>' +
+                            '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + i + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\',\'' + res[i].email + '\')" type="submit">Reply</button>' +
                             '</div>' +
                             '</div>' +
                             '</td>' +
-                            '</tr>'
-                        );
+                            '</tr>';
+
+                        $('#complaints').append(test);
+
+                        test = "";
+
 
 
                         let menu_id = "#drop-menu-" + i;
@@ -120,7 +141,7 @@ function getAllTickets(status) {
                                 '<div style="margin-top: 20px;">' +
                                 '   <p><span>' + res[j].description + '</span></p>' +
                                 '<hr>' +
-                                '<span class="media-meta pull-right" style="margin-bottom: 20px;">' + res[j].date + '</span>' +
+                                '<span class="media-meta" style="margin-bottom: 20px;">' + res[j].date + '</span>' +
                                 '</div> '
                             );
                         }
@@ -150,6 +171,8 @@ function deleteTicket(number) {
         url: "userManagmentApi.php",
         data: request,
         success: function (response) {
+
+            let res = JSON.parse(response);
             console.log('success:' + JSON.stringify(response));
             $('#complaints tr').each(function (index, tr) {
                 if(parseInt($(this).attr('data-number')) === number){
@@ -157,7 +180,9 @@ function deleteTicket(number) {
                 }
             });
 
-            Swal.fire(response.title, response.message, response.type);
+            Swal.fire(res.title, res.message, res.type);
+            fillTicketsNumbers();
+            getAllTickets('Opened');
 
         },
         failure: function (response) {
@@ -174,6 +199,8 @@ function updateTicket(number, status) {
     const request = {};
     request.updateTicket = true;
     request.number = parseInt(number);
+
+    console.log(number);
 
     switch (status) {
         case "Archived":{
@@ -196,13 +223,16 @@ function updateTicket(number, status) {
         data: request,
         success: function (response) {
             console.log('success:' + JSON.stringify(response));
+
             $('#complaints tr').each(function (index, tr) {
                 if(parseInt($(this).attr('data-number')) === number){
                     $('#complaints').removeChild(tr);
                 }
             });
 
-            Swal.fire(response.title, response.message, response.type);
+            fillTicketsNumbers();
+            let res = JSON.parse(response);
+            Swal.fire(res.title, res.message, res.type);
 
         },
         failure: function (response) {
@@ -215,18 +245,21 @@ function updateTicket(number, status) {
 
 }
 
-function sendMessage(id, message, username,number, reason) {
+
+function sendMessage(id, message, username,number, reason, email) {
+
+    let msg = '#response_' + message;
     const request = {};
     request.send_query_message = true;
-    request.userDesc = message;
+    request.userDesc = $(msg).val();
     request.userName = username;
-    request.userEmail = username+'@idate.ie';
+    request.userEmail = username + '@idate.ie';
     request.number = number;
     request.userReason = reason;
     request.date = getDate();
     request.archived = false;
 
-    let message_id = "#"+id;
+    let message_id = "#" + id;
 
     $.ajax({
         method: "POST",
@@ -237,14 +270,14 @@ function sendMessage(id, message, username,number, reason) {
             $(message_id).append(
                 '<div>' +
                 '<div style="display: inline-block;" class="pull-right">' +
-                '<h4 class="title" style="margin-bottom: 20px;" ">'+username+'</h4>' +
+                '<h4 class="title" style="margin-bottom: 20px;" ">' + username + '</h4>' +
                 '<img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo pull-right">' +
                 '</div>' +
                 '<div style="display: inline-block; margin-top: 20px;">' +
-                '   <p><span>'+message+'</span></p>' +
-                '<hr>'+
-                '<span class="media-meta pull-left" style="margin-bottom: 20px;">'+request.date+'</span>'+
-                '</div> '+
+                '   <p><span>' + $(msg).val() + '</span></p>' +
+                '<hr>' +
+                '<span class="media-meta pull-left" style="margin-bottom: 20px;">' + request.date + '</span>' +
+                '</div> ' +
                 '</div>'
             );
         },
@@ -255,7 +288,6 @@ function sendMessage(id, message, username,number, reason) {
             console.log('error:' + JSON.stringify(response));
         }
     });
-
 
 }
 
@@ -301,83 +333,6 @@ $(document).ready(function () {
 
 
 
-(function($) {
 
-    $.fn.charCounter = function (max, settings) {
-        max = max || 100;
-        settings = $.extend({
-            container: "<span></span>",
-            classname: "charcounter",
-            format: "(%1 characters remaining)",
-            pulse: true,
-            delay: 0
-        }, settings);
-        var p, timeout;
-
-        function count(el, container) {
-            el = $(el);
-            if (el.val().length > max) {
-                el.val(el.val().substring(0, max));
-                if (settings.pulse && !p) {
-                    pulse(container, true);
-                };
-            };
-            if (settings.delay > 0) {
-                if (timeout) {
-                    window.clearTimeout(timeout);
-                }
-                timeout = window.setTimeout(function () {
-                    container.html(settings.format.replace(/%1/, (max - el.val().length)));
-                }, settings.delay);
-            } else {
-                container.html(settings.format.replace(/%1/, (max - el.val().length)));
-            }
-        };
-
-        function pulse(el, again) {
-            if (p) {
-                window.clearTimeout(p);
-                p = null;
-            };
-            el.animate({ opacity: 0.1 }, 100, function () {
-                $(this).animate({ opacity: 1.0 }, 100);
-            });
-            if (again) {
-                p = window.setTimeout(function () { pulse(el) }, 200);
-            };
-        };
-
-        return this.each(function () {
-            var container;
-            if (!settings.container.match(/^<.+>$/)) {
-                // use existing element to hold counter message
-                container = $(settings.container);
-            } else {
-                // append element to hold counter message (clean up old element first)
-                $(this).next("." + settings.classname).remove();
-                container = $(settings.container)
-                    .insertAfter(this)
-                    .addClass(settings.classname);
-            }
-            $(this)
-                .unbind(".charCounter")
-                .bind("keydown.charCounter", function () { count(this, container); })
-                .bind("keypress.charCounter", function () { count(this, container); })
-                .bind("keyup.charCounter", function () { count(this, container); })
-                .bind("focus.charCounter", function () { count(this, container); })
-                .bind("mouseover.charCounter", function () { count(this, container); })
-                .bind("mouseout.charCounter", function () { count(this, container); })
-                .bind("paste.charCounter", function () {
-                    var me = this;
-                    setTimeout(function () { count(me, container); }, 10);
-                });
-            if (this.addEventListener) {
-                this.addEventListener('input', function () { count(this, container); }, false);
-            };
-            count(this, container);
-        });
-    };
-
-})(jQuery);
 
 

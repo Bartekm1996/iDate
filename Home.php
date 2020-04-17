@@ -20,8 +20,12 @@
     <link rel="stylesheet" href="css/usermatch.css">
     <link rel="stylesheet" href="css/cardV2.css">
     <link rel="stylesheet" href="css/userProfile.css"/>
-
+    <link rel="stylesheet" href="css/multirange.css"/>
     <link rel="stylesheet" type="text/css" href="css/profileCard.css">
+    <link rel="stylesheet" type="text/css" href="css/wrunner-default-theme.css">
+
+    <!-- Compiled and minified CSS -->
+    <script src="js/support.js"></script>
     <script src="js/userProfile.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
@@ -31,6 +35,8 @@
 
 
     <script>
+
+        let interval  =0;
 
         var userID = '<?php echo $_SESSION['userid']; ?>';
 
@@ -77,14 +83,40 @@
 
        
             //console.log("UD " + <?php echo $userid?>);
-            $('#username-header').text('<?php echo $firstname?>');
+            $('#username-header').text('<?php echo $username ?>');
             $('#username-header').attr('user-id', <?php echo $userid ?>);
             $('#username-header').attr('user-name', "<?php echo $username ?>");
-            fillTicketsNumbers();
-            fillMembersNumbers();
-            loadHistoryTable($('#username-header').attr('user-name'));
+            $('#username-header').attr('user_name', "<? $_SESSION['user_name']?>")
+            $('#username-header').attr('user_email', "<?php $_SESSION['email'] ?>")
+
+
             showProfile( $('#username-header').attr('user-name'), null, false);
+            loadMyProfile();
+            loadHistoryTable($('#username-header').attr('user-name'));
+            fillMembersNumbers();
+            fillTicketsNumbers();
+
+            interval = setInterval(function() {
+                loadConversations();
+            }, 3000);
         };
+
+        function showUserChar(user) {
+            $('.filter').attr('hidden', true);
+            $('#placeholder').css({"display": 'none'});
+            $('.contact-profile').css({"display": 'block'});
+            $('.messages').css({"display": 'block'});
+            $('.message-input').css({"display": 'block'});
+            showChat();
+            $('#contact_name').text(user);
+
+        }
+
+
+        function hideChat() {
+            $('.filter').attr('hidden', true);
+            $('#frame').prop('hidden', true);
+        }
 
         //let interval = setInterval(() => getMessage(),2000);
 
@@ -134,6 +166,8 @@
 
         });
 
+
+
         function search() {
 
         }
@@ -158,10 +192,10 @@
             }).then((result) => {
 
                 if (result.value) {
-
-                var request = {};
-                request.logout_api = true;
-                sendDataTest(request, 'api.php');
+                clearInterval(interval);
+                    let request = {};
+                    request.logout_api = true;
+                    sendDataTest(request, 'api.php');
 
                     Swal.mixin({
                         toast: true,
@@ -176,7 +210,7 @@
                     }).fire({
                         icon: 'success',
                         title: 'Logged out successfully'
-                    })
+                    });
 
                     //clearInterval(interval);
                 window.location.href = "index.php";
@@ -208,24 +242,55 @@
 
             $('#contact_name').text($('ul#contactsList').find('li.active').attr("data-username"));
 
+            getPicture($(elem).attr('data-username'));
             getMessage()
 
         };
 
 
+        function getPicture(username) {
+            const request = {};
+            request.get_picture = true;
+            request.username = username;
+
+            $.ajax({
+                method: "POST",
+                url: "api.php",
+                data: request,
+                success: function (response) {
+                    document.getElementById('chat_img').src = response;
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+
+        }
+
         function getMessage(){
+            clearInterval(interval);
+            interval = setInterval(function() {
+                getMessage();
+                loadConversations();
+            }, 2000);
 
             $('#placeholder').css({"display": 'none'});
             $('.contact-profile').css({"display": 'block'});
             $('.messages').css({"display": 'block'});
             $('.message-input').css({"display": 'block'});
 
-            let id = $('#username-header').attr('user-id');
+            let id = $('#username-header').attr('user-name');
 
             console.log("id " + id);
             const request = {};
-            request.messages = $('ul#contactsList').find('li.active').attr("data-id");
+            request.messages = ($('ul#contactsList').find('li.active').attr("data-id") === undefined ?   0 : $('ul#contactsList').find('li.active').attr("data-id"));
             request.userId = id;
+
+
+            console.log(request.messages + "  " + request.userId);
             $.ajax({
                 method: "GET",
                 url: "Mongo.php",
@@ -233,29 +298,31 @@
                 success: function (response) {
                     console.log('success ' + response + " length ");
                     let res = JSON.parse(response);
+                    console.log("Message " + res[0]._conversations[request.messages].messages[0].message);
+
+                        let length = 0;
+                        if ($('.messages ul').attr('data-length') !== undefined || $('.messages ul').attr('data-length') > 0) {
+                            $('.messages ul').attr('data-length', $('.messages ul li').length);
+                            length = $('.messages ul').attr('data-length');
+                        } else {
+                            length = $('.messages ul li').length;
+                        }
+
+                        console.log("Length " + res[0]._conversations[request.messages].messages[0].username + " " + length);
+
+                            for (let i = length; i < res[0]._conversations[request.messages].messages.length; i++) {
+                                $('<li>' +
+                                    '<div class="' + (res[0]._conversations[request.messages].messages[i].username === id ? "outgoing_msg" : "incoming_msg") + '">' +
+                                    '<div class="' + (res[0]._conversations[request.messages].messages[i].username === id ? "outgoing_msg_img" : "incoming_msg_img") + '"> <img src="" alt="" /></div>' +
+                                    '<div class="' + (res[0]._conversations[request.messages].messages[i].username === id ? "sent_msg" : "received_msg") + '">' +
+                                    '<p>' + res[0]._conversations[request.messages].messages[i].message + '</p>' +
+                                    '<span class="time_date">' + res[0]._conversations[request.messages].messages[i].timestamp + '</span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</li>').appendTo($('.messages ul'));
+                            }
 
 
-
-                    let length = 0;
-                    if($('.messages ul').attr('data-length') !== undefined){
-                        $('.messages ul').attr('data-length', $('.messages ul li').length);
-                        length =  $('.messages ul').attr('data-length');
-                    }else{
-                        length = $('.messages ul li').length;
-                    }
-
-                    console.log(length);
-                    for (let i = length; i < res.length; i++) {
-                        $(  '<li>' +
-                            '<div class="' + (res['messages'][i]['username'] === id ? "outgoing_msg" : "incoming_msg") + '">' +
-                            '<div class="' + (res['messages'][i]['username'] === id ? "outgoing_msg_img" : "incoming_msg_img") + '"> <img src="" alt="" /></div>' +
-                            '<div class="' + (res['messages'][i]['username'] === id ? "sent_msg" : "received_msg") + '">' +
-                            '<p>' + res['messages'][i]["message"] + '</p>' +
-                            '<span class="time_date">' + res['messages'][i]["timestamp"] + '</span>' +
-                            '</div>' +
-                            '</div>' +
-                            '</li>').appendTo($('.messages ul'));
-                    }
 
                 },
                 failure: function (response) {
@@ -271,7 +338,6 @@
 
         async function loadConversations(){
 
-            showChat();
             $('#contactsList').empty();
 
             const request = {};
@@ -284,20 +350,20 @@
                 success: function (response) {
 
                     let res = JSON.parse(response);
-                    console.log(response);
-                    console.log('success ' + response + " length " + res["contacts"].length);
+                    console.log(res);
 
-                    for (let i = 0; i < res["contacts"].length; i++) {
+                    for (let i = 0; i < res[0]._conversations.length; i++) {
 
-                        console.log(res['contacts'][i]["username"]);
 
-                        $('<li class="contact" onclick="toggleClass(this)" data-id='+res['contacts'][i]["id"]+' data-username='+res['contacts'][i]["username"]+'>'
+                        $('<li class="contact" onclick="toggleClass(this)" data-id='+i+' data-username='+res[0]._conversations[i].username+'>'
                             + '<div class="wrap">'
                             + '<img src="https://source.unsplash.com/random" alt="">'
                             + '<div class="meta">'
-                            + '<p class="name">' +res['contacts'][i]["username"]+'</p>'
-                            + '<p class="preview">'+res['contacts'][i]["message"]+'</p>'
-                            + '</div></div></li>').appendTo($('#contactsList'))
+                            + '<p class="name text-white" style="font-size: 13px; font-weight: bold;"><strong>' +res[0]._conversations[i].username+'</strong></p>'
+                            + '<p class="preview text-white">'+res[0]._conversations[i].messages[res[0]._conversations[i].messages.length-1].message+'</p>'
+                            + '</div></div></li>').appendTo($('#contactsList'));
+
+                        console.log("Cse");
 
                     }
                 },
@@ -310,64 +376,6 @@
             });
         }
 
-        async function changeProfilePicture() {
-            const {value: file} = await Swal.fire({
-                title: 'Select Profile image',
-                input: 'file',
-                inputAttributes: {
-                    'accept': 'image/jpeg',
-                    'aria-label': 'Upload your profile picture'
-                },
-                showCancelButton: true,
-                showLoaderOnConfirm: true,
-                preConfirm: (file) => {
-                    if (Math.ceil(file.size / 1000) > 38) {
-                        Swal.showValidationMessage(
-                            `Picture cannot be bigger than 38KB`
-                        );
-                    }
-                }
-            });
-
-
-            if (file) {
-
-                const reader = new FileReader();
-                const request = {};
-
-
-                reader.onload = (e) => {
-                    Swal.fire({
-                        title: 'Your Selected Picture',
-                        imageUrl: e.target.result,
-                        imageAlt: 'The Selected Picture'
-                    });
-
-                    console.log(e.target.result);
-                    request.userId = '170';
-                    request.photoUrl = e.target.result;
-
-                    $.ajax({
-                        method: "POST",
-                        url: "Picture.php",
-                        data: request,
-                        success: function (response) {
-                            Swal.fire(response.title, response.message, response.type);
-                            console.log('success' + JSON.stringify(response));
-                            document.getElementById('profilePicture').src = response.img;
-                        },
-                        failure: function (response) {
-                            console.log('failure:' + JSON.stringify(response));
-                        },
-                        error: function (response) {
-                            console.log('error:' + JSON.stringify(response));
-                        }
-                    });
-                };
-
-                reader.readAsDataURL(file);
-            }
-        }
 
 
 
@@ -380,7 +388,7 @@
         function loadMatches(){
 
             const request = {};
-            request.get_matches_api = "yes";
+            request.get_matches_api = true;
             request.userId = $('#username-header').attr('user-id');
 
             $.ajax({
@@ -388,11 +396,19 @@
                 url: "api.php",
                 data: request,
                 success: function (response) {
-                    let res = response.substring(2).slice(0,-1).split(",");
-                    console.log('success ' + res[1]);
-                    nextMatch(res[0]);
-                    $('#person_fullname').attr('data-matches', res);
-                    $('#person_fullname').attr('data-index', 0)
+                    console.log(response);
+                    if(response.length > 0) {
+                        let res = response.substring(2).slice(0, -1).split(",");
+                        console.log(res);
+                        nextMatch(res[0]);
+                        $('#person_fullname').attr('data-matches', res);
+                        $('#person_fullname').attr('data-index', 0);
+                        $('#my_matches_place_holder').attr('hidden', true);
+                    }else {
+                        hideMatching();
+                        $('#my_matches_place_holder').text("Sorry No Other Sheep Shagers To Show");
+                        $('#my_matches_place_holder').attr('hidden', false);
+                    }
                 },
                 failure: function (response) {
                     console.log('failure:' + JSON.stringify(response));
@@ -406,7 +422,6 @@
 
         function nextMatch(index) {
 
-
             const request = {};
             request.get_user_profile_api = true;
 
@@ -414,16 +429,17 @@
                 let tmp = $('#person_fullname').attr('data-matches').split(',');
                 console.log(tmp);
                 let tmpIndex = parseInt($('#person_fullname').attr('data-index'))+1;
-                if(tmpIndex === tmp.length-1){
+                if(tmpIndex > tmp.length - 2){
                     tmpIndex = 0;
                 }
                 request.userId = tmp[tmpIndex];
-                $('#person_fullname').attr('data-index',tmpIndex+1)
+                $('#person_fullname').attr('data-index',tmpIndex)
             }else{
                 request.userId = index;
             }
 
-            console.log(parseInt($('#person_fullname').attr('data-index'))+1);
+            console.log("Index " + request.userId);
+
 
             $.ajax({
                 method: "POST",
@@ -434,18 +450,21 @@
                     console.log(response);
                     let res = JSON.parse(response);
                     $('#person_fullname').attr('data-user-name', res.username);
+                    $('#person_fullname').attr('data-id',res.id);
                     $('#person_fullname').text(res.name);
                     $('#person_age_outter').text("Age: " + res.age);
 
-//                    $('#person_location_outter').text(res.location != null &&
-//                    res.location.length > 0 ? res.location.length : "Location: Hidden");
+                    console.log("Town " + res.town);
+                     $('#person_location_outter').text(res.town !== undefined ? res.town : "Location: Hidden");
 //
-                    $('#message_button').text("Message " + res.name);
-                    $('#user_full_age').text("Age " + res.age);
-                    $('#user_full_name').text("Name " + res.name);
-                    $('#user_gender').text("Gender " + res.gender);
-                    var defImage = res.photoId;
+                    $('#user_full_age').html('<i class="fas fa-calendar-week"></i><strong> Age </strong>' + res.age);
+                    $('#user_full_name').html('<i class="fas fa-signature"></i><strong> Name </strong>' + res.name);
+                    $('#user_gender').html('<i class="fas fa-venus-mars"></i><strong> Gender </strong>' + res.gender);
+                    $('#user_card_bio').html('<i class="fas fa-address-card"></i><strong> Bio </strong><br>' + res.desc);
+                    $('#user_smoking').html('<i class="fas fa-smoking"></i><strong> Smoking </strong>' + res.smoking);
+                    $('#user_drinking').html('<i class="fas fa-cocktail"></i><strong> Drinking </strong>' + res.drinking);
 
+                    let defImage = res.photoId;
                     if(defImage == null || defImage.length == 0) {
                         defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
                     }
@@ -463,25 +482,53 @@
         }
 
         function showFilter() {
-            let filter = $('#filter_pop_up');
+            let filter = $('.filter');
             if(filter.attr('hidden')){
                 filter.attr('hidden', false);
             }else filter.attr('hidden', true);
+        }
+
+        function showChat() {
+            $('#frame').attr('data-opened', false);
+            hideMatchArea();
+            hideUserManagment();
+            hideMatching();
+            hideUserProfile();
+            hideTickets();
+            $('#frame').prop('hidden', false);
 
         }
 
+        function addActive(elem) {
+            if($(elem).hasClass('active')){
+                $(elem).removeClass('active');
+                $(elem).css({"background":"gray"});
+            }else {
+                $(elem).addClass('active');
+                $(elem).css({"background":"blue"});
+            }
+        }
+
         function newMessage() {
-            message = $(".message-input input").val();
+            clearInterval(interval);
+            let message = $(".message-input input").val();
             if($.trim(message) == '') {
                 return false;
             }
 
+            let size = $('.messages ul li').length;
+
+            console.log("Size "+ size);
+
             const request = {};
 
             request.userOne = $('#username-header').attr('user-name');
-            request.userTwoId = $('ul#contactsList').find('li.active').attr("data-id");
-            request.userTwoName = $('ul#contactsList').find('li.active').attr("data-username");
+            request.userTwoId = ($('ul#contactsList').find('li.active').attr("data-id") === undefined ?   $('#contact_name').text() : $('ul#contactsList').find('li.active').attr("data-id"));
+            request.userTwoName = $('#contact_name').text();
             request.messages = message;
+            request.size = size;
+
+            console.log(request.userTwoId);
 
             $('.messages ul').attr('data-length', ($('.messages ul li').length));
 
@@ -504,8 +551,23 @@
             //$('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
             $('.message-input input').val(null);
             $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+
+
+            interval = setInterval(function() {
+                loadConversations();
+                getMessage();
+            }, 2000);
         };
 
+
+        function proxy() {
+            connect($('#person_fullname').attr('data-id'), $('#username-header').attr('user-id'), $('#person_image').attr('src'), $('#person_fullname').text(), $('#person_fullname').attr('data-user-name'), true, false);
+        }
+
+        function changeValue(val){
+            console.log("Value " + $(val).val())
+            console.log("Value low " + $(val).valueLow)
+        }
 
         $(window).on('keydown', function(e) {
             if (e.which === 13) {
@@ -514,11 +576,23 @@
             }
         });
 
+        function cal(){
+            let date_input = $('input[name="date"]'); //our date input has the name "date"
+            let container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+            let options = {
+                format: 'mm/dd/yyyy',
+                container: container,
+                todayHighlight: true,
+                autoclose: true,
+            };
+            date_input.datepicker(options);
+        }
+
+
+
     </script>
 
-    <style>
-        div
-    </style>
+
 </head>
 <body style="background-color: white; width: 100%; height: 100%;" >
         <div class="page-wrapper chiller-theme toggled">
@@ -559,7 +633,7 @@
                                     </a>
                                 <div class="sidebar-submenu">
                                     <ul>
-                                        <li><a href="#" onclick="showProfile('<?php echo $username?>', null)"><i class="fas fa-user"></i><span>Profile</span></a></li>
+                                        <li><a href="#" onclick="showProfile('<?php echo $username?>', null, false)"><i class="fas fa-user"></i><span>Profile</span></a></li>
                                         <li><a href="#" onclick="showUerMatches('<?php echo $id ?>')"><i class="fas fa-heart"></i><span>My Matches</span></a></li>
                                         </ul>
                                     </div>
@@ -585,8 +659,7 @@
                                     '</div></li>'.
                                     '<li><a onclick="showSearch()"><i class="fas fa-users""></i><span>Find Love</span></a></li>';
                             }else{
-                                echo '<li><a onclick="showSearch()"><i class="fas fa-users""></i><span>Find Love</span></a></li>'.
-                                     '<li><a onclick="showUerMatches('.$id.')"><i class="fas fa-heart"></i><span>My Matches</span></a></li>';
+                                echo '<li><a onclick="showSearch()"><i class="fas fa-users""></i><span>Find Love</span></a></li>';
                             }
                             ?>
                             <li>
@@ -608,9 +681,9 @@
                                             '<li><a href="#" onclick="showTickets(\'Archived\')">Archived <span class="label tag-pill label-success" id="archived_tickets"></span></a></li>'.
                                             '</ul>'.
                                             '</div></li>'.
-                                            '<li><a onclick="loadConversations()"><i class="fas fa-envelope"></i><span>Messages</span></a></li>';
+                                            '<li><a onclick="showChat()"><i class="fas fa-envelope"></i><span>Messages</span></a></li>';
                                     }else{
-                                        echo '<li><a onclick="loadConversations()"><i class="fas fa-envelope"></i><span>Messages</span></a></li>';
+                                        echo '<li><a onclick="showChat()"><i class="fas fa-envelope"></i><span>Messages</span></a></li>';
                                     }
                                 ?>        
                             </li>
@@ -632,7 +705,7 @@
 
                     ?>
 
-                    <a href="#" onclick="loadConversations()">
+                    <a href="#" onclick="showChat()">
                         <i class="fa fa-envelope"></i>
                     </a>
                     <a href="#" onclick="logout()">
@@ -654,7 +727,7 @@
                 <div class="container h-100 mb-5">
                     <div class="d-flex justify-content-center h-100">
                         <div class="searchbar">
-                            <input class="search_input" id="searchFilter" type="text" name="" placeholder="Search..." data-matches="false" onkeyup="getAllProfiles()">
+                            <input class="search_input" id="searchFilter" type="text" name="" placeholder="Search..." data-matches="false" onkeyup="getAllProfiles(null,null,null)">
                         </div>
                     </div>
                 </div>
@@ -678,11 +751,12 @@
                                 <div class="mc-description">
                                     <div class="modal-body">
                                         <table id="popup_user_info">
-                                            <tr><td></td><td id="user_full_name"><b> </b> </td><td id="person_fullname"></td>
+                                            <tr><td></td><td id="user_full_name"><b></b></td><td id="person_fullname"></td>
                                             <tr><td><td id="user_full_age"><b> </b> </td><td></td></td></tr>
                                             <tr><td><td id="user_gender"><b> </b> </td></td></tr>
-                                            <tr><td><td>Interests </td></td></tr>
-                                            <tr><td><td>Bio </td></td></tr>
+                                            <tr><td><td id="user_card_bio"> </td></td></tr>
+                                            <tr><td><td id="user_smoking"> </td></td></tr>
+                                            <tr><td><td id="user_drinking"> </td></td></tr>
                                         </table>
                                     </div>
                                 </div>
@@ -691,9 +765,8 @@
                             <a class="mc-btn-next" onclick="nextMatch(null)"><i class="fas fa-angle-double-right"></i></a>
                             <a class="mc-btn-previous" onclick="nextMatch(null)"><i class="fas fa-angle-double-left"></i></a>
                             <div class="mc-footer">
-                                <input id="match_id" type="hidden"  value=""><!-- current selected user -->
-                                <button onclick="newMatch()"  target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i></button>
-                                <button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button" onclick="showProfile('\''+ $('#person_fullname').attr('user_name')+'\',\''+$('#username-header').attr('user-name')+'\',false)" id="show_profile_button"><i class="fas fa-comments mr-2" ></i></button>
+                                <button class="btn btn-danger mt-2" onclick="proxy()"><i class="fas fa-user-plus mr-2" ></i>Connect</button>
+                                <button class="ml-3 btn btn-success mt-2" onclick="showProfile($('#person_fullname').attr('data-user-name'),$('#username-header').attr('user-name'),false)"><i class="fas fa-user-alt mr-2"></i> View Profile</button>
                             </div>
                         </article>
                     </div>
@@ -701,7 +774,56 @@
                 </section>
             </div>
 
-            <div id="frame" hidden>
+
+            <section class="filter" hidden>
+                <div class="mb-3 mt-3" style="width: 100%;margin-top: 40px;">
+                    <label class="text-white">Smoker </label>
+                    <select id="smoker_select_picker" class="form-control" >
+                        <optgroup label="Select A Smoker">
+                            <option value=""selected>Select your option</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="ocasionally">Ocasionally</option>
+                            <option value="party drinker">Party Smoker</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div style="width: 100%;">
+                    <label class="text-white">Drinker </label>
+                    <select id="drinker_select_picker" class="form-control">
+                        <optgroup label="Select A Drinking">
+                            <option value=""selected>Select your option</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="ocasionally">Ocasionally</option>
+                            <option value="party drinker">Party Drinker</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div style="width: 100%;" class="mt-2">
+                    <div class="form-group focused">
+                        <label class="text-white">City </label>
+                        <select id="city_select_picker" class="form-control">
+                            <option value=""selected>Select your option</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-4 ml-1">
+                    <label class="text-white ml-3">Age</label>
+                    <div class="my-js-slider mb-2" style="width: 100%; padding-left: 30px; padding-right: 30px;"></div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <label class="text-left text-white d-none d-lg-flex ml-2 mt-2 mb-2" for="interest_box">Interests</label>
+                    <div id="interest_box" class="ml-2 mr-2">
+                        <div class="mb-3" style="display: grid;grid-template-columns: auto auto auto auto;grid-gap: 10px;"><span class="badge badge-primary" onclick="addActive(this)">Programming</span><span class="badge badge-primary" onclick="addActive(this)">Football</span><span class="badge badge-primary" onclick="addActive(this)">Travelling</span><span class="badge badge-primary ml-2" onclick="addActive(this)">Horse Riding</span></div>
+                        <div class="mb-3" style="display: grid;grid-template-columns: auto auto auto;grid-gap: 10px;"><span class="badge badge-primary" onclick="addActive(this)">Fashion</span><span class="badge badge-primary" onclick="addActive(this)">Jogging</span><span class="badge badge-primary" onclick="addActive(this)">Crossfit</span></div>
+                        <div style="display: grid;grid-template-columns: auto auto auto auto;grid-gap: 20px;"><span class="badge badge-primary" onclick="addActive(this)">Swimming</span><span class="badge badge-primary" onclick="addActive(this)">Cinema</span><span class="badge badge-primary ml-2" onclick="addActive(this)">Diving</span></div>
+                    </div>
+                </div>
+                <button class="btn btn-success" style="width: 100%; margin-top: 15px;" onclick="profileFilterButton()">Filter</button>
+            </section>
+
+            <div id="frame" hidden >
                 <div id="sidepanel">
                     <div id="search">
                         <label ><i class="fa fa-search" aria-hidden="true"></i></label>
@@ -718,8 +840,9 @@
                             <h3 style="position: absolute; top: 50%; left: 35%;">Select User To Start Chat</h3>
                         </div>
                         <div class="contact-profile" id="contact-profile" style="display: none;">
-                            <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                            <p class="mt-3" id="contact_name"></p>
+                            <img src="images/icons/userIcon.png" alt="" id="chat_img" />
+                            <strong><p class="mt-3" id="contact_name" style="font-size: 15px; font-weight: bold;"></p></strong>
+                            <button class="btn btn-danger pull-right mt-3 mr-3" onclick="openReportPane($('#contact_name').text())">Report User</button>
                         </div>
                         <div class="messages" id="messages" style="display: none;">
                             <ul id="messages">
@@ -733,9 +856,143 @@
                         </div>
                     </div>
                 </div>
+
+            <section id="report_pane" style="width: 550px;padding: 20px;height: 500px;background: lightgray;border-radius: 20px; border: 2px solid rgb(85,31,31);  position: absolute; left: 30%; right: 20%; bottom: 20%; z-index: 100;" hidden>
+                <button class="btn btn-primary" onclick="openReportPane()" style="width: 25px;height: 25px;border-radius: 12px;background: red;position: absolute;top: 5px;left: 5px;border: 2px; text-align: center;"></button>
+                <div class="col mt-4">
+                    <div class="row">
+                            <strong class="ml-2 mb-2" style="color: rgb(255,255,255);">User Name Being Reported</strong><input id="user_report_username" type="text" class="ml-2" placeholder="UserName" readonly/>
+                            <strong class="ml-2 mt-2 mb-2" style="color: rgb(255,255,255);">Name</strong><input id="user_report_name" type="text" class="ml-2" placeholder="Name" readonly/>
+                            <strong class="mt-2 ml-2 mb-2" style="color: rgb(255,255,255);">Email</strong><input id="user_report_email" type="email" class="ml-2" placeholder="Email"/>
+                            <strong class="mt-2 ml-2 mb-2" style="color: rgb(255,255,255);">Reason For Report</strong>
+                    </div>
+                    <div class="row mb-2">
+                        <select class="form-control" id="report_select_reason"><optgroup  style="width: 100%;" label="Select A Reason For Report"><option value="Abusive Messages" selected>Abusive Messages</option><option value="Continous Stalking">Continous Stalking</option><option value="Inapropiate Behaviour">Inapropiate Behaviour</option></optgroup></select>
+                    </div>
+                </div>
+                <div><textarea id="reason_text" placeholder="Please Enter Some Additional Details" style="width: 100%;height: 150px;resize: none;"></textarea></div><button class="btn btn-primary pull-right mt-2" type="button" onclick="sendReportMessage(true)">Report</button>
+            </section>
+
         </main>
 
+        <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
+        <script src="js/wrunner-native.js"></script>
 
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+             https://firebase.google.com/docs/web/setup#available-libraries -->
+        <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-storage.js"></script>
+        <script>
+
+            const setting = {
+                roots: document.querySelector('.my-js-slider'),
+                type: 'range',
+                rangeValue: {
+                    minValue: 18,
+                    maxValue: 65,
+                },
+                limits: {
+                    minLimit: 18,
+                    maxLimit: 65
+                },
+                valueNoteDisplay: true,
+                step: 1,
+            };
+            const slider = wRunner(setting);
+
+
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyDYlh0TCY0b6KaHCzkf8HHTaGLwI38-LHc",
+                authDomain: "idev-10931.firebaseapp.com",
+                databaseURL: "https://idev-10931.firebaseio.com",
+                projectId: "idev-10931",
+                storageBucket: "idev-10931.appspot.com",
+                messagingSenderId: "392385283208",
+                appId: "1:392385283208:web:02610f3f1bb6dac8534b3d",
+                measurementId: "G-XR4NDN7MYF"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            const storage = firebase.storage();
+            const storageRef = storage.ref();
+
+
+
+
+            async function changeProfilePicture() {
+                const {value: file} = await Swal.fire({
+                    title: 'Select Profile image',
+                    input: 'file',
+                    inputAttributes: {
+                        'accept': 'image/jpeg',
+                        'aria-label': 'Upload your profile picture'
+                    },
+                    showCancelButton: true,
+                    showLoaderOnConfirm: true,
+                    preConfirm: (file) => {
+                        if (Math.ceil(file.size / 1000) > 256) {
+                            Swal.showValidationMessage(
+                                `Picture cannot be bigger than 38KB`
+                            );
+                        }
+                    }
+                });
+
+
+                if (file) {
+
+                    const reader = new FileReader();
+                    const request = {};
+
+                    console.log(file);
+
+                    reader.onload = (e) => {
+                        Swal.fire({
+                            title: 'Your Selected Picture',
+                            imageUrl: e.target.result,
+                            imageAlt: 'The Selected Picture'
+                        });
+
+                        var uploadTask = storageRef.child('images/' + file.name).put(file);
+                        uploadTask.on('state_changed', function(snapshot){
+                        }, function(error) {
+                            Swal.fire({
+                                title: 'Upload Failed',
+                                text: 'Image Upload Failed',
+                                icon: 'error'
+                            })
+                        }, function() {
+                            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                                request.userId =  $('#username-header').attr('user-id');
+                                request.photoUrl = downloadURL;
+                                $.ajax({
+                                    method: "POST",
+                                    url: "Picture.php",
+                                    data: request,
+                                    success: function (response) {
+                                        Swal.fire(response.title, response.message, response.type);
+                                        document.getElementById('profilePicture').src = downloadURL;
+                                    },
+                                    failure: function (response) {
+                                        console.log('failure:' + JSON.stringify(response));
+                                    },
+                                    error: function (response) {
+                                        console.log('error:' + JSON.stringify(response));
+                                    }
+                                });
+                            });
+                        });
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            }
+
+
+        </script>
+
+        <script src="js/multirange.js"></script>
         <script src="https://kit.fontawesome.com/2530adff57.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
         <script src="vendorv/animsition/js/animsition.min.js"></script>

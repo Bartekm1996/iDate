@@ -45,7 +45,27 @@ function getBlockedInfo(username){
         data: request,
         success: function (response) {
             console.log('success:' + JSON.stringify(response));
-            Swal.fire(username + " has been blocked for " + response.reason + " on the " + response.date);
+            let res =JSON.parse(response);
+            let reason = "";
+            switch (res.reason) {
+                case "breach_of_terms_and_conditiosn":{
+                    reason = "Breach of Terms And Conditions";
+                    break;
+                }
+                case "continous_incmopliance":{
+                    reason = "Continous Incompliance";
+                    break;
+                }
+                case "reported_by_use":{
+                    reason = "Reported By Users";
+                    break;
+                }
+            }
+            Swal.fire({
+                title: 'Blocked Info',
+                text :  username + " has been blocked for " + reason + " on the " + res.date,
+                icon: 'info'
+            });
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
@@ -56,56 +76,61 @@ function getBlockedInfo(username){
     });
 }
 
-async function userActionTwo(action, user, name, email) {
+async function userActionTwo(action, user, name, email, id) {
+
 
     let inputOptions = {};
-    inputOptions.user = user;
     inputOptions.sender_name = "iDate Customer Service Team";
     inputOptions.update_user = true;
     inputOptions.name = name;
-    inputOptions.eamil = email;
-
-
-    if(action === 'delete'){
-        inputOptions.action = 3;
-    }else if(action === 'block'){
-        inputOptions.action = 2;
-    }
-
-    let options = {};
-
+    inputOptions.email = email;
 
     if(action === 'delete'){
-        options.inactiveaccount = 'Inactive Account',
-        options.breachOfTermsAndConditions = 'Breach Of Terms And Conditions',
-        options.reportedBySeveralUsers = 'Reported By Several Users'
+        inputOptions.action = 'delete';
     }else if(action === 'block'){
-        options.breachOfTermsAndConditions = 'Breach Of Terms And Conditions',
-        options.continousincompliance = 'Continous Incompliance',
-        options.reportedByUser = 'Reported By User'
+        inputOptions.action = 'block';
     }
 
 
+    let ops = {};
 
-    const {value: reason} = await Swal.fire({
+    if(action === 'delete'){
+        inputOptions.user = id;
+        console.log("fjwkbfuweufuweugfigew "  + id);
+        ops = {
+            inactive_account: 'Inactive Account',
+            breach_of_terms_and_conditiosn: 'Breach Of Terms And Conditions',
+            reported_by_several_users: 'Reported By Several Users',
+        }
+    }else if(action === 'block'){
+        inputOptions.user = user;
+        ops = {
+            breach_of_terms_and_conditiosn: 'Breach Of Terms And Conditions',
+            continous_incmopliance: 'Continous Incompliance',
+            reported_by_use: 'Reported By User'
+        }
+    }
+
+    const { value: reason } = await Swal.fire({
         title: 'Select A Reason',
         text: 'Select A Reason for taking this action against ' + user,
         input: 'select',
-        inputOptions: options,
+        inputOptions: ops,
         inputPlaceholder: 'Select A Reason',
         showCancelButton: true,
         inputValidator: (value) => {
             return new Promise((resolve) => {
-                if (value.length === 0) {
-                    resolve('You need to select a reason')
+                if (value !== '') {
+                    resolve()
+                } else {
+                    resolve('You need to select oranges :)')
                 }
             })
         }
-    })
+    });
 
+    console.log("reason " + reason);
     if (reason) {
-
-
 
         inputOptions.reason = reason;
 
@@ -114,19 +139,24 @@ async function userActionTwo(action, user, name, email) {
             url: 'userManagmentApi.php',
             data: inputOptions,
             success: function (response) {
-                if(reason === 'block'){
+
+                console.log(response);
+                if(action === 'block'){
                     Swal.fire({
                         title : "User Blocked",
                         text : "User has been blocked Successfully",
                         icon : "success"
                     });
-                }else if(reason === 'delete'){
+                }else if(action === 'delete'){
                     Swal.fire({
                         title : "User Deleted",
                         text : "User has been deleted Successfully",
                         icon : "success"
                     });
                 }
+                showUserManagment(null);
+                fillMembersNumbers();
+
                 console.log('success:' + JSON.stringify(response));
             },
             failure: function (response) {
@@ -146,16 +176,18 @@ function editField(elem) {
    let res = $(elem).attr('data-id');
    res = "#"+res;
 
+
+
    if($(res).attr('data-active') === 'false'){
        $(res).attr('data-active', 'true');
        $(res).removeClass('hide-input');
        $(elem).text("Save");
    }else{
+       saveUserData();
        $(res).attr('data-active', 'false');
        $(res).addClass('hide-input');
        $(elem).text("");
        $(elem).html('<i class="fas fa-pen"></i>');
-
    }
 
 }
@@ -186,17 +218,28 @@ function clearValues() {
 
 function editProfile(elem) {
 
+    document.getElementById('mang_pro').src = "";
     showAllEditButton();
     let userName = $(elem).find("#userName").text();
     let name = $(elem).find("#user_name").text().split(" ");
     let email = $(elem).find('#userEmail').text();
 
-
     $('#user_profile_header').text(userName);
     $('#user_email_input').val(email);
     $('#first_name').val(name[0]);
     $('#user_last_name_input').val(name[1]);
-    $('#location').val("Unknown");
+    $('#location').val(($(elem).attr('data-town') === null ? "Unknown" : ($(elem).attr('data-town'))));
+
+    let gender = $(elem).attr('data-gender');
+    let photoId = $(elem).attr('data-photoId');
+
+    if(photoId !== "null"){
+        document.getElementById('mang_pro').src = photoId;
+    }else{
+        document.getElementById('mang_pro').src = (gender === 'Male' ? 'images/male.png' : 'images/female.png');
+    }
+
+
 
     let res = $('#tableBody').find('.active');
 
@@ -204,6 +247,7 @@ function editProfile(elem) {
         $(res).removeClass('active');
         clearValues();
         hideAllEditButtons();
+        document.getElementById('mang_pro').src = "images/icons/userIcon.png";
     }else{
         $(res).removeClass('active');
         $(elem).addClass('active');
@@ -308,6 +352,177 @@ function userAdmin(username, change) {
 
 }
 
+function activateUser(username, email) {
+
+    const request = {};
+    request.user = username;
+    request.action = 'activate';
+    request.update_user = true;
+    request.email = email;
+    $.ajax({
+        method: "POST",
+        url: 'userManagmentApi.php',
+        data: request,
+        success: function (response) {
+            let res = JSON.parse(response);
+            if(res.statusCode === 1) {
+                Swal.fire({
+                    title: "User Activated Successfully",
+                    text: 'User '+username+" has been activated successfully",
+                    icon: 'success'
+                });
+
+            }else if(res.statusCode === 2){
+                Swal.fire({
+                    title: "Failed to activate user",
+                    text: 'Failed to activate user '+username+" successfully",
+                    icon: 'error'
+                })
+            }
+            showUserManagment(0);
+            fillMembersNumbers();
+            console.log('success:' + JSON.stringify(response));
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+}
+
+function saveUserData() {
+    const request = {};
+    request.username = $('#user_profile_header').text();
+    request.email = $('#user_email_input').val();
+    request.firstname = $('#first_name').val();
+    request.lastname = $('#user_last_name_input').val();
+    request.save_user_info = true;
+
+
+
+    if(request.username === ""){
+        Swal.fire("Select a user to update his info");
+    }
+    else {
+
+        if(request.firstname.length === 0 || request.email.length === 0 || request.lastname.length === 0){
+                Swal.fire({
+                    title: "Please Fill In All Fields",
+                    text: "All Fields Have To Be Filled In",
+                    icon: "warning"
+                });
+        }else {
+            if ($('#profile_input_user_last_name').val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
+                    Swal.fire({
+                        title: "Email Error",
+                        text: "Email is not valid",
+                        icon: "warning"
+                    });
+            } else {
+                $.ajax({
+                    method: "POST",
+                    url: 'userManagmentApi.php',
+                    data: request,
+                    success: function (response) {
+                        let res = JSON.parse(response);
+                        if (res.statusCode === 1) {
+                            Swal.fire({
+                                title: "User info has been successfully updated",
+                                text: 'User ' + username + " details have been updated successfully",
+                                icon: 'success'
+                            });
+                        } else if (res.statusCode === 2) {
+                            Swal.fire({
+                                title: "Failed to update User info successfully",
+                                text: 'Failed to update users ' + username + " details",
+                                icon: 'error'
+                            });
+                        }
+                            showUserManagment(null);
+                            console.log('success:' + JSON.stringify(response));
+                        },
+                        failure: function (response) {
+                            console.log('failure:' + JSON.stringify(response));
+                        },
+                        error: function (response) {
+                            console.log('error:' + JSON.stringify(response));
+                        }
+                    });
+                }
+            }
+        }
+}
+
+
+function unblockUser(username, email) {
+
+    const request = {};
+    request.user = username;
+    request.action = 'unblock';
+    request.update_user = true;
+    request.email = email;
+    $.ajax({
+        method: "POST",
+        url: 'userManagmentApi.php',
+        data: request,
+        success: function (response) {
+            let res = JSON.parse(response);
+            if(res.statusCode === 1) {
+                Swal.fire({
+                    title: 'Unblocked ' + username + " Successfully",
+                    text: 'User '+username+" has been unblocked successfully",
+                    icon: 'success'
+                });
+
+            }else if(res.statusCode === 2){
+                Swal.fire({
+                    title: "Failed to unblock user",
+                    text: 'Failed to unblock user '+username+" successfully",
+                    icon: 'error'
+                })
+            }
+            showUserManagment(null);
+            fillMembersNumbers();
+            console.log('success:' + JSON.stringify(response));
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+}
+
+function resetEmail(username, email) {
+
+    const request = {};
+    request.password_reset_email = true;
+    request.reset_uname = username;
+    request.reset_email = email;
+    $.ajax({
+        method: "POST",
+        url: 'api.php',
+        data: request,
+        success: function (response) {
+            console.log(response);
+                Swal.fire({
+                    title: "Password reset sent",
+                    text: 'Password reset email sent successfully',
+                    icon: 'success'
+                });
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+}
+
 function getUserData(verified) {
 
     $('#tableBody tr').remove();
@@ -322,57 +537,65 @@ function getUserData(verified) {
         url: 'userManagmentApi.php',
         data: request,
         success: function (response) {
-            console.log('success:' + JSON.parse(response)[0].userId);
 
-            let res = JSON.parse(response);
+            let ress = response.replace(/.$/,"]");
+            let res = JSON.parse(ress);
+            console.log(res);
+
 
             for(let i = 0; i < res.length; i++)
             {
-                let node =
-                    '<tr data-id='+i+' class="clickable-row" onclick="editProfile(this)" style="padding-top: 5px;">' +
-                    '<td>'+(parseInt(res[i].registered) === 0 ? "<span class=\"label label-warning\" id='status'>Pending</span>" : (parseInt(res[i].blocked) === 0 ? "<span class=\"label label-success\" id='status'>Active</span>" : "<span class=\"label label-danger\" id='status'>Blocked</span>"))+'</small></td>'+
-                    '<td><small id="userName">'+res[i].userName+'</small></td>'+
-                    '<td><small id="user_name">'+res[i].name+'</small></td>'+
-                    '<td><small id="userEmail">'+res[i].email+'</small></td>'+
-                    '<td><small>'+(parseInt(res[i].admin) === 0 ? "<span class=\"label label-primary\" id='role'>User</span>" : "<span class=\"label label-info\" id='role'>Admin</span>")+'</small></td>'+
-                    '<td>'+
-                    '<div class="btn-group">' +
-                    '<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>'+
-                    '<div class="dropdown-menu">';
 
-                    if(parseInt(res[i].registered) === 0){
-                        node += '<a class="dropdown-item" href="#"><i class="fas fa-user-plus mr-2"></i>Activate</a>';
+                let def = JSON.parse(res[i]);
+                let node =
+                    '<tr data-id='+i+' class="clickable-row" onclick="editProfile(this)"  data-town='+def.town+' data-status='+def.blocked+' data-gender="'+def.gender+'" data-photoId="'+def.photoId+'" style="padding-top: 5px;">' +
+                    '<td>'+(parseInt(def.registered) === 0 ? "<span class=\"label label-warning\" id='status'>Pending</span>" : (parseInt(def.blocked) === 0 ? "<span class=\"label label-success\" id='status'>Active</span>" : "<span class=\"label label-danger\" id='status'>Blocked</span>"))+'</small></td>'+
+                    '<td><small id="userName">'+def.userName+'</small></td>'+
+                    '<td><small id="user_name">'+def.name+'</small></td>'+
+                    '<td><small id="userEmail">'+def.email+'</small></td>'+
+                    '<td><small>'+(parseInt(def.admin) === 0 ? "<span class=\"label label-primary\" id='role'>User</span>" : "<span class=\"label label-info\" id='role'>Admin</span>")+'</small></td>'+
+                    '<td>';
+                if(def.userName !== $('#username-header').attr('user-name')) {
+                    node += '<div class="btn-group">' +
+                        '<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>' +
+                        '<div class="dropdown-menu">';
+
+                    if (parseInt(def.registered) === 0) {
+                        node += '<a class="dropdown-item" href="#" onclick="activateUser(\'' + def.userName + '\',\''+def.email+'\')"><i class="fas fa-user-plus mr-2"></i>Activate</a>';
                     }
 
-                    if(parseInt(res[i].blocked) === 1){
-                        node += '<a class="dropdown-item" href="#" onclick="getBlockedInfo('+res[i].userName+'"><i class="fas fa-info-circle"></i>Block Info</a>';
+                    if (parseInt(def.blocked) === 1) {
+                        node += '<a class="dropdown-item" href="#" onclick="getBlockedInfo(\'' + def.userName + '\')"><i class="fas fa-user-lock mr-2"></i>Block Info</a>'+
+                                '<a class="dropdown-item" href="#" onclick="unblockUser(\'' + def.userName + '\',\''+def.email+'\')"><i class="fas fa-user-lock mr-2"></i>Unblock</a>';
+                    } else node += '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\'' + def.userName + '\',\'' + def.name + '\',\'' + def.email + '\',\'' + null + '\')"><i class="fas fa-user-lock mr-2"></i>Block</a>'+
+                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'delete\',\'' + def.userName + '\',\'' + def.name + '\',\'' + def.email + '\',\'' + def.userId + '\')"><i class="fas fa-user-lock mr-2"></i>Delete</a>';
+
+                    if (parseInt(def.admin) === 0) {
+                        node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + def.userName + '\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';
+                    } else {
+                        node += '<a class="dropdown-item" href="#" onclick="userAdmin(\'' + def.userName + '\',\'Remove\')"><i class="fas fa-user-minus"></i>Remove User a Admin</a>';
+                    }
+
+                    if (parseInt(def.registered) === 0) {
+                        node +=
+                            '<div class="dropdown-divider"></div>' +
+                            '<a class="dropdown-item" href="#" onclick="sendVerificationEmail(\'' + def.email + '\',\'' + def.userName + '\')"><i class="fas fa-paper-plane mr-2"></i>Resend Activation Email</a>';
                     }
 
                     node +=
-                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\''+res[i].userName+'\',\''+res[i].name+'\',\''+res[i].email+'\')"><i class="fas fa-user-lock mr-2"></i>Block</a>'+
-                        '<a class="dropdown-item" href="#" onclick="userActionTwo(\'block\',\''+res[i].userName+'\',\''+res[i].name+'\',\''+res[i].email+'\')"><i class="fas fa-user-minus mr-2"></i>Delete</a>';
+                        '<a class="dropdown-item" href="#" onclick="resetEmail(\'' + def.userName + '\',\'' + def.email + '\')"><i class="fas fa-paper-plane mr-2"></i>Send Password Reset Email</a>';
 
-                    if(parseInt(res[i].admin) === 0){
-                        node +=  '<a class="dropdown-item" href="#" onclick="userAdmin(\''+res[i].userName+'\',\'Add\')"><i class="fas fa-user-plus"></i>Add User as Admin</a>';
-                    }else{
-                        node += '<a class="dropdown-item" href="#" onclick="userAdmin(\''+res[i].userName+'\',\'Remove\')"><i class="fas fa-user-minus"></i>Remove User a Admin</a>';
-                    }
-
-                    if(parseInt(res[i].registered) === 0) {
-                        node +=
-                            '<div class="dropdown-divider"></div>'+
-                            '<a class="dropdown-item" href="#" onclick="sendVerificationEmail(\'' + res[i].email + '\',\'' + res[i].userName + '\')"><i class="fas fa-paper-plane mr-2"></i>Resend Activation Email</a>';
-                    }
+                }
 
                     node +='</div>'+
                             '</div>'+
                             '</td>'+
                             '</tr>';
 
-                    if(verified !== null && parseInt(res[i].registered) === 0 && verified === 0){
+                    if(verified !== null && parseInt(def.registered) === 0 && verified === 0){
                         $('#tableBody').append(node);
                         counter++;
-                    }else if(verified !== null && verified === 1 && parseInt(res[i].blocked) === 1){
+                    }else if(verified !== null && verified === 1 && parseInt(def.blocked) === 1){
                         $('#tableBody').append(node);
                         counter++;
                     }else if(verified === null){

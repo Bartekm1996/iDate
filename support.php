@@ -1,67 +1,5 @@
-<script src="vendorv/jquery/jquery-3.2.1.min.js"></script>
-<script src="js/main.js"></script>
 <link rel="stylesheet" type="text/css" href="css/support.css">
-<script type="text/javascript">
-
-    function hiddeSupport() {
-        $('#contact_form').attr('hidden', true);
-    }
-
-    function getDate() {
-        let m = new Date();
-        return m.getUTCFullYear() + "-" +
-            ("0" + (m.getUTCMonth() + 1)).slice(-2) + "-" +
-            ("0" + m.getUTCDate()).slice(-2) + " " +
-            ("0" + m.getUTCHours()).slice(-2) + ":" +
-            ("0" + m.getUTCMinutes()).slice(-2) + ":" +
-            ("0" + m.getUTCSeconds()).slice(-2);
-    }
-
-    function sendMessage() {
-
-        const request = {};
-        request.send_query_message = true;
-        request.userName = document.getElementById("txtUserName").value;
-        request.userEmail = document.getElementById("email_support").value;
-        request.userDesc = document.getElementById("txtMsg").value;
-        request.userReason = document.getElementById("reason").value;
-        request.date = getDate();
-
-        if(validate(request)) {
-            $.ajax({
-                method: "POST",
-                url: "api.php",
-                data: request,
-                success: function (response) {
-                    console.log(response);
-                    let res = JSON.parse(response);
-                    Swal.fire(res.title, res.message, res.type);
-                    hiddeSupport();
-                },
-                failure: function (response) {
-                    console.log('failure:' + JSON.stringify(response));
-                },
-                error: function (response) {
-                    console.log('error:' + JSON.stringify(response));
-                }
-            });
-        }else{
-                document.getElementById("txtUserName").style.border = request.userName.length === 0 ? "2px solid red" : "";
-                document.getElementById("email_support").style.border = request.userEmail.length === 0 ? "2px solid red" : "";
-                document.getElementById("txtMsg").style.border = request.userDesc.length === 0 ? "2px solid red" : "";
-                document.getElementById("reason").style.border = request.userReason.length === 0 ? "2px solid red" : "";
-        }
-
-    }
-
-    function validate(request) {
-        return request.userEmail.length > 0 && request.userName.length > 0 && request.userDesc.length > 0 && request.userReason.length > 0;
-    }
-
-
-
-</script>
-
+<script src="js/support.js"></script>
 
 <div id="contact_form" class="container contact-form" hidden>
             <button class="close-button" onclick="hiddeSupport()"><i class="zmdi zmdi-close"></i></button>
@@ -85,7 +23,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="button" onclick="sendMessage()" id="send_message" name="btnSubmit" class="btnContact" value="Send Message" required/>
+                            <input type="button" onclick="sendReportMessage(false)" id="send_message" name="btnSubmit" class="btnContact" value="Send Message" required/>
                         </div>
                     </div>
                     <div class="col-md-6">

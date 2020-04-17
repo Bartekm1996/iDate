@@ -12,6 +12,8 @@ class Email
     const RESET_PASSWORD = 1;
     const BLOCKED = 2;
     const DELETED = 3;
+    const UNBLOCKED = 4;
+    const ACTIVATE = 5;
 
     public function __construct($to, $name)
     {
@@ -23,26 +25,69 @@ class Email
 
 
         $subject = "";
+        $emailRes = "";
+        $template = "";
+        $res_two = "";
+
         switch ($type){
             case self::BLOCKED:{
                 $subject = "Your Account Has Been Blocked";
+                $template = "/emailTemplates/message.html";
                 break;
             }
             case self::DELETED:{
                 $subject = "Your Account Has Been Deleted";
+                $template = "/emailTemplates/message.html";
+                break;
+            }
+            case self::UNBLOCKED:{
+                $subject = "Your Account Has Been Unblocked";
+                $template = "/emailTemplates/unblocked.html";
+                break;
+            }
+            case self::ACTIVATE:{
+                $subject = "Your Account Has Been Activated";
+                $template = "/emailTemplates/activated.html";
                 break;
             }
         }
 
-        $template = "/emailTemplates/message.html";
+        switch ($reason){
+            case "breach_of_terms_and_conditiosn":{
+                $emailRes = "Breach Of Terms And Conditions";
+                break;
+            }
+            case "inactive_account":{
+                $emailRes = "Inactive Account";
+                break;
+            }
+            case "reported_by_several_users":{
+                $emailRes = "Reported By Several Users";
+                break;
+            }
+            case "continous_incmopliance":{
+                $emailRes = "Continous Incompliance";
+                break;
+            }
+            case "reported_by_use":{
+                $emailRes = "Reported By Users";
+                break;
+            }
+        }
+
         $cont = file_get_contents(__DIR__.$template);
         $res = str_replace("{{user_name}}", $this->name, $cont);
         $res_one = str_replace( "{{action}}", $action, $res);
-        $res_two = str_replace( "{{reason}}", $reason, $res_one);
+
+        if($type === self::BLOCKED || $type === self::DELETED){
+            $res_two = str_replace( "{{reason}}", $emailRes, $res_one);
+        }
+
         $res_three = str_replace( "{{sender_name}}", $sender_name, $res_two);
 
         $this->sendEmail($subject, $res_three, $this->getTo());
     }
+
 
     public function sendRegisterEmail($type){
         $template = "";

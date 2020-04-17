@@ -1,16 +1,5 @@
 
-function showChat() {
-    hideMatchArea();
-    hideUserManagment();
-    hideMatching();
-    hideUserProfile();
-    hideTickets();
-    $('#frame').prop('hidden', false);
-}
 
-function hideChat() {
-    $('#frame').prop('hidden', true);
-}
 
 function showMatching() {
     loadMatches();
@@ -20,12 +9,13 @@ function showMatching() {
     hideUserProfile();
     hideTickets();
     hideMatchArea();
-    $('#matching').prop('hidden', false);
+    $('#matching').attr('hidden', false);
 }
 
 function hideMatching() {
     epxand ($('#expandable'));
-    $('#matching').prop('hidden', true);
+    $('#filter').attr('hidden', true);
+    $('#matching').attr('hidden', true);
 }
 
 function showMatchArea() {
@@ -34,7 +24,7 @@ function showMatchArea() {
     hideMatching();
     hideUserProfile();
     hideTickets();
-    $('#matcharea').prop('hidden', false);
+    $('#matcharea').attr('hidden', false);
 }
 
 function hideMatchArea() {
@@ -48,6 +38,7 @@ function showUserManagment(verified) {
     hideMatching();
     hideUserProfile();
     hideTickets();
+    $('.filter').attr('hidden', true);
     $('#usermng').attr('hidden', false);
     getUserData(verified);
 }
@@ -66,6 +57,7 @@ function showTickets(status) {
     hideChat();
     hideUserManagment();
     hideUserProfile();
+    $('.filter').attr('hidden', true);
     $('#main_cont').attr('hidden',false);
     getAllTickets(status);
 }
@@ -86,22 +78,28 @@ function fillMembersNumbers(){
         data: request,
         success: function (response) {
             console.log(response);
+
+            // preserve newlines, etc - use valid JSON
+
             let obj = JSON.parse(response);
+
             let un_reg = 0, blocked = 0;
 
 
                 for(let i = 0; i < obj.length; i++){
-                    if(parseInt(obj[i].registered) === 0){
+                    let res = JSON.parse(obj[i]);
+                    if(parseInt(res.registered) === 0){
                         un_reg++;
-                    }else if(parseInt(obj[i].blocked) === 1){
+                    }
+                    if(parseInt(res.blocked) === 1){
                         blocked++;
                     }
 
                 }
 
                 $('#all_users').text(obj.length);
-                $('#unverified_users').text(0);
-                $('#blocked_users').text(0);
+                $('#unverified_users').text(un_reg);
+                $('#blocked_users').text(blocked);
 
 
                 if(un_reg > 0){
@@ -158,7 +156,7 @@ function fillTicketsNumbers(){
 
             for(let i = 0; i < unqiues.length; i++){
                 for(let j = 0; j < obj.length; j++){
-                    if(unqiues.includes(obj[j].status) && csr !== parseInt(obj[j].number)){
+                    if(unqiues[i] === obj[j].status && csr !== parseInt(obj[j].number)){
                         counter++;
                     }
                     csr = parseInt(obj[j].number);
@@ -205,37 +203,57 @@ function addTicketLabel(node, counter){
 
 
 function showSearch() {
-    $('#searchFilter').attr('data-matches', false);
-    loadMatches();
-    getAllProfiles();
+    if($('#upro_img').attr('details') === 'true') {
 
-    if($('#searchFilter').val().length > 0){
-        $('#searchFilter').val("");
-        $('#searchResults').prop('hidden', true);
-    }else {
-        if($('#matching').attr('hidden')){
-            $('#searchResults').prop('hidden', false);
+        $('#searchFilter').attr('data-matches', false);
+        loadMatches();
+        getAllProfiles();
+
+        if ($('#searchFilter').val().length > 0) {
+            $('#searchFilter').val("");
+            $('#searchResults').prop('hidden', true);
+        } else {
+            if ($('#matching').attr('hidden')) {
+                $('#searchResults').prop('hidden', false);
+            }
         }
+
+        hideChat();
+        hideUserManagment();
+        hideUserProfile();
+        hideTickets();
+        $('#matcharea').prop('hidden', false);
+        $('#matching').prop('hidden', false);
+    }else {
+        Swal.fire({
+            title: "Fill In Profile Information",
+            text: "Please Fill In Your Profile Information before accessing other services",
+            icon: "warning"
+        });
     }
 
-    hideChat();
-    hideUserManagment();
-    hideUserProfile();
-    hideTickets();
-    $('#matcharea').prop('hidden', false);
-    $('#matching').prop('hidden', false);
 }
 
+
 function showUerMatches(user_id) {
-    $('#searchFilter').attr('data-matches', true);
-    $('#my_matches_place_holder').attr('hidden', false);
-    $('#matcharea').attr('hidden', false);
-    getUserMatches(parseInt(user_id));
-    hideUserManagment();
-    hideMatching();
-    hideUserProfile();
-    hideTickets();
-    hideChat();
+    console.log("True " + $('#upro_img').attr('details'));
+    if($('#upro_img').attr('details') === 'true') {
+        $('#searchFilter').attr('data-matches', true);
+        $('#my_matches_place_holder').attr('hidden', false);
+        $('#searchResults').attr('hidden', false);
+        hideUserManagment();
+        hideMatching();
+        hideUserProfile();
+        hideTickets();
+        hideChat();
+        getUserMatches(user_id);
+    }else {
+        Swal.fire({
+            title: "Fill In Profile Information",
+            text:"Please Fill In Your Profile Information before accessing other services",
+            icon: "warning"
+        });
+    }
 }
 
 function  openUserProfile(event) {
@@ -275,8 +293,11 @@ function epxand (elem) {
     }
 }
 
-//update file
+
 function getUserMatches(user_id) {
+    $('#matcharea').attr('hidden', false);
+    $('#searchResults').empty();
+
     const request = {};
     request.get_user_matches_api = true;
     request.user_id = user_id;
@@ -293,16 +314,13 @@ function getUserMatches(user_id) {
                 }else{
                     $('#my_matches_place_holder').attr('hidden', true);
                 }
-                $('#searchResults').empty();
-                debugger;
                 for(let i = 0; i < obj.length; i++) {
 
-                    let res = obj[i];//No need to use JSON.parse here
-                    let defImage = res.photoId;
+                    let res = JSON.parse(obj[i]);
 
-                    if(defImage == null) {
-                        defImage = res.gender === 'Male' ? 'images/male.png' : 'images/female.png';
-                    }
+                    console.log(res);
+                    let defImage = (res.photoId === null ? (res.gender === 'Male' ? 'images/male.png' : 'images/female.png') : res.photoId);
+
 
                     let test = '<div style="width: 300px; height: 100%;">'+
                         '<div class="image-flip" ontouchstart="this.classList.toggle(\'hover\');">' +
@@ -318,8 +336,8 @@ function getUserMatches(user_id) {
                         '</div>'+
                         '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
                         '<div class="d-flex justify-content-between">'+
-                        '<a href="#" class="btn btn-sm btn-info mr-4" >Report</a>'+
-                        '<a href="#" onclick="showProfile(\''+obj[i].id+'\',\''+$('#username-header').attr('user-name')+'\',true)" class="btn btn-sm btn-default float-right">Profile</a>'+
+                        '<a href="#" class="btn btn-sm btn-info mr-4 ml-2" onclick="openReportPane(\''+res.username+'\')">Report</a>'+
+                        '<a href="#" onclick="showProfile(\''+res.id+'\',\''+$('#username-header').attr('user-name')+'\',true)" class="btn btn-sm btn-default float-right mr-2">Profile</a>'+
                         '</div>'+
                         '</div>'+
                         '<div class="card-body pt-0 pt-md-4">'+
@@ -327,31 +345,27 @@ function getUserMatches(user_id) {
                         '<div class="col">'+
                         '<div class="card-profile-stats d-flex justify-content-center mt-md-5">'+
                         '<div>'+
-                        '<span class="heading">22</span>'+
-                        '<span class="description">Matches</span>'+
+                        '<span class="heading"><strong>'+res.smoker+'</strong></span>'+
+                        '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-smoking mr-2"></i>Smoker</strong></span>'+
                         '</div>'+
                         '<div>'+
-                        '<span class="heading">10</span>'+
-                        '<span class="description">Photos</span>'+
-                        '</div>'+
-                        '<div>'+
-                        '<span class="heading">89</span>'+
-                        '<span class="description">Connections</span>'+
+                        '<span class="heading"><strong>'+res.drinker+'</strong></span>'+
+                        '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-cocktail mr-2"></i>Drinker</strong></span>'+
                         '</div>'+
                         '</div>'+
                         '</div>'+
                         '</div>'+
                         '<div class="text-center">'+
-                        '<h3>'+obj[i].name+'<span class="font-weight-light">, '+obj[i].age+'</span> </h3>'+
+                        '<h3>'+res.name+'<span class="font-weight-light">, '+res.age+'</span> </h3>'+
                         '<div class="h5 font-weight-300">'+
-                        '<i class="ni location_pin mr-2"></i>City, Country'+
+                        '<i class="ni location_pin mr-2"></i>'+(res.town === null ? "Unknown" : res.town) +', Ireland'+
                         '</div>'+
                         '<div class="h5 mt-4">'+
                         '</div>'+
                         '<div>'+
                         '</div>'+
                         '<hr class="my-4">'+
-                        '<p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music.</p>'+
+                        '<p>'+res.desc+'</p>'+
                         '</div>'+
                         '</div>'+
                         '</div>'+
@@ -359,7 +373,6 @@ function getUserMatches(user_id) {
                         '</div>';
 
                     $('#searchResults').append(test);
-                    // let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
                 }
             }
         },
@@ -372,11 +385,8 @@ function getUserMatches(user_id) {
     });
 }
 
-function reportUser() {
 
-}
-
-function getAllProfiles() {
+function getAllProfiles(smoker, drinker, age) {
 
     let filter = $('#searchFilter').val();
 
@@ -394,22 +404,30 @@ function getAllProfiles() {
 
 
     if($('#searchFilter').attr('data-matches') === true){
-        request.search_matches = true;
+        request.get_user_matches_api = true;
     }else{
         request.get_profiles_api = true;
     }
 
-
+    if(smoker !== null && drinker && null && age !== null){
+        request.smoker = smoker;
+        request.drinker = drinker;
+        request.age = age;
+    }
 
     if(filter.length !== 0){
         request.filter = filter;
     }
+
+    console.log("Filter " + filter);
 
     $.ajax({
         method: "POST",
         url: "api.php",
         data: request,
         success: function (response) {
+
+
             console.log(response);
             let obj = JSON.parse(response);
             document.getElementById("searchResults").innerHTML = '';
@@ -417,67 +435,14 @@ function getAllProfiles() {
             if(obj != null) {
                 for(let i = 0; i < obj.length; i++) {
 
-                    /*
-                let test = '<div >'+
-                 '<div class="row">' +
-                 '<div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">' +
-                 '<div class="card card-profile shadow">'+
-                 '<div class="row justify-content-center">'+
-                 '<div class="col-lg-3 order-lg-2">'+
-                 '<div class="card-profile-image">'+
-                 '<a href="#">'+
-                 '<img src="../images/icons/userIcon.png" class="rounded-circle">'+
-                 '</a>'+
-                 '</div>'+
-                 '</div>'+
-                 '</div>'+
-                 '<div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">'+
-                 '<div class="d-flex justify-content-between">'+
-                 '<a href="#" class="btn btn-sm btn-info mr-4">Connect</a>'+
-                 '<a href="#" class="btn btn-sm btn-default float-right">Message</a>'+
-                 '</div>'+
-                 '</div>'+
-                 '<div class="card-body pt-0 pt-md-4">'+
-                 '<div class="row">'+
-                 '<div class="col">'+
-                 '<div class="card-profile-stats d-flex justify-content-center mt-md-5">'+
-                 '<div>'+
-                 '<span class="heading">22</span>'+
-                 '<span class="description">Matches</span>'+
-                 '</div>'+
-                 '<div>'+
-                 '<span class="heading">10</span>'+
-                 '<span class="description">Photos</span>'+
-                 '</div>'+
-                 '<div>'+
-                 '<span class="heading">89</span>'+
-                 '<span class="description">Connections</span>'+
-                 '</div>'+
-                 '</div>'+
-                 '</div>'+
-                 '</div>'+
-                 '<div class="text-center">'+
-                 '<h3>'+obj[i].name+'<span class="font-weight-light">, '+obj[i].age+'</span> </h3>'+
-                 '<div class="h5 font-weight-300">'+
-                 '<i class="ni location_pin mr-2"></i>City, Country'+
-                 '</div>'+
-                 '<div class="h5 mt-4">'+
-                 '</div>'+
-                 '<div>'+
-                 '</div>'+
-                 '<hr class="my-4">'+
-                 '<p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music.</p>'+
-                 '</div>'+
-                 '</div>'+
-                 '</div>'+
-                 '</div>';
+                    let ress = JSON.parse(obj[i]);
 
-                */
-                let test = '<div style="width: 300px; height: 100%;">'+
-                '<div class="image-flip" ontouchstart="this.classList.toggle(\'hover\');">' +
-                    '<div class="mainflip">'+
-                    '<div class="frontside">'+
-                     '<div class="card card-profile shadow">'+
+                let test =
+                 '<div style="width: 300px; height: 100%;">'+
+                 '<div class="image-flip" >' +
+                 '<div >'+
+                 '<div class="frontside">'+
+                 '<div class="card card-profile shadow">'+
                  '<div class="row justify-content-center">'+
                  '<div class="col-lg-3 order-lg-2">'+
                  '<div class="card-profile-image">'+
@@ -487,8 +452,8 @@ function getAllProfiles() {
                  '</div>'+
                  '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">'+
                  '<div class="d-flex justify-content-between">'+
-                 '<a href="#" class="btn btn-sm btn-info mr-4" onclick="connect(\''+ress.id+'\',\''+$('#username-header').attr('user-id')+'\')">Connect</a>'+
-                 '<a href="#" onclick="showProfile(\''+ress.id+'\',\''+$('#username-header').attr('user-name')+'\',false)" class="btn btn-sm btn-default float-right">Profile</a>'+
+                 '<a href="#" class="btn btn-sm btn-info mr-4 ml-2" onclick="connect(\''+ress.id+'\',\''+$('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.name + ' ' + ress.lastname) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>'+
+                 '<a href="#" onclick="showProfile(\''+ress.id+'\',\''+$('#username-header').attr('user-name')+'\',false)" class="btn btn-sm btn-default float-right mr-2">Profile</a>'+
                  '</div>'+
                  '</div>'+
                  '<div class="card-body pt-0 pt-md-4">'+
@@ -496,69 +461,33 @@ function getAllProfiles() {
                  '<div class="col">'+
                  '<div class="card-profile-stats d-flex justify-content-center mt-md-5">'+
                  '<div>'+
-                 '<span class="heading">22</span>'+
-                 '<span class="description">Matches</span>'+
+                 '<span class="heading"><strong>'+ress.smoker+'</strong></span>'+
+                 '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-smoking mr-2"></i>Smoker</strong></span>'+
                  '</div>'+
                  '<div>'+
-                 '<span class="heading">10</span>'+
-                 '<span class="description">Photos</span>'+
-                 '</div>'+
-                 '<div>'+
-                 '<span class="heading">89</span>'+
-                 '<span class="description">Connections</span>'+
+                 '<span class="heading"><strong>'+ress.drinker+'</strong></span>'+
+                 '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-cocktail mr-2"></i>Drinker</strong></span>'+
                  '</div>'+
                  '</div>'+
                  '</div>'+
                  '</div>'+
-                 '<div class="text-center">'+
-                 '<h3>'+obj[i].name+'<span class="font-weight-light">, '+obj[i].age+'</span> </h3>'+
+                 '<div class="text-center text-desc mainflip" ontouchstart="this.classList.toggle(\'hover\');">'+
+                 '<h3>'+ress.name+'<span class="font-weight-light">, '+ress.age+'</span> </h3>'+
                  '<div class="h5 font-weight-300">'+
-                 '<i class="ni location_pin mr-2"></i>City, Country'+
+                 '<i class="ni location_pin mr-2"></i>'+(ress.town === null ? "Unknown" : ress.town)+', Ireland'+
                  '</div>'+
                  '<div class="h5 mt-4">'+
                  '</div>'+
                  '<div>'+
                  '</div>'+
                  '<hr class="my-4">'+
-                 '<p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music.</p>'+
+                 '<p>'+ress.desc+'</p>'+
                  '</div>'+
                     '</div>'+
                     '</div>'+
                     '</div>'+
                     '</div>';
 
-
-                /*
-
-                        '<div class="row active-with-click">' +
-                        '<div class="col-xs-12">' +
-                        '<article class="material-card Red">' +
-                        '<h2><span >'+obj[i].name+'</span><strong><i class="fas fa-birthday-cake"><i class="ml-3"></i>' +obj[i].age+ '</i><i class="fas fa-map-pin ml-3"><i class="ml-3">'  + (obj[i].location > 0 ?  obj[i].location : "Unknown" )   + '</i></i></strong></h2>'+
-                        '<div class="mc-content">' +
-                        '<div class="img-container">' +
-                        '<img  id="person_image" style="width: 100%; height: 100%;" src="https://source.unsplash.com/random">' +
-                        '</div>' +
-                        '<div class="mc-description">' +
-                        '<div class="modal-body">' +
-                        '<table id="popup_user_info">' +
-                        '<tr><td></td><td>Name</td><td id="person_fullname">'+obj[i].name+'</td>' +
-                        '<tr><td><td>Age :'+obj[i].age+'</td><td></td></td></tr>' +
-                        '<tr><td><td>Gender : '+obj[i].gender+'</td></td></tr>' +
-                        '</table>' +
-                        '</div>' +
-                        '</div></div>' +
-                        '<a class="mc-btn-action" onclick="epxand(this)">' +
-                        '<i class="fa fa-bars"></i>' +
-                        '</a>' +
-                        '<div class="mc-footer">'+
-                        '<button target=_parent type="button" class="btn btn-danger mt-2 match-user-button"><i class="fas fa-user-plus"></i></button>'+
-                        '<button target=_parent type="button" class="ml-3 btn btn-success mt-2 message-user-button"><i class="fas fa-comments"></i></button>'+
-                        '</article></div></div></div>';
-
-                   // let test = "<div onclick='openUserProfile("+ obj[i].id + ")'  class='grid-item'><img class='popimg' src='https://placekitten.com/100/100'/><h4>" + obj[i].name + "</h4></div>\n";
-                    document.getElementById("searchResults").innerHTML += test;
-
-                 */
                     document.getElementById("searchResults").innerHTML += test;
 
                 }
@@ -573,44 +502,11 @@ function getAllProfiles() {
     });
 }
 
-/*
-<section class="container">
 
-    <div class="row active-with-click">
-        <div class="col-md-4 col-sm-6 col-xs-12">
-            <article class="material-card Red">
-                <h2>
-                    <span>Shahnur Alam</span>
-                    <strong>
-                        <i class="fa fa-fw fa-magic"></i>
-                        Qui Maleficus
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://scontent.fcgp2-1.fna.fbcdn.net/v/t1.0-9/64622894_10157744391564026_2243513133849116672_o.jpg?_nc_cat=103&_nc_ohc=3LqOQPKa3LAAQkhNs6IycYd_UEZkq70P1ODj1pCG2E1SdYBAURRB9C5Rg&_nc_ht=scontent.fcgp2-1.fna&oh=64f4a0143ea114c3583a7d0be3114df5&oe=5EAB9485">
-                    </div>
-                    <div class="mc-description">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
+function connect(user_id, logged_in_id, src, name, username, matchingPane, searchpane) {
 
-            </article>
-        </div>
 
-    </div>
-</section>
-
- */
-
-function newMatch() {
-    connect(userID, $('#match_id').val());
-}
-
-function connect(user_id, logged_in_id) {
+    console.log(user_id + " " + logged_in_id + " " + src + " " + name + " " + username + " " + matchingPane + " " + searchpane);
 
     const request = {};
     request.create_match_api = true;
@@ -621,19 +517,59 @@ function connect(user_id, logged_in_id) {
         url: "api.php",
         data: request,
         success: function (response) {
+            let les = JSON.parse(response);
             console.log(response);
-            var res = JSON.parse(response);
-            switch (res.statusCode) {
+            switch (les.statusCode) {
                 case 1:{
                     $('#card_message_button').attr('hidden', false);
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                            confirmButton: 'btn btn-success',
+                            cancelButton: 'btn btn-danger'
+                        },
+                        buttonsStyling: false
+                    })
+
+                    if(matchingPane === true){
+                        nextMatch(null);
+                    }
+
+                    if(searchpane === true){
+                        getAllProfiles();
+                    }
+
+                    swalWithBootstrapButtons.fire({
+                        title: 'You just matched with ' + name,
+                        html: '<img src="'+src+'" alt="" style="width: 150px; height: 150px; border-radius: 75px; border: 2px solid gray;" class="avatar img-thumbnail">',
+                        showCancelButton: true,
+                        confirmButtonText: 'View Profile',
+                        cancelButtonText: 'Message',
+                        reverseButtons: true,
+                        width: 400,
+                        height: 400,
+                        backdrop: `
+                            rgba(0,0,123,0.4)
+                            url("https://media.giphy.com/media/d3MK2JGObFW0NPSE/giphy.gif")
+                            center
+                            no-repeat
+                          `
+                    }).then((result) => {
+                        if (result.value) {
+                            showProfile(user_id,username, true);
+                        } else if (
+                            /* Read more about handling dismissals below */
+                            result.dismiss === Swal.DismissReason.cancel
+                        ) {
+                            showUserChar(username);
+                        }
+                    })
                     break;
                 }
                 case 2:{
-
+                    Swal.fire(les.title, les.message, les.type);
                     break;
                 }
             }
-            Swal.fire(res.title, res.message, res.type);
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
@@ -719,14 +655,14 @@ $(document).ready(function() {
         $(this).tab('show')
     })
 
-    loadMyProfile();
+
 });
 
 function loadMyProfile() {
 
-    var request = {};
+    const request = {};
     request.get_user_profile_api = true;
-    request.userId = userID;
+    request.userId = $('#username-header').attr('user-id');
     console.log('request:loadMyProfile->', request);
     $.ajax({
         method: "POST",
@@ -736,7 +672,7 @@ function loadMyProfile() {
             console.log('loadMyProfile:response->', response);
             let res = JSON.parse(response);
 
-            var defImage = res.photoId;
+            let defImage = res.photoId;
 
             if(defImage == null || defImage.length == 0) {
                 defImage = res.gender == 'Male' ? 'images/male.png' : 'images/female.png';
@@ -752,4 +688,175 @@ function loadMyProfile() {
         }
     });
 
+}
+
+function openReportPane(name) {
+    if($('#report_pane').attr('hidden')){
+        $('#report_pane').attr('hidden', false);
+    }else{
+        $('#report_pane').attr('hidden', true);
+    }
+
+    $('#user_report_username').val(name);
+    $('#user_report_name').val($('#username-header').attr('user-name'));
+    $('#user_report_email').val( $('#username-header').attr('user_email'));
+}
+
+function profileFilterButton() {
+
+
+    document.getElementById("searchResults").innerHTML = '';
+
+    const request = {};
+
+    let input = $('#searchFilter').val();
+
+    let smoker = $('#smoker_select_picker').val();
+    let drinker = $('#drinker_select_picker').val();
+    let interest = $('#interest_box').children();
+    let city = $('#city_select_picker').val();
+    let ints = [];
+
+
+
+    if(drinker !== null && drinker.length > 0){
+        request.drinker = drinker;
+    }
+    if(smoker !== null && smoker.length > 0){
+        request.smoker = smoker;
+    }
+    if(city !== null && city.length > 0){
+        request.city = city;
+    }
+    if(input !== null && input.length > 0){
+        request.input = input;
+    }
+
+
+
+    request.filter_get_users = true;
+    request.userId = $('#username-header').attr('user-id');
+    request.minValue = slider.getValue().minValue;
+    request.maxValue = slider.getValue().maxValue;
+    request.gender = $('#upro_img').attr('data-gender');
+    request.seeking = $('#upro_img').attr('data-seeking');
+
+    for(let i = 0; i < interest.length; i++){
+        let childs = $(interest[i]).children();
+        for(let j = 0; j < childs.length; j++){
+            if($(childs[j]).hasClass('active')){
+                ints.push($(childs[j]).text());
+            }
+        }
+    }
+
+    if(ints.length > 0){
+        request.interests = true;
+    }
+
+    let names = [];
+
+
+    $.ajax({
+        method: "POST",
+        url: "api.php",
+        data: request,
+        success: function (response) {
+            console.log(response);
+            if(response.length > 0) {
+                $('#my_matches_place_holder').attr('hidden', true);
+                $('#searchResults').prop('hidden', false);
+                $('#matching').prop('hidden', true);
+                let res = JSON.parse(response);
+                if (ints.length > 0) {
+                    let name = "";
+                    let obj = [];
+                    for (let i = 0; i < res.length; i++) {
+                        let ress = JSON.parse(res[i]);
+                        name = ress.firstName;
+                        if (ints.includes(ress.interest)) {
+                            if (!names.includes(ress.firstName)) {
+                                names.push(ress.firstName);
+                                obj.push(ress);
+                            }
+                        }
+                    }
+                    for (let i = 0; i < obj.length; i++) {
+                        append(obj[i]);
+                    }
+                }else{
+                    for (let i = 0; i < res.length; i++) {
+                        let ress = JSON.parse(res[i]);
+                        append(ress);
+                    }
+                }
+
+            }else {
+                $('#my_matches_place_holder').attr('hidden', false);
+                $('#my_matches_place_holder').text("No Results");
+            }
+        },
+        failure: function (response) {
+            console.log('failure:' + JSON.stringify(response));
+        },
+        error: function (response) {
+            console.log('error:' + JSON.stringify(response));
+        }
+    });
+
+}
+
+function append(ress) {
+    let test =
+        '<div style="width: 300px; height: 100%;">' +
+        '<div class="image-flip" >' +
+        '<div >' +
+        '<div class="frontside">' +
+        '<div class="card card-profile shadow">' +
+        '<div class="row justify-content-center">' +
+        '<div class="col-lg-3 order-lg-2">' +
+        '<div class="card-profile-image">' +
+        '<img src="' + (ress.photoId === null ? (ress.gender === "Male" ? "images/male.png" : "images/female.png") : ress.photoId) + '" style="width: 118px; height: 118px;" class="rounded-circle avatar">' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="text-center pt-8 pt-md-4 pb-0 pb-md-4">' +
+        '<div class="d-flex justify-content-between">' +
+        '<a href="#" class="btn btn-sm btn-info mr-4 ml-2" onclick="connect(\'' + ress.id + '\',\'' + $('#username-header').attr('user-id') + '\',\'' + ress.photoId + '\',\'' + (ress.firstName + ' ' + ress.lastName) + '\',\'' + $('#username-header').attr('user-name') + '\',\'' + false + '\',\'' + true + '\')">Connect</a>' +
+        '<a href="#" onclick="showProfile(\'' + ress.id + '\',\'' + $('#username-header').attr('user-name') + '\',false)" class="btn btn-sm btn-default float-right mr-2">Profile</a>' +
+        '</div>' +
+        '</div>' +
+        '<div class="card-body pt-0 pt-md-4">' +
+        '<div class="row">' +
+        '<div class="col">' +
+        '<div class="card-profile-stats d-flex justify-content-center mt-md-5">' +
+        '<div>'+
+        '<span class="heading"><strong>'+ress.smoker+'</strong></span>'+
+        '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-smoking mr-2"></i>Smoker</strong></span>'+
+        '</div>'+
+        '<div>'+
+        '<span class="heading"><strong>'+ress.dinker+'</strong></span>'+
+        '<span class="description" style="font-size: 12px;"><strong><i class="fas fa-cocktail mr-2"></i>Drinker</strong></span>'+
+        '</div>'+
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="text-center text-desc mainflip" ontouchstart="this.classList.toggle(\'hover\');">' +
+        '<h3>' + (ress.firstName + " " + ress.lastName) + '<span class="font-weight-light">, ' + ress.age + '</span> </h3>' +
+        '<div class="h5 font-weight-300">' +
+        '<i class="ni location_pin mr-2"></i>' + (ress.town === null ? "Unknown" : ress.town) + ', Ireland' +
+        '</div>' +
+        '<div class="h5 mt-4">' +
+        '</div>' +
+        '<div>' +
+        '</div>' +
+        '<hr class="my-4">' +
+        '<p>' + ress.descripion + '</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+    $('#searchResults').append(test);
 }
