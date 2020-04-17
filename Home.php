@@ -184,20 +184,23 @@
             });
 
             $("#search input").on('input', function () {
-                let ul = document.getElementById("contactsList");
-                let items = ul.getElementsByTagName("li");
-                for (let i = 0; i < items.length; ++i) {
-                    console.log($('#search input').val());
-                    if(!items[i].getAttribute('data-username').toLowerCase().includes($('#search input').val().toLowerCase(), 0)) {
-                        items[i].style.display = "none";
-                    }else{
-                        items[i].style.display = "block";
-                    }
-                }
+                filterChatList();
             })
 
         });
 
+        function filterChatList() {
+            let ul = document.getElementById("contactsList");
+            let items = ul.getElementsByTagName("li");
+            for (let i = 0; i < items.length; ++i) {
+                console.log($('#search input').val());
+                if(!items[i].getAttribute('data-username').toLowerCase().includes($('#search input').val().toLowerCase(), 0)) {
+                    items[i].style.display = "none";
+                }else{
+                    items[i].style.display = "block";
+                }
+            }
+        }
 
 
         function search() {
@@ -405,6 +408,7 @@
                         console.log("Cse");
 
                     }
+                    filterChatList();
                 },
                 failure: function (response) {
                     console.log('failure:' + JSON.stringify(response));
