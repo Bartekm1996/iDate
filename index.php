@@ -278,6 +278,9 @@
                         case 3:
                             passWordReset('Invalid Password', 'warning')
                             break;
+                        case 11: {
+                            Swal.fire(response.title, response.message, response.type);
+                        }
                         default:
                             Swal.fire(response.title, response.message, response.type);
                             break;

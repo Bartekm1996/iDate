@@ -90,7 +90,7 @@ function showProfile(currentProfile, username, matched) {
                 $('#profile_input_user_name').val(res.userName);
                 $('#profile_input_user_first_name').val(res.firstName);
                 $('#profile_input_user_last_name').val(res.lastName);
-                $('#profile_bio').val(res.descripion);
+                $('#profile_bio').val((res.descripion === null ? "Say Something About yourself" : res.descripion));
                 $('#seeking_picker').val(res.seeking);
                 $('#drinker_picker').val(res.dinker);
                 $('#smoking_picker').val(res.smoker);
@@ -102,7 +102,7 @@ function showProfile(currentProfile, username, matched) {
                 $('#age_picker').val(parseInt(res.age));
                 $('#city_select').val((res.town === null ? "Unknown" : res.town));
                 $('#city_selected').text((res.town === null ? "Unknown" : res.town) + ",Ireland");
-                $('#profile_card_description').text(res.descripion);
+                $('#profile_card_description').text((res.descripion === null ? "Say Something About yourself" : res.descripion));
                 $('#profile_user_card_name').attr('user_age', res.age);
                 $('#drinker_header').text(res.dinker);
                 $('#smoker_header').text(res.smoker);

@@ -228,7 +228,7 @@ function editProfile(elem) {
     $('#user_email_input').val(email);
     $('#first_name').val(name[0]);
     $('#user_last_name_input').val(name[1]);
-    $('#location').val(($(elem).attr('data-town') === null ? "Unknown" : ($(elem).attr('data-town'))));
+    $('#location').val(($(elem).attr('data-town') === "null" ? "Unknown" : ($(elem).attr('data-town'))));
 
     let gender = $(elem).attr('data-gender');
     let photoId = $(elem).attr('data-photoId');

@@ -54,7 +54,7 @@ if (isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['email'])
 
                     $resp = new SweetalertResponse(11,
                         'Registered',
-                        "$email Registered successfully. Please check email and confirm activation link",
+                        "$email Registered successfully. Please check your email and click on the activation link",
                         SweetalertResponse::SUCCESS
                     );
 
