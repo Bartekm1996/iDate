@@ -238,6 +238,7 @@
                 }
             }
 
+            $('#contact_name').attr('data-size', $(elem).attr('data-size'));
             $('#contact_name').text($('ul#contactsList').find('li.active').attr("data-username"));
 
             getPicture($(elem).attr('data-username'));
@@ -352,7 +353,7 @@
                     for (let i = 0; i < res[0]._conversations.length; i++) {
 
 
-                        $('<li class="contact" onclick="toggleClass(this)" data-id='+i+' data-username='+res[0]._conversations[i].username+'>'
+                        $('<li class="contact" onclick="toggleClass(this)" data-size='+(res[0]._conversations[i].messages[res[0]._conversations[i].messages.length-1].message.length === 0 ? 0 : 1)+' data-id='+i+' data-username='+res[0]._conversations[i].username+'>'
                             + '<div class="wrap">'
                             + '<img src="https://source.unsplash.com/random" alt="">'
                             + '<div class="meta">'
@@ -517,8 +518,7 @@
                 return false;
             }
 
-            let usr  = "#"+$('#contact_name').text()+"_preview";
-            let size = ($(usr).text().length === 0 ? 0 : 1);
+            let size = $('#contact_name').attr('data-size');
 
             const request = {};
 
