@@ -349,18 +349,23 @@
                 data: request,
                 success: function (response) {
 
+
+
                     let res = JSON.parse(response);
                     console.log(res);
+                    debugger;
+                    var allConvos = res[0]._conversations;
+                    for (let i = 0; i < allConvos.length; i++) {
+                        var curMsgs = allConvos[i].messages;
 
-                    for (let i = 0; i < res[0]._conversations.length; i++) {
+                        if(!curMsgs.length || curMsgs.length === 0) continue; //if invalid or has not messages
 
-
-                        $('<li class="contact" onclick="toggleClass(this)" data-size='+(res[0]._conversations[i].messages[res[0]._conversations[i].messages.length-1].message.length === 0 ? 0 : 1)+' data-id='+i+' data-username='+res[0]._conversations[i].username+'>'
+                        $('<li class="contact" onclick="toggleClass(this)" data-size='+(curMsgs[curMsgs.length-1].message.length === 0 ? 0 : 1)+' data-id='+i+' data-username='+res[0]._conversations[i].username+'>'
                             + '<div class="wrap">'
                             + '<img src="https://source.unsplash.com/random" alt="">'
                             + '<div class="meta">'
-                            + '<p class="name text-white" style="font-size: 13px; font-weight: bold;"><strong>' +res[0]._conversations[i].username+'</strong></p>'
-                            + '<p class="preview text-white" id="'+res[0]._conversations[i].username+'_preview">'+res[0]._conversations[i].messages[res[0]._conversations[i].messages.length-1].message+'</p>'
+                            + '<p class="name text-white" style="font-size: 13px; font-weight: bold;"><strong>' +allConvos[i].username+'</strong></p>'
+                            + '<p class="preview text-white" id="'+allConvos[i].username+'_preview">'+curMsgs[curMsgs.length-1].message+'</p>'
                             + '</div></div></li>').appendTo($('#contactsList'));
 
                         console.log("Cse");
