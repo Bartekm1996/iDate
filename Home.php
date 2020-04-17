@@ -326,6 +326,10 @@
                     console.log('error:' + JSON.stringify(response));
                 }
             });
+            clearInterval(interval);
+            interval = setInterval(function() {
+                loadConversations();
+            }, 10000);
         }
 
 
