@@ -33,6 +33,40 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="vendorv/jquery/jquery-3.2.1.min.js"></script>
 
+    <style>
+        .overlapbtn {
+            /* This bit sets up the horizontal layout */
+            display:flex;
+            flex-direction:row;
+            /* I've used padding so you can see the edges of the elements. */
+            padding:2px;
+        }
+
+        .overlapbtn input {
+            /* Tell the input to use all the available space */
+            flex-grow:2;
+            /* And hide the input's outline, so the form looks like the outline */
+            border:none;
+        }
+
+        .overlapbtn input:focus {
+            /* removing the input focus blue box. Put this on the form if you like. */
+            outline: none;
+        }
+
+        .round-button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
 
     <script>
 
@@ -727,14 +761,21 @@
 
 
             <div class="matches" id="matcharea" hidden>
-                <a href="#" class="fab" style="font-weight: bold;" onclick="showFilter()">
-                    <i class="fas fa-filter fab-float mr-1"></i>Filter
-                </a>
+
+
                 <div class="container h-100 mb-5">
                     <div class="d-flex justify-content-center h-100">
                         <div class="searchbar">
+
+                            <div class="overlapbtn">
                             <input class="search_input" id="searchFilter" type="text" name="" placeholder="Search..." data-matches="false" onkeyup="getAllProfiles(null,null,null)">
-                            <section class="filter" hidden>
+<!--                                <a href="#" class="fab" style="font-weight: bold;" onclick="showFilter()">-->
+<!--                                    <i class="fas fa-filter fab-float mr-1"></i>Filter-->
+<!--                                </a>-->
+                                <button class="btn btn-success" onclick="showFilter()"><i class="fas fa-filter"></i> Filter</button>
+                            </div>
+
+                                <section class="filter" hidden>
                                 <div class="mb-3 mt-3" style="width: 100%;margin-top: 40px;">
                                     <label class="text-white">Smoker </label>
                                     <select id="smoker_select_picker" class="form-control" >
