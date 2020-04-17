@@ -414,45 +414,38 @@ function saveUserData() {
                     icon: "warning"
                 });
         }else {
-            if ($('#profile_input_user_last_name').val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
-                    Swal.fire({
-                        title: "Email Error",
-                        text: "Email is not valid",
-                        icon: "warning"
-                    });
-            } else {
-                $.ajax({
-                    method: "POST",
-                    url: 'userManagmentApi.php',
-                    data: request,
-                    success: function (response) {
-                        let res = JSON.parse(response);
-                        if (res.statusCode === 1) {
-                            Swal.fire({
-                                title: "User info has been successfully updated",
-                                text: 'User ' + username + " details have been updated successfully",
-                                icon: 'success'
-                            });
-                        } else if (res.statusCode === 2) {
-                            Swal.fire({
-                                title: "Failed to update User info successfully",
-                                text: 'Failed to update users ' + username + " details",
-                                icon: 'error'
-                            });
-                        }
-                            showUserManagment(null);
-                            console.log('success:' + JSON.stringify(response));
-                        },
-                        failure: function (response) {
-                            console.log('failure:' + JSON.stringify(response));
-                        },
-                        error: function (response) {
-                            console.log('error:' + JSON.stringify(response));
-                        }
-                    });
+
+            $.ajax({
+                method: "POST",
+                url: 'userManagmentApi.php',
+                data: request,
+                success: function (response) {
+                    let res = JSON.parse(response);
+                    if (res.statusCode === 1) {
+                        Swal.fire({
+                            title: "User info has been successfully updated",
+                            text: 'User ' + username + " details have been updated successfully",
+                            icon: 'success'
+                        });
+                    } else if (res.statusCode === 2) {
+                        Swal.fire({
+                            title: "Failed to update User info successfully",
+                            text: 'Failed to update users ' + username + " details",
+                            icon: 'error'
+                        });
+                    }
+                    showUserManagment(null);
+                    console.log('success:' + JSON.stringify(response));
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
                 }
-            }
+            });
         }
+    }
 }
 
 
