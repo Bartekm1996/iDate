@@ -292,7 +292,6 @@
                 success: function (response) {
                     console.log('success ' + response + " length ");
                     let res = JSON.parse(response);
-                    console.log("Message " + res[0]._conversations[request.messages].messages[0].message);
 
                         let length = 0;
                         if ($('.messages ul').attr('data-length') !== undefined || $('.messages ul').attr('data-length') > 0) {
@@ -302,7 +301,6 @@
                             length = $('.messages ul li').length;
                         }
 
-                        console.log("Length " + res[0]._conversations[request.messages].messages[0].username + " " + length);
 
                             for (let i = length; i < res[0]._conversations[request.messages].messages.length; i++) {
                                 $('<li>' +
@@ -326,6 +324,10 @@
                     console.log('error:' + JSON.stringify(response));
                 }
             });
+            clearInterval(interval);
+            interval = setInterval(function() {
+                loadConversations();
+            }, 5000);
         }
 
 
@@ -335,7 +337,7 @@
             clearInterval(interval);
             interval = setInterval(function() {
                 loadConversations();
-            }, 10000);
+            }, 5000);
             $('#contactsList').empty();
 
             const request = {};
@@ -514,7 +516,9 @@
                 return false;
             }
 
-            let size = $('#contact_name').attr('data-size');
+            let size = ($('#contact_name').attr('data-size') === undefined ? $('.messages ul li').length : $('#contact_name').attr('data-size'));
+
+            console.log("Data size " + size)
 
             const request = {};
 
@@ -553,7 +557,7 @@
             interval = setInterval(function() {
                 loadConversations();
                 getMessage();
-            }, 10000);
+            }, 5000);
         };
 
 
