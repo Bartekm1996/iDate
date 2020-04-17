@@ -721,8 +721,8 @@
 
 
             <div class="matches" id="matcharea" hidden>
-                <a href="#" class="fab" onclick="showFilter()">
-                    <i class="fas fa-filter fab-float"></i>
+                <a href="#" class="fab" style="font-weight: bold;" onclick="showFilter()">
+                    <i class="fas fa-filter fab-float mr-1"></i>Filter
                 </a>
                 <div class="container h-100 mb-5">
                     <div class="d-flex justify-content-center h-100">
@@ -773,7 +773,7 @@
                                         <div style="display: grid;grid-template-columns: auto auto auto auto;grid-gap: 20px;"><span class="badge badge-primary" onclick="addActive(this)">Swimming</span><span class="badge badge-primary" onclick="addActive(this)">Cinema</span><span class="badge badge-primary ml-2" onclick="addActive(this)">Diving</span></div>
                                     </div>
                                 </div>
-                                <button class="btn btn-success" style="width: 100%; margin-top: 15px;" data-toggle="Search Filter" data-placement="right" title="Filter" onclick="profileFilterButton()">Filter</button>
+                                <button class="btn btn-success" style="width: 100%; margin-top: 15px;" onclick="profileFilterButton()">Filter</button>
                             </section>
                         </div>
                     </div>
