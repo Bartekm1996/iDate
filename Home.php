@@ -36,7 +36,7 @@
 
     <script>
 
-        let interval  =0;
+        let interval  = 0;
 
         var userID = '<?php echo $_SESSION['userid']; ?>';
 
@@ -508,11 +508,7 @@
         }
 
         function newMessage() {
-            clearInterval(interval);
-            interval = setInterval(function() {
-                getMessage();
-                loadConversations();
-            }, 10000);
+
             let message = $(".message-input input").val();
             if($.trim(message) == '') {
                 return false;
@@ -553,10 +549,11 @@
             $(".messages").animate({ scrollTop: $(document).height() }, "slow");
 
 
+            clearInterval(interval);
             interval = setInterval(function() {
                 loadConversations();
                 getMessage();
-            }, 2000);
+            }, 10000);
         };
 
 
