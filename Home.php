@@ -95,10 +95,8 @@
             loadHistoryTable($('#username-header').attr('user-name'));
             fillMembersNumbers();
             fillTicketsNumbers();
+            loadConversations();
 
-            interval = setInterval(function() {
-                loadConversations();
-            }, 3000);
         };
 
         function showUserChar(user) {
@@ -182,7 +180,7 @@
             })
 
             swalWithBootstrapButtons.fire({
-                title: 'Are you sure?',
+                title: 'Log Out ?? Are you sure?',
                 text: "Ready to miss a chance of finding your love ?",
                 icon: 'warning',
                 showCancelButton: true,
@@ -209,7 +207,7 @@
                         }
                     }).fire({
                         icon: 'success',
-                        title: 'Logged out successfully'
+                        title: 'Logged Out successfully'
                     });
 
                     //clearInterval(interval);
@@ -219,7 +217,7 @@
                     result.dismiss === Swal.DismissReason.cancel
                 ) {
                     swalWithBootstrapButtons.fire(
-                        'Congratulations',
+                        "Congratulations, You've stayed",
                         'You Made the right choice :)',
                         'success'
                     )
@@ -271,11 +269,6 @@
         }
 
         function getMessage(){
-            clearInterval(interval);
-            interval = setInterval(function() {
-                getMessage();
-                loadConversations();
-            }, 2000);
 
             $('#placeholder').css({"display": 'none'});
             $('.contact-profile').css({"display": 'block'});
@@ -338,6 +331,10 @@
 
         async function loadConversations(){
 
+            clearInterval(interval);
+            interval = setInterval(function() {
+                loadConversations();
+            }, 10000);
             $('#contactsList').empty();
 
             const request = {};
@@ -360,7 +357,7 @@
                             + '<img src="https://source.unsplash.com/random" alt="">'
                             + '<div class="meta">'
                             + '<p class="name text-white" style="font-size: 13px; font-weight: bold;"><strong>' +res[0]._conversations[i].username+'</strong></p>'
-                            + '<p class="preview text-white">'+res[0]._conversations[i].messages[res[0]._conversations[i].messages.length-1].message+'</p>'
+                            + '<p class="preview text-white" id="'+res[0]._conversations[i].username+'_preview">'+res[0]._conversations[i].messages[res[0]._conversations[i].messages.length-1].message+'</p>'
                             + '</div></div></li>').appendTo($('#contactsList'));
 
                         console.log("Cse");
@@ -511,14 +508,17 @@
 
         function newMessage() {
             clearInterval(interval);
+            interval = setInterval(function() {
+                getMessage();
+                loadConversations();
+            }, 10000);
             let message = $(".message-input input").val();
             if($.trim(message) == '') {
                 return false;
             }
 
-            let size = $('.messages ul li').length;
-
-            console.log("Size "+ size);
+            let usr  = "#"+$('#contact_name').text()+"_preview";
+            let size = ($(usr).text().length === 0 ? 0 : 1);
 
             const request = {};
 
@@ -550,7 +550,7 @@
 
             //$('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
             $('.message-input input').val(null);
-            $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+            $(".messages").animate({ scrollTop: $(document).height() }, "slow");
 
 
             interval = setInterval(function() {
@@ -699,17 +699,17 @@
 
                         echo
                          '<a href="#" onclick="showTickets(\'Opened\')">'.
-                         '<i class="fa fa-bell"></i>'.
+                         '<i class="fa fa-bell mr-2"></i>Tickets'.
                          '</a>';
                     }
 
                     ?>
 
                     <a href="#" onclick="showChat()">
-                        <i class="fa fa-envelope"></i>
+                        <i class="fa fa-envelope mr-2"></i>Messages
                     </a>
-                    <a href="#" onclick="logout()">
-                        <i class="fa fa-power-off"></i>
+                    <a href="#" data-toggle="Log Out" data-placement="top" onclick="logout()">
+                        <i class="fa fa-power-off mr-2"></i>Log Out
                     </a>
                 </div>
             </nav>
@@ -728,6 +728,53 @@
                     <div class="d-flex justify-content-center h-100">
                         <div class="searchbar">
                             <input class="search_input" id="searchFilter" type="text" name="" placeholder="Search..." data-matches="false" onkeyup="getAllProfiles(null,null,null)">
+                            <section class="filter" hidden>
+                                <div class="mb-3 mt-3" style="width: 100%;margin-top: 40px;">
+                                    <label class="text-white">Smoker </label>
+                                    <select id="smoker_select_picker" class="form-control" >
+                                        <optgroup label="Select A Smoker">
+                                            <option value=""selected>Select your option</option>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                            <option value="ocasionally">Ocasionally</option>
+                                            <option value="party drinker">Party Smoker</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <div style="width: 100%;">
+                                    <label class="text-white">Drinker </label>
+                                    <select id="drinker_select_picker" class="form-control">
+                                        <optgroup label="Select A Drinking">
+                                            <option value=""selected>Select your option</option>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                            <option value="ocasionally">Ocasionally</option>
+                                            <option value="party drinker">Party Drinker</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <div style="width: 100%;" class="mt-2">
+                                    <div class="form-group focused">
+                                        <label class="text-white">City </label>
+                                        <select id="city_select_picker" class="form-control">
+                                            <option value=""selected>Select your option</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-4 ml-1">
+                                    <label class="text-white ml-3">Age</label>
+                                    <div class="my-js-slider mb-2" style="width: 100%; padding-left: 30px; padding-right: 30px;"></div>
+                                </div>
+                                <div style="margin-top: 20px;">
+                                    <label class="text-left text-white d-none d-lg-flex ml-2 mt-2 mb-2" for="interest_box">Interests</label>
+                                    <div id="interest_box" class="ml-2 mr-2">
+                                        <div class="mb-3" style="display: grid;grid-template-columns: auto auto auto auto;grid-gap: 10px;"><span class="badge badge-primary" onclick="addActive(this)">Programming</span><span class="badge badge-primary" onclick="addActive(this)">Football</span><span class="badge badge-primary" onclick="addActive(this)">Travelling</span><span class="badge badge-primary ml-2" onclick="addActive(this)">Horse Riding</span></div>
+                                        <div class="mb-3" style="display: grid;grid-template-columns: auto auto auto;grid-gap: 10px;"><span class="badge badge-primary" onclick="addActive(this)">Fashion</span><span class="badge badge-primary" onclick="addActive(this)">Jogging</span><span class="badge badge-primary" onclick="addActive(this)">Crossfit</span></div>
+                                        <div style="display: grid;grid-template-columns: auto auto auto auto;grid-gap: 20px;"><span class="badge badge-primary" onclick="addActive(this)">Swimming</span><span class="badge badge-primary" onclick="addActive(this)">Cinema</span><span class="badge badge-primary ml-2" onclick="addActive(this)">Diving</span></div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-success" style="width: 100%; margin-top: 15px;" data-toggle="Search Filter" data-placement="right" title="Filter" onclick="profileFilterButton()">Filter</button>
+                            </section>
                         </div>
                     </div>
                 </div>
@@ -774,54 +821,6 @@
                 </section>
             </div>
 
-
-            <section class="filter" hidden>
-                <div class="mb-3 mt-3" style="width: 100%;margin-top: 40px;">
-                    <label class="text-white">Smoker </label>
-                    <select id="smoker_select_picker" class="form-control" >
-                        <optgroup label="Select A Smoker">
-                            <option value=""selected>Select your option</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                            <option value="ocasionally">Ocasionally</option>
-                            <option value="party drinker">Party Smoker</option>
-                        </optgroup>
-                    </select>
-                </div>
-                <div style="width: 100%;">
-                    <label class="text-white">Drinker </label>
-                    <select id="drinker_select_picker" class="form-control">
-                        <optgroup label="Select A Drinking">
-                            <option value=""selected>Select your option</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                            <option value="ocasionally">Ocasionally</option>
-                            <option value="party drinker">Party Drinker</option>
-                        </optgroup>
-                    </select>
-                </div>
-                <div style="width: 100%;" class="mt-2">
-                    <div class="form-group focused">
-                        <label class="text-white">City </label>
-                        <select id="city_select_picker" class="form-control">
-                            <option value=""selected>Select your option</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row mt-4 ml-1">
-                    <label class="text-white ml-3">Age</label>
-                    <div class="my-js-slider mb-2" style="width: 100%; padding-left: 30px; padding-right: 30px;"></div>
-                </div>
-                <div style="margin-top: 20px;">
-                    <label class="text-left text-white d-none d-lg-flex ml-2 mt-2 mb-2" for="interest_box">Interests</label>
-                    <div id="interest_box" class="ml-2 mr-2">
-                        <div class="mb-3" style="display: grid;grid-template-columns: auto auto auto auto;grid-gap: 10px;"><span class="badge badge-primary" onclick="addActive(this)">Programming</span><span class="badge badge-primary" onclick="addActive(this)">Football</span><span class="badge badge-primary" onclick="addActive(this)">Travelling</span><span class="badge badge-primary ml-2" onclick="addActive(this)">Horse Riding</span></div>
-                        <div class="mb-3" style="display: grid;grid-template-columns: auto auto auto;grid-gap: 10px;"><span class="badge badge-primary" onclick="addActive(this)">Fashion</span><span class="badge badge-primary" onclick="addActive(this)">Jogging</span><span class="badge badge-primary" onclick="addActive(this)">Crossfit</span></div>
-                        <div style="display: grid;grid-template-columns: auto auto auto auto;grid-gap: 20px;"><span class="badge badge-primary" onclick="addActive(this)">Swimming</span><span class="badge badge-primary" onclick="addActive(this)">Cinema</span><span class="badge badge-primary ml-2" onclick="addActive(this)">Diving</span></div>
-                    </div>
-                </div>
-                <button class="btn btn-success" style="width: 100%; margin-top: 15px;" onclick="profileFilterButton()">Filter</button>
-            </section>
 
             <div id="frame" hidden >
                 <div id="sidepanel">
