@@ -402,7 +402,7 @@
 
                         $('<li class="contact" onclick="toggleClass(this)" data-size='+(curMsgs[curMsgs.length-1].message.length === 0 ? 0 : 1)+' data-id='+i+' data-username='+res[0]._conversations[i].username+'>'
                             + '<div class="wrap">'
-                            + '<img src="https://source.unsplash.com/random" alt="">'
+                            + '<img src="images/message.png" alt="">'
                             + '<div class="meta">'
                             + '<p class="name text-white" style="font-size: 13px; font-weight: bold;"><strong>' +allConvos[i].username+'</strong></p>'
                             + '<p class="preview text-white" id="'+allConvos[i].username+'_preview">'+curMsgs[curMsgs.length-1].message+'</p>'
