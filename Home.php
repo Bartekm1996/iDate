@@ -775,7 +775,7 @@
 <!--                                <a href="#" class="fab" style="font-weight: bold;" onclick="showFilter()">-->
 <!--                                    <i class="fas fa-filter fab-float mr-1"></i>Filter-->
 <!--                                </a>-->
-                                <button class="btn btn-success fab" onclick="showFilter()"><i class="fas fa-filter"></i> Filter</button>
+                                <button class="btn btn-success" style="height: 55px; width: 55px; border-radius: 27px;" onclick="showFilter()"><i class="fas fa-filter"></i> Filter</button>
                             </div>
 
                                 <section class="filter" hidden>
