@@ -57,17 +57,22 @@
             request.reset_email = email;
             sendDataTest(request, "Login.php");
         }
+
+        function privacyPolicy(){
+
+        }
+
         async function acceptTermsAndCons(request) {
             const {value: accept} = await Swal.fire({
-                title: 'Terms and conditions',
+                title: 'Privacy Policy',
                 input: 'checkbox',
                 inputValue: 1,
                 inputPlaceholder:
-                    'I agree with the <a href="#">terms and conditions</a>',
+                    'I agree with the <a href="#" onclick="privacyPolicy()">Privacy Policy Of iDate</a>',
                 confirmButtonText:
                     'Continue<i class="fa fa-arrow-right"></i>',
                 inputValidator: (result) => {
-                    return !result && 'You need to agree with T&C to continue'
+                    return !result && 'You need to agree with Privacy Policy to continue'
                 }
             })
             if (accept) {

@@ -375,7 +375,6 @@
             interval = setInterval(function() {
                 loadConversations();
             }, 5000);
-            $('#contactsList').empty();
 
             const request = {};
             request.userId =  $('#username-header').attr('user-name');
@@ -387,13 +386,13 @@
                 success: function (response) {
 
 
+                    $('#contactsList').empty();
 
                     let res = JSON.parse(response);
                     console.log(res);
-                    debugger;
-                    var allConvos = res[0]._conversations;
+                    let allConvos = res[0]._conversations;
                     for (let i = 0; i < allConvos.length; i++) {
-                        var curMsgs = allConvos[i].messages;
+                        let curMsgs = allConvos[i].messages;
 
                         if(!curMsgs.length || curMsgs.length === 0) continue; //if invalid or has not messages
 
@@ -776,7 +775,7 @@
 <!--                                <a href="#" class="fab" style="font-weight: bold;" onclick="showFilter()">-->
 <!--                                    <i class="fas fa-filter fab-float mr-1"></i>Filter-->
 <!--                                </a>-->
-                                <button class="btn btn-success" onclick="showFilter()"><i class="fas fa-filter"></i> Filter</button>
+                                <button class="btn btn-success fab" onclick="showFilter()"><i class="fas fa-filter"></i> Filter</button>
                             </div>
 
                                 <section class="filter" hidden>
