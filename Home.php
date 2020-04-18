@@ -278,6 +278,7 @@
 
             $('#contact_name').attr('data-size', $(elem).attr('data-size'));
             $('#contact_name').text($('ul#contactsList').find('li.active').attr("data-username"));
+            $('#contact_name').attr('data-id',$('ul#contactsList').find('li.active').attr("data-id"));
 
             getPicture($(elem).attr('data-username'));
             getMessage()
@@ -316,10 +317,11 @@
 
             let id = $('#username-header').attr('user-name');
 
-            console.log("id " + id);
             const request = {};
-            request.messages = ($('ul#contactsList').find('li.active').attr("data-id") === undefined ?   0 : $('ul#contactsList').find('li.active').attr("data-id"));
+            request.messages = ($('#contact_name').attr('data-id') === undefined ?  0 : $('#contact_name').attr('data-id'));
             request.userId = id;
+
+            console.log($('#contact_name').attr('data-id') + " data-id " + request.messages);
 
 
             console.log(request.messages + "  " + request.userId);
