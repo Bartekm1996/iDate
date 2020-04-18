@@ -593,8 +593,8 @@
 
             //$('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
             $('.message-input input').val(null);
-            $(".messages").animate({ scrollTop: $(document).height() }, "slow");
-            
+            $(".messages").animate({ scrollTop: $(window).height() }, "slow");
+
         };
 
 
