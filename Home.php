@@ -364,7 +364,7 @@
             clearInterval(interval);
             interval = setInterval(function() {
                 loadConversations();
-            }, 5000);
+            }, 3000);
         }
 
 
@@ -374,7 +374,7 @@
             clearInterval(interval);
             interval = setInterval(function() {
                 loadConversations();
-            }, 5000);
+            }, 3000);
 
             const request = {};
             request.userId =  $('#username-header').attr('user-name');
@@ -599,7 +599,7 @@
             interval = setInterval(function() {
                 loadConversations();
                 getMessage();
-            }, 5000);
+            }, 3000);
         };
 
 
@@ -775,7 +775,7 @@
 <!--                                <a href="#" class="fab" style="font-weight: bold;" onclick="showFilter()">-->
 <!--                                    <i class="fas fa-filter fab-float mr-1"></i>Filter-->
 <!--                                </a>-->
-                                <button class="btn btn-success" style="height: 55px; width: 55px; border-radius: 27px;" onclick="showFilter()"><i class="fas fa-filter"></i> Filter</button>
+                                <button class="btn btn-success" style="height: 90px; width: 90px; border-radius: 45px;" onclick="showFilter()"><i class="fas fa-filter"></i> Filter</button>
                             </div>
 
                                 <section class="filter" hidden>
