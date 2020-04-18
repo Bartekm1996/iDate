@@ -365,7 +365,7 @@
             clearInterval(interval);
             interval = setInterval(function() {
                 loadConversations();
-            }, 3000);
+            }, 2000);
         }
 
 
@@ -375,7 +375,7 @@
             clearInterval(interval);
             interval = setInterval(function() {
                 loadConversations();
-            }, 3000);
+            }, 2000);
 
             const request = {};
             request.userId =  $('#username-header').attr('user-name');
@@ -594,13 +594,7 @@
             //$('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
             $('.message-input input').val(null);
             $(".messages").animate({ scrollTop: $(document).height() }, "slow");
-
-
-            clearInterval(interval);
-            interval = setInterval(function() {
-                loadConversations();
-                getMessage();
-            }, 3000);
+            
         };
 
 
