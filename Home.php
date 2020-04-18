@@ -36,26 +36,27 @@
     <style>
         .overlapbtn {
             /* This bit sets up the horizontal layout */
-            display:flex;
-            flex-direction:row;
+            position: relative;
+            margin-bottom:10px;
             /* I've used padding so you can see the edges of the elements. */
-            padding:2px;
+
         }
 
-        .overlapbtn input {
-            /* Tell the input to use all the available space */
-            flex-grow:2;
-            /* And hide the input's outline, so the form looks like the outline */
-            border:none;
-        }
-
-        .overlapbtn input:focus {
-            /* removing the input focus blue box. Put this on the form if you like. */
-            outline: none;
-        }
-
-        .round-button {
+        .filter_button{
             background-color: #4CAF50; /* Green */
+            position:absolute;
+            right: -10px;
+            top: -10px;
+            width: 100px;
+            font-size: 18px;
+            border:none;
+            height:60px;
+            border-radius: 0 30px 30px 0;
+            outline:none;
+            text-align:center;
+            font-weight:bold;
+        }
+        .round-button {
             border: none;
             color: white;
             padding: 12px;
@@ -771,11 +772,11 @@
                         <div class="searchbar">
 
                             <div class="overlapbtn">
-                            <input class="search_input" id="searchFilter" type="text" name="" placeholder="Search..." data-matches="false" onkeyup="getAllProfiles(null,null,null)">
+                                <input class="search_input" id="searchFilter" type="text" name="" placeholder="Search..." data-matches="false" onkeyup="getAllProfiles(null,null,null)">
 <!--                                <a href="#" class="fab" style="font-weight: bold;" onclick="showFilter()">-->
 <!--                                    <i class="fas fa-filter fab-float mr-1"></i>Filter-->
 <!--                                </a>-->
-                                <button class="btn btn-success" style="height: 90px; width: 90px; border-radius: 45px;" onclick="showFilter()"><i class="fas fa-filter"></i> Filter</button>
+                                <button class="filter_button" onclick="showFilter()"><i class="fas fa-filter"></i> Filter</button>
                             </div>
 
                                 <section class="filter" hidden>
