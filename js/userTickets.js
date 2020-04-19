@@ -9,6 +9,13 @@ function filterTickets(filter) {
     });
 }
 
+function checkLength(elem, i) {
+    let textLength = (320 - $(elem).val().length);
+    let counter = "#counter_"+i;
+    console.log($(counter).text());
+    $(counter).text(textLength + " characters remaining");
+}
+
 function getAllTickets(status) {
 
     $('#complaints tr').remove();
@@ -109,8 +116,8 @@ function getAllTickets(status) {
                             '<div>' +
                             '<div id="message_pane' + i + '">' +
                             '</div>' +
-                            '   <textarea class="form-control counted" name="message" placeholder="Add Notes" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
-                            '   <h6 class="pull-right" id="counter">320 characters remaining</h6>' +
+                            '   <textarea class="form-control counted" name="message" maxlength="320" onkeyup="checkLength(this, '+i+')" placeholder="Add Notes" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
+                            '   <p class="pull-right" id="counter_'+i+'">320 characters remaining</p>' +
                             '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + i + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\',\'' + res[i].email + '\')" type="submit">Reply</button>' +
                             '</div>' +
                             '</div>' +
