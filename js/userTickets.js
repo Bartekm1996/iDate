@@ -113,14 +113,18 @@ function getAllTickets(status) {
                             '<td colspan="4">' +
                             '<div class="panel-body wrap"">' +
                             '<div>' +
-                            '<div>' +
-                            '<div id="message_pane' + i + '">' +
-                            '</div>' +
-                            '   <textarea class="form-control counted" name="message" maxlength="320" onkeyup="checkLength(this, '+i+')" placeholder="Add Notes" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
-                            '   <p class="pull-right" id="counter_'+i+'">320 characters remaining</p>' +
-                            '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + i + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\',\'' + res[i].email + '\')" type="submit">Reply</button>' +
-                            '</div>' +
-                            '</div>' +
+                            '<div>';
+
+                            if(res[i].status !== "Closed") {
+
+                                test += '<div id="message_pane' + i + '">' +
+                                    '</div>' +
+                                    '   <textarea class="form-control counted" name="message" maxlength="320" onkeyup="checkLength(this, ' + i + ')" placeholder="Add Notes" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
+                                    '   <p class="pull-right" id="counter_' + i + '">320 characters remaining</p>' +
+                                    '<button class="btn btn-info" onclick="sendMessage(\'' + "message_pane" + i + '\',\'' + i + '\',\'Bartek\',\'' + res[i].number + '\',\'' + res[i].reason + '\',\'' + res[i].email + '\')" type="submit">Reply</button>' +
+                                    '</div>';
+                            }
+                            test += '</div>' +
                             '</td>' +
                             '</tr>';
 
