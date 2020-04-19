@@ -112,12 +112,11 @@ function getAllTickets(status) {
                             '<tr id="collapseme_' + i + '" class="collapse out" data-number="' + res[i].number + '" data-status="' + reason + '" hidden>' +
                             '<td colspan="4">' +
                             '<div class="panel-body wrap"">' +
-                            '<div>' +
                             '<div>';
 
                             if(res[i].status !== "Closed") {
 
-                                test += '<div id="message_pane' + i + '">' +
+                                test += '<div><div id="message_pane' + i + '">' +
                                     '</div>' +
                                     '   <textarea class="form-control counted" name="message" maxlength="320" onkeyup="checkLength(this, ' + i + ')" placeholder="Add Notes" rows="5" id="response_' + i + '" style="margin-bottom:10px;"></textarea>' +
                                     '   <p class="pull-right" id="counter_' + i + '">320 characters remaining</p>' +
