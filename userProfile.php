@@ -254,7 +254,7 @@
     </div>
 </div>
 
-<section id="interests_select" style="padding: 10px; position: absolute; ; left: 20%; top: 10%; right: 20%; bottom: 10%;background: whitesmoke; z-index: 100;;  overflow-y: scroll;" hidden>
+<section id="interests_select" style="padding: 10px; border-radius: 10px; border: 2px lightgray solid; position: absolute; ; left: 20%; top: 10%; right: 20%; bottom: 10%;background: whitesmoke; z-index: 100;;  overflow-y: scroll;" hidden>
     <div role="group" class="btn-group mt-2 pull-right">
         <button class="btn btn-warning ml-2" type="button" onclick="editInterests('close')">Close</button>
         <button class="btn btn-primary ml-2" type="button" onclick="saveInterest()">Save</button>
