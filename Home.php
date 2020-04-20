@@ -777,7 +777,7 @@
                             </div>
 
                                 <section class="filter" hidden>
-                                <div class="mb-3 mt-3" style="width: 100%;margin-top: 40px;">
+                                <div class="mb-3 mt-3" style="width: 100%; margin-top: 40px;">
                                     <label class="text-white">Smoker </label>
                                     <select id="smoker_select_picker" class="form-control" >
                                         <optgroup label="Select A Smoker">
@@ -902,7 +902,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+            </div>
 
             <section id="report_pane" style="width: 550px;padding: 20px;height: 500px;background: lightgray;border-radius: 20px; border: 2px solid rgb(85,31,31);  position: absolute; left: 30%; right: 20%; bottom: 20%; z-index: 100;" hidden>
                 <button class="btn btn-primary" onclick="openReportPane()" style="width: 25px;height: 25px;border-radius: 12px;background: red;position: absolute;top: 5px;left: 5px;border: 2px; text-align: center;"></button>

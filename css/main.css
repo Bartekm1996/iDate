@@ -158,8 +158,8 @@ main {
   padding: 10px;
   background: #1e2229;
   border: 2px solid blue;
-  bottom: 80px;
-  right:80px;
+  bottom: 20px;
+  right: 20px;
   z-index: 98;
 }
 /* Dropdown Button */
