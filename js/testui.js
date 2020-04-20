@@ -505,9 +505,6 @@ function getAllProfiles(smoker, drinker, age) {
 
 function connect(user_id, logged_in_id, src, name, username, matchingPane, searchpane) {
 
-
-    console.log(user_id + " " + logged_in_id + " " + src + " " + name + " " + username + " " + matchingPane + " " + searchpane);
-
     const request = {};
     request.create_match_api = true;
     request.id1 = user_id;
@@ -517,8 +514,9 @@ function connect(user_id, logged_in_id, src, name, username, matchingPane, searc
         url: "api.php",
         data: request,
         success: function (response) {
-            let les = JSON.parse(response);
             console.log(response);
+
+            let les = JSON.parse(response);
             switch (les.statusCode) {
                 case 1:{
                     $('#card_message_button').attr('hidden', false);

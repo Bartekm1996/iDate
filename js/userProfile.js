@@ -37,6 +37,7 @@ function showProfile(currentProfile, username, matched) {
 
     loadAgePicker();
 
+
     const request = {};
     request.get_user_info = true;
     request.username = currentProfile;
@@ -61,6 +62,7 @@ function showProfile(currentProfile, username, matched) {
             $('#upro_img').attr('details', 'true');
 
 
+            loadHistoryTable(res.userName, true);
             if(res.firstName === null){
                 $('#age_picker').val(parseInt(res.age));
                 $('#gender_picker').val(res.gender);
@@ -247,7 +249,7 @@ function killSessiosn() {
 }
 
 
-function loadHistoryTable(username) {
+function loadHistoryTable(username, reload) {
 
     const request = {};
     request.last_logged_in = true;
@@ -258,6 +260,7 @@ function loadHistoryTable(username) {
         url: "Mongo.php",
         data: request,
         success: function (response) {
+            $('#history_table_body').empty();
             console.log(response);
             if(response == null || response.length == 0) return;
             
@@ -266,13 +269,15 @@ function loadHistoryTable(username) {
             let res = JSON.parse(response);
             console.log(res.events[0].timestamp);
 
-            if(res.events.length === 1){
-                msg("Welcome " + username);
-            }else {
-                for (let i = (res.events.length - 1); i > -1; i--) {
-                    if (res.events[i].event === "Log In") {
-                        msg('Last Signed In ' + res.events[i].timestamp)
-                        break;
+            if(reload === false) {
+                if (res.events.length === 1) {
+                    msg("Welcome " + username);
+                } else {
+                    for (let i = (res.events.length - 1); i > -1; i--) {
+                        if (res.events[i].event === "Log In") {
+                            msg('Last Signed In ' + res.events[i].timestamp)
+                            break;
+                        }
                     }
                 }
             }

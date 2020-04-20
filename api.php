@@ -12,6 +12,7 @@ require("model/AvailableInterests.php");
 require("model/Connection.php");
 require("SweetalertResponse.php");
 require("model/Profile.php");
+require("MongoConnect.php");
 require("model/UserInfo.php");
 require ("Email.php");
 /* Create a match with current logged in user and match_id user */
@@ -24,7 +25,7 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
         $heart = "";$matched = false;
         $date = date("Y/m/d");
         $sqlCheckMatch = "SELECT userID1,userID2 FROM connections WHERE userID1 = '{$_POST['id2']}' AND userID2 = '{$_POST['id1']}';";
-        $sql = "INSERT INTO connections (userID1, userID2, connectionDate) VALUES({$_POST['id1']}, {$_POST['id2']}, '{$date}');";
+        $sqlMatch = "INSERT INTO connections (userID1, userID2, connectionDate) VALUES({$_POST['id1']}, {$_POST['id2']}, '{$date}');";
 
         $i = 0;
         $res = $conn->query($sqlCheckMatch);
@@ -32,10 +33,20 @@ if(isset($_POST['create_match_api']) && isset($_POST['id1']) && isset($_POST['id
             while($row = mysqli_fetch_row($res)){
                 if($row[0] === $_POST['id2'] && $row[1] === $_POST['id1']){
                     $matched = true;
+                    $sql = "SELECT userName FROM user WHERE id = '{$_POST['id1']}';";
+                    $usersNameOne = $conn->query($sql)->fetch_row()[0];
+
+                    $sql = "SELECT userName FROM user WHERE id = '{$_POST['id2']}';";
+                    $usersNameTwo = $conn->query($sql)->fetch_row()[0];
+
+                    $mongo = new MongoConnect();
+                    $mongo->historyUpdate($usersNameOne, "You matched with ". $usersNameTwo, "New Match");
+                    $mongo->historyUpdate($usersNameTwo, "You matched with ". $usersNameOne, "New Match");
+
                 }
             }
         }
-        $conn->query($sql);
+        $conn->query($sqlMatch);
 
         if($matched === false){
             $heart = new SweetalertResponse(2,

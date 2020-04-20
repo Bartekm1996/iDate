@@ -36,12 +36,7 @@ if(isset($_GET['userId'])){
 
 
 } else {
-    /*
-    request.userOne = 'Bartekm1999';
-    request.userTwoId = $('ul#contactsList').find('li.active').attr("data-id");
-    request.userTwoName = $('ul#contactsList').find('li.active').attr("data-user-name");
-    request.messages = message;
-    */
+
     if(isset($_GET['userOne']) && isset($_GET['userTwoId']) && isset($_GET['userTwoName']) && isset($_GET['messages']) && isset($_GET['size'])) {
         $mongo = new MongoConnect();
 

@@ -127,7 +127,7 @@
 
             showProfile( $('#username-header').attr('user-name'), null, false);
             loadMyProfile();
-            loadHistoryTable($('#username-header').attr('user-name'));
+            loadHistoryTable($('#username-header').attr('user-name'), false);
             fillMembersNumbers();
             fillTicketsNumbers();
             loadConversations();
