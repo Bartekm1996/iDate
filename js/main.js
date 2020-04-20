@@ -45,8 +45,6 @@
             $('#lowerCase').css({'color': 'red'});
             $('#passLength').css({'color': 'red'});
             $('#specialChar').css({'color': 'red'});
-
-
         }
 
         if($(this).val().length > 7){
@@ -228,11 +226,13 @@
             $('#loginForm').hide();
             $('#signUpHeader').html("Sign Up");
             $('#signUp').html("Sing In");
+            $('#register').html("Register");
             $('#registerForm').show();
         } else {
             $('#loginForm').show();
             $('#signUpHeader').html("Sign In");
             $('#signUp').html("Sing Up");
+            $('#register').html("Register");
             $('#registerForm').hide();
         }
     })

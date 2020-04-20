@@ -20,6 +20,8 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link href="vendorv/sweetalert/sweetalert.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <!--    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
     <!--    <script src="//geodata.solutions/includes/statecity.js"></script>-->
     <!--    <script src="//geodata.solutions/includes/countrystatecity.js"></script>-->
@@ -187,8 +189,15 @@
                         errorMessage("Whitespace Error", "Username or Password cannot contain Whitespaces");
                     } else {
                         if (passWordReqs()) {
-                            $('#signUp').html('<i class="fa fa-spinner fa-spin mr-2"></i> Registering');
-                            acceptTermsAndCons(request);
+                            if(isCaptchaChecked()) {
+                                captchaSuccessful(request);
+                            }else{
+                                Swal.fire({
+                                    title: "Captcha Not Checked",
+                                    text: "Check reCaptcha To Finish Registration",
+                                    icon: "warning"
+                                });
+                            }
                         }
                     }
                 }
@@ -285,6 +294,8 @@
                             break;
                         case 11: {
                             Swal.fire(response.title, response.message, response.type);
+                            $('#signUp').trigger("click");
+                            blankFields();
                         }
                         default:
                             Swal.fire(response.title, response.message, response.type);
@@ -300,6 +311,77 @@
                 }
             });
         }
+
+        function blankFields() {
+            $('#email').val('');
+            $('#username').val('');
+            $('#password').val('');
+            $('#confirm_password').val('');
+            $('#email').removeClass('alert-validate');
+            $('#username').removeClass('alert-validate');
+            $('#password').removeClass('alert-validate');
+            $('#confirm_password').removeClass('alert-validate');
+            $('#username').parent().removeClass('true-validate');
+            $('#email').parent().removeClass('true-validate');
+            clearPassword();
+            $('#passWordInfo').attr('hidden',true);
+            grecaptcha.reset();
+            $('#passWordId').attr('aria-valuenow', 0).css('width', 0+"%");
+            $('#confirmPassWordBar').attr('aria-valuenow', 0).css('width', 0+"%");
+        }
+
+        function clearPassword(){
+                $('#passWordId').attr('data-password-length', 0);
+                $('#passWordId').attr('data-password-digit', 0);
+                $('#passWordId').attr('data-password-lower-case', 0);
+                $('#passWordId').attr('data-password-upper-case', 0);
+                $('#passWordId').attr('data-password-special-case', 0);
+                $('#digit').css({'color': 'red'});
+                $('#upperCase').css({'color': 'red'});
+                $('#lowerCase').css({'color': 'red'});
+                $('#passLength').css({'color': 'red'});
+                $('#specialChar').css({'color': 'red'});
+        }
+
+        function isCaptchaChecked() {
+            return grecaptcha && grecaptcha.getResponse().length !== 0;
+        }
+
+        function hideValidate(input) {
+            var thisAlert = $(input).parent();
+            $(thisAlert).removeClass('alert-validate');
+        }
+
+        function captchaSuccessful(request) {
+            const req = {};
+            req.g_recaptcha_response = grecaptcha.getResponse();
+
+            $.ajax({
+                type: "POST",
+                url: "api.php",
+                dataType: "json",
+                data: req,
+                success: function (response) {
+                    if(response.status === 1){
+                        $('#register').html('<i class="fa fa-spinner fa-spin mr-2"></i> Registering');
+                        acceptTermsAndCons(request);
+                    }else{
+                        Swal.fire({
+                            title: "Failed To Verify Captcha",
+                            text: "reCaptcha Verification Failed, Try Again. If this issue persists please contact customer service",
+                            icon: "warning"
+                        });
+                    }
+                },
+                failure: function (response) {
+                    console.log('failure:' + JSON.stringify(response));
+                },
+                error: function (response) {
+                    console.log('error:' + JSON.stringify(response));
+                }
+            });
+        }
+
     </script>
 </head>
 <body style="background-color: #e8519e;">
@@ -379,10 +461,11 @@
                         <div id="confirmPassWordBar" role="progressbar"  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </div>
+                <div class="g-recaptcha mb-2" data-sitekey="6LeA9OsUAAAAAP19N8wGhLu7Blv8HJfDkJjuvQMB"></div>
                 <div class="container-login100-form-btn m-t-10">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn txt4" onclick="regTest()">
+                        <button class="login100-form-btn txt4" id="register" onclick="regTest()">
                             Sign Up
                         </button>
                     </div>

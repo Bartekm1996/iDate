@@ -254,12 +254,12 @@
     </div>
 </div>
 
-<section id="interests_select" style="padding: 10px; border-radius: 10px; border: 2px lightgray solid; position: absolute; ; left: 20%; top: 10%; right: 20%; bottom: 10%;background: whitesmoke; z-index: 100;;  overflow-y: scroll;" hidden>
+<div id="interests_select" style="padding: 15px; border-radius: 10px; border: 2px lightgray solid; position: absolute; ; left: 20%; top: 10%; right: 20%; bottom: 10%;background: whitesmoke; z-index: 100; overflow-y: scroll;" hidden>
     <div role="group" class="btn-group mt-2 pull-right">
         <button class="btn btn-warning ml-2" type="button" onclick="editInterests('close')">Close</button>
         <button class="btn btn-primary ml-2" type="button" onclick="saveInterest()">Save</button>
     </div>
-    <div style="display: grid;grid-template-columns: auto auto auto auto;grid-row-gap: 25px; width: 50%; height: 100%; margin-left: 15px; margin-top: 50px;">
+    <div style="display: grid; grid-template-columns: auto auto auto auto; grid-row-gap: 25px; width: 100%; height: 100%; margin-left: 15px; margin-top: 50px; ">
         <div class="in-card" onclick="setActive(this)">
             <div class="in-card-header"><span>Football</span></div>
             <div class="in-card-main"><img src="https://firebasestorage.googleapis.com/v0/b/inventory-b7072.appspot.com/o/iDare%2Ficonfinder_football_172468.png?alt=media&amp;token=57ccb570-6d86-4a3d-8d93-4ea1949c4b58" style="width: 100px;height: 100px;" /></div>
@@ -303,4 +303,4 @@
             <div class="in-card-main"><img src="https://firebasestorage.googleapis.com/v0/b/inventory-b7072.appspot.com/o/iDare%2Ficonfinder_horse_384872.png?alt=media&amp;token=0a8f5921-182b-4e9f-9234-abcadae9913e" style="width: 100px;height: 100px;" /></div>
         </div>
     </div>
-</section>
+</div>

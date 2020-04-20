@@ -598,6 +598,20 @@ else if(isset($_POST['upload_files_api'])) {
     $remail = $_POST['reset_email'];
     $semail = new Email($remail, $rname);
     $semail->sendRegisterEmail(Email::RESET_PASSWORD);
+}else if(isset($_POST['g_recaptcha_response'])){
+
+    $resp = 0;
+    $secret = '6LeA9OsUAAAAALJqSZa3xKj9bQdHgE-FyiTS0F02';
+    //get verify response data
+    $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g_recaptcha_response']);
+    $responseData = json_decode($verifyResponse);
+    if($responseData->success) {
+        $resp = 1;
+    }else{
+        $resp = 2;
+    }
+
+    echo json_encode(array("status" => $resp));
 }
 ob_start();
 

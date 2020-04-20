@@ -321,7 +321,6 @@
             request.messages = ($('#contact_name').attr('data-id') === undefined ?  0 : $('#contact_name').attr('data-id'));
             request.userId = id;
 
-            console.log($('#contact_name').attr('data-id') + " data-id " + request.messages);
 
 
             console.log(request.messages + "  " + request.userId);
@@ -564,12 +563,12 @@
 
             let size = ($('#contact_name').attr('data-size') === undefined ? $('.messages ul li').length : $('#contact_name').attr('data-size'));
 
-            console.log("Data size " + size)
+            console.log("Data size " + size);
 
             const request = {};
 
             request.userOne = $('#username-header').attr('user-name');
-            request.userTwoId = ($('ul#contactsList').find('li.active').attr("data-id") === undefined ?   $('#contact_name').text() : $('ul#contactsList').find('li.active').attr("data-id"));
+            request.userTwoId = ($('#contactsList').find('li.active').attr("data-id") === undefined ?   $('#contact_name').text() : $('#contactsList').find('li.active').attr("data-id"));
             request.userTwoName = $('#contact_name').text();
             request.messages = message;
             request.size = size;
@@ -583,6 +582,11 @@
                 url: "Mongo.php",
                 data: request,
                 success: function (response) {
+
+                    if($('#contact_name').attr('data-id') === undefined){
+                        let leng = $('ul#contactsList').length;
+                        $('#contact_name').attr('data-id',leng === 0 ? 0 : leng);
+                    }
                     console.log('success' + response);
                     getMessage();
                 },
@@ -606,8 +610,8 @@
         }
 
         function changeValue(val){
-            console.log("Value " + $(val).val())
-            console.log("Value low " + $(val).valueLow)
+            console.log("Value " + $(val).val());
+            console.log("Value low " + $(val).valueLow);
         }
 
         $(window).on('keydown', function(e) {

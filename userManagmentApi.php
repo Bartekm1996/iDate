@@ -282,14 +282,6 @@ else if(isset($_POST['resend_verification_email'])){
                             "" ,
                             SweetalertResponse::SUCCESS
                 );
-
-                if($action === 'block'){
-                    $email = new Email($email, $username);
-                    $email->sendMessage(2, $reason, "Blocked", "customerservicesteam@idate.ie");
-                }else if($action === 'delete'){
-                    $email = new Email($email, $username);
-                    $email->sendMessage(3, $reason, "Deleted", "customerservicesteam@idate.ie");
-                }
             }
         }else{
             if($action === 'activate'){
