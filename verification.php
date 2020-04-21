@@ -62,10 +62,10 @@
 
 
 
-        function passWordCheck(elem) {
+        function passWordCheck() {
                     let strength = parseInt($('#updatepass').attr('passwordStrenght'));
 
-                    if($(elem).val().match(" ")){
+                    if($('#updatepass').val().match(" ")){
                         Swal.fire({
                             title: "Whitespace Error",
                             text: "Password cannot contain whitespaces",
@@ -73,7 +73,7 @@
                         });
                     }
 
-                    if($(elem).val().length === 0){
+                    if($('#updatepass').val().length === 0){
                         strength = 0;
                         $('#digit').css({'color': 'red'});
                         $('#upperCase').css({'color': 'red'});
@@ -82,7 +82,7 @@
                         $('#specialChar').css({'color': 'red'});
                     }
 
-                    if($(elem).val().length > 7){
+                    if($('#updatepass').val().length > 7){
                         if(parseInt( $('#updatepass').attr('data-password-length')) !== 1) {
                             $('#updatepass').attr('data-password-length', 1);
                             strength += 20;
@@ -95,7 +95,7 @@
                     }
 
 
-                    if(/\d/.test($(elem).val().trim())){
+                    if(/\d/.test($('#updatepass').val().trim())){
                         if(parseInt($('#updatepass').attr('data-password-digit')) !== 1){
                             $('#updatepass').attr('data-password-digit', 1);
                             $('#digit').css({'color': 'green'});
@@ -110,7 +110,7 @@
                     }
 
 
-                    if(/[a-z]+/.test($(elem).val())){
+                    if(/[a-z]+/.test($('#updatepass').val())){
                         if(parseInt($('#updatepass').attr('data-password-lower-case')) !== 1){
                             $('#updatepass').attr('data-password-lower-case', 1);
                             $('#lowerCase').css({'color': 'green'});
@@ -124,7 +124,7 @@
                         }
                     }
 
-                    if(/[A-Z]+/.test($(elem).val().trim())){
+                    if(/[A-Z]+/.test($('#updatepass').val().trim())){
                         if(parseInt($('#updatepass').attr('data-password-upper-case')) !== 1){
                             $('#updatepass').attr('data-password-upper-case', 1);
                             $('#upperCase').css({'color': 'green'});
@@ -138,9 +138,9 @@
                         }
                     }
 
-                    if(/[!@#$%()&*?{}\[\]\/]+/.test($(elem).val().trim())){
+                    if(/[!@#$%()&*?{}\[\]\/]+/.test($('#updatepass').val().trim())){
                         if(parseInt($('#updatepass').attr('data-password-special-case')) !== 1){
-                            $('#passWordId').attr('data-password-special-case', 1);
+                            $('#updatepass').attr('data-password-special-case', 1);
                             $('#specialChar').css({'color': 'green'});
                             strength += 20;
                         }
@@ -217,7 +217,7 @@ else if (isset($_GET['reset'])) {
                 "<input id='updateemail' type='hidden' value='{$_GET['reset']}'/>".
                 "<label class='form-control btn-warning'>Reset Password for</label>".
                 "<label class='form-control'>$decryptedUserName</label>".
-                "<input id='updatepass' class='form-control' type='text' onkeyup='passWordCheck(this)' placeholder='New password' style='padding-bottom:10px'/>".
+                "<input id='updatepass' class='form-control' type='text' onkeyup='passWordCheck()' placeholder='New password' style='padding-bottom:10px'/>".
                 '<div id="passWordInfo" style="padding: 5px; margin-top: 10px; margin-bottom: 10px;">'.
                     '<div class="d-flex pos-justify ml-3">'.
                         '<ul class="m-r-40" style="text-align: left;">'.
