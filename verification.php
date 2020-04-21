@@ -87,7 +87,7 @@ if (isset($_GET['verification'])) {
         {
             echo "<br><br><br><br><br>$decryptedUserName has been verified. <br/><br>Please return to <a href=\"http://www.idate.ie\">Login Page</a>";
         } else {
-            echo "Key is invalid or has expired please try again.  " + $userName;
+            echo "Key is invalid or has expired please try again.  ";
         }
     }
 
@@ -114,7 +114,7 @@ else if (isset($_GET['reset'])) {
                 "<input id='updatepass' class='form-control' type='text' onkeyup='updateButton()' placeholder='New password' style='padding-bottom:10px'/>".
                 "<button id='resetbtn' class='btn btn-success' onclick='resetPassword()' disabled>Reset</button></div>";
         } else {
-            echo "Key is invalid or has expired please try again.";
+            echo "Key is invalid or has expired please try again. " + $userName;
         }
     }
 
