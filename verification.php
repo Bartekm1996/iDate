@@ -240,7 +240,7 @@ else if (isset($_GET['reset'])) {
                 "</div>".
                 "<button id='resetbtn' class='btn btn-success mt-2' onclick='resetPassword()' disabled>Reset</button></div>";
         } else {
-            echo "Key is invalid or has expired please try again. ";
+            echo "Key is invalid or has expired please try again. {$decryptedUserName}";
         }
     }
 
