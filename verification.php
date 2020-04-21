@@ -63,6 +63,8 @@
 
 
         function passWordCheck() {
+                    updateButton();
+                    
                     let strength = parseInt($('#updatepass').attr('passwordStrenght'));
 
                     if($('#updatepass').val().match(" ")){
