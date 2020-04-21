@@ -67,7 +67,7 @@
             if(parseInt($('#updatepass').attr('passwordStrenght')) === undefined || parseInt($('#updatepass').attr('passwordStrenght')) === null){
                 strength = 0
             }else{
-                strength = parseInt($('#updatepass').attr('passwordStrenght'));
+                strength = $('#updatepass').attr('passwordStrenght');
             }
 
             if ($('#updatepass').val().match(" ")) {
