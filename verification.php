@@ -100,7 +100,7 @@ else if (isset($_GET['reset'])) {
 
         $decryptedUserName = decrypt($_GET['reset']);
         $userName = $conn->real_escape_string($decryptedUserName);
-        $sql = "SELECT registered FROM user where email='{$decryptedUserName}' LIMIT 1;";
+        $sql = "SELECT registered FROM user WHERE userName='{$decryptedUserName}' LIMIT 1;";
 
 
         $result = $conn->query($sql);
@@ -114,7 +114,7 @@ else if (isset($_GET['reset'])) {
                 "<input id='updatepass' class='form-control' type='text' onkeyup='updateButton()' placeholder='New password' style='padding-bottom:10px'/>".
                 "<button id='resetbtn' class='btn btn-success' onclick='resetPassword()' disabled>Reset</button></div>";
         } else {
-            echo "Key is invalid or has expired please try again. username = ".$userName." query".$_GET['data'];
+            echo "Key is invalid or has expired please try again. ";
         }
     }
 
