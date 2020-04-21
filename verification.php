@@ -64,7 +64,7 @@
             }
 
             let strength = 0;
-            if(parseInt($('#updatepass').attr('passwordStrenght')) === undefined || parseInt($('#updatepass').attr('passwordStrenght')) === null){
+            if(parseInt($('#updatepass').attr('passwordStrenght')) === undefined || parseInt($('#updatepass').attr('passwordStrenght')) === null ||  isNaN(parseInt($('#updatepass').attr('passwordStrenght')))){
                 strength = 0
             }else{
                 strength = parseInt($('#updatepass').attr('passwordStrenght'));
