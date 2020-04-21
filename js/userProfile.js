@@ -146,6 +146,8 @@ function saveUserInfo() {
             $('#upro_img').attr('details',true);
             $('#drinker_header').text(request.drinker);
             $('#smoker_header').text(request.smoker);
+            showProfile( $('#username-header').attr('user-name'),null,false);
+
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
@@ -441,6 +443,7 @@ function saveDate(request) {
             }else if(request.about_me !== " "){
                 $('#profile_card_description').text(request.about_me);
             }
+            showProfile( $('#username-header').attr('user-name'),null,false);
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));
@@ -624,6 +627,7 @@ function saveCity(){
         success: function (response) {
             let res = JSON.parse(response);
             Swal.fire(res.title, res.message, res.type);
+            showProfile( $('#username-header').attr('user-name'),null,false);
         },
         failure: function (response) {
             console.log('failure:' + JSON.stringify(response));

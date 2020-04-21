@@ -203,11 +203,12 @@ function addTicketLabel(node, counter){
 
 
 function showSearch() {
+    loadMatches();
+    getAllProfiles();
     if($('#upro_img').attr('details') === 'true') {
 
         $('#searchFilter').attr('data-matches', false);
-        loadMatches();
-        getAllProfiles();
+
 
         if ($('#searchFilter').val().length > 0) {
             $('#searchFilter').val("");
