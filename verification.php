@@ -63,7 +63,12 @@
                 $('#resetbtn').prop('disabled', true);
             }
 
-            let strength = parseInt($('#updatepass').attr('passwordStrenght'));
+            let strength = 0;
+            if(parseInt($('#updatepass').attr('passwordStrenght')) === undefined || parseInt($('#updatepass').attr('passwordStrenght')) === null || parseInt($('#updatepass').attr('passwordStrenght')) === Nan){
+                strength = 0
+            }else{
+                strength = parseInt($('#updatepass').attr('passwordStrenght'));
+            }
 
             if ($('#updatepass').val().match(" ")) {
                 Swal.fire({
