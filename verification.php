@@ -86,11 +86,13 @@
             if ($('#updatepass').val().length > 7) {
                 if (parseInt($('#updatepass').attr('data-password-length')) !== 1) {
                     $('#updatepass').attr('data-password-length', 1);
+                    $('#passLength').css({'color': 'green'});
                     strength += 20;
                 }
             } else {
                 if (parseInt($('#updatepass').attr('data-password-length')) === 1) {
                     $('#updatepass').attr('data-password-length', 0);
+                    $('#passLength').css({'color': 'red'});
                     strength -= 20;
                 }
             }
@@ -153,6 +155,7 @@
                 }
             }
 
+            console.log("Password Lengy " + strength);
             $('#updatepass').attr('passwordStrenght', strength);
         }
 
