@@ -87,7 +87,7 @@ if (isset($_GET['verification'])) {
         {
             echo "<br><br><br><br><br>$decryptedUserName has been verified. <br/><br>Please return to <a href=\"http://www.idate.ie\">Login Page</a>";
         } else {
-            echo "Key is invalid or has expired please try again.";
+            echo "Key is invalid or has expired please try again.  " + $userName;
         }
     }
 
