@@ -14,13 +14,7 @@
     <link href="vendorv/sweetalert/sweetalert.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
-        function updateButton() {
-            if($('#updatepass').val().length > 7) {
-                $('#resetbtn').prop('disabled', false);
-            } else {
-               $('#resetbtn').prop('disabled', true);
-            }
-        }
+
         function resetPassword() {
             var request = {};
             request.updateemail = $('#updateemail').val();
@@ -63,103 +57,107 @@
 
 
         function passWordCheck() {
-                    updateButton();
-                    
-                    let strength = parseInt($('#updatepass').attr('passwordStrenght'));
+            if($('#updatepass').val().length > 7) {
+                $('#resetbtn').prop('disabled', false);
+            } else {
+                $('#resetbtn').prop('disabled', true);
+            }
 
-                    if($('#updatepass').val().match(" ")){
-                        Swal.fire({
-                            title: "Whitespace Error",
-                            text: "Password cannot contain whitespaces",
-                            icon: 'warning'
-                        });
-                    }
+            let strength = parseInt($('#updatepass').attr('passwordStrenght'));
 
-                    if($('#updatepass').val().length === 0){
-                        strength = 0;
-                        $('#digit').css({'color': 'red'});
-                        $('#upperCase').css({'color': 'red'});
-                        $('#lowerCase').css({'color': 'red'});
-                        $('#passLength').css({'color': 'red'});
-                        $('#specialChar').css({'color': 'red'});
-                    }
+            if ($('#updatepass').val().match(" ")) {
+                Swal.fire({
+                    title: "Whitespace Error",
+                    text: "Password cannot contain whitespaces",
+                    icon: 'warning'
+                });
+            }
 
-                    if($('#updatepass').val().length > 7){
-                        if(parseInt( $('#updatepass').attr('data-password-length')) !== 1) {
-                            $('#updatepass').attr('data-password-length', 1);
-                            strength += 20;
-                        }
-                    }else{
-                        if(parseInt( $('#updatepass').attr('data-password-length')) === 1) {
-                            $('#updatepass').attr('data-password-length', 0);
-                            strength -= 20;
-                        }
-                    }
-
-
-                    if(/\d/.test($('#updatepass').val().trim())){
-                        if(parseInt($('#updatepass').attr('data-password-digit')) !== 1){
-                            $('#updatepass').attr('data-password-digit', 1);
-                            $('#digit').css({'color': 'green'});
-                            strength += 20;
-                        }
-                    }else {
-                        if(parseInt($('#updatepass').attr('data-password-digit')) === 1){
-                            $('#updatepass').attr('data-password-digit', 0);
-                            $('#digit').css({'color': 'red'});
-                            strength -= 20;
-                        }
-                    }
-
-
-                    if(/[a-z]+/.test($('#updatepass').val())){
-                        if(parseInt($('#updatepass').attr('data-password-lower-case')) !== 1){
-                            $('#updatepass').attr('data-password-lower-case', 1);
-                            $('#lowerCase').css({'color': 'green'});
-                            strength += 20;
-                        }
-                    }else {
-                        if(parseInt($('#updatepass').attr('data-password-lower-case')) === 1){
-                            $('#updatepass').attr('data-password-lower-case', 0);
-                            $('#lowerCase').css({'color': 'red'});
-                            strength -= 20;
-                        }
-                    }
-
-                    if(/[A-Z]+/.test($('#updatepass').val().trim())){
-                        if(parseInt($('#updatepass').attr('data-password-upper-case')) !== 1){
-                            $('#updatepass').attr('data-password-upper-case', 1);
-                            $('#upperCase').css({'color': 'green'});
-                            strength += 20;
-                        }
-                    }else {
-                        if(parseInt($('#updatepass').attr('data-password-upper-case')) === 1){
-                            $('#updatepass').attr('data-password-upper-case', 0);
-                            $('#upperCase').css({'color': 'red'});
-                            strength -= 20;
-                        }
-                    }
-
-                    if(/[!@#$%()&*?{}\[\]\/]+/.test($('#updatepass').val().trim())){
-                        if(parseInt($('#updatepass').attr('data-password-special-case')) !== 1){
-                            $('#updatepass').attr('data-password-special-case', 1);
-                            $('#specialChar').css({'color': 'green'});
-                            strength += 20;
-                        }
-                    }else {
-                        if(parseInt($('#updatepass').attr('data-password-special-case')) === 1){
-                            $('#updatepass').attr('data-password-special-case', 0);
-                            $('#specialChar').css({'color': 'red'});
-                            strength -= 20;
-                        }
-                    }
-
+            if ($('#updatepass').val().length === 0) {
+                strength = 0;
+                $('#digit').css({'color': 'red'});
+                $('#upperCase').css({'color': 'red'});
+                $('#lowerCase').css({'color': 'red'});
+                $('#passLength').css({'color': 'red'});
+                $('#specialChar').css({'color': 'red'});
                 $('#updatepass').attr('passwordStrenght', strength);
             }
+
+            if ($('#updatepass').val().length > 7) {
+                if (parseInt($('#updatepass').attr('data-password-length')) !== 1) {
+                    $('#updatepass').attr('data-password-length', 1);
+                    strength += 20;
+                }
+            } else {
+                if (parseInt($('#updatepass').attr('data-password-length')) === 1) {
+                    $('#updatepass').attr('data-password-length', 0);
+                    strength -= 20;
+                }
+            }
+
+
+            if (/\d/.test($('#updatepass').val().trim())) {
+                if (parseInt($('#updatepass').attr('data-password-digit')) !== 1) {
+                    $('#updatepass').attr('data-password-digit', 1);
+                    $('#digit').css({'color': 'green'});
+                    strength += 20;
+                }
+            } else {
+                if (parseInt($('#updatepass').attr('data-password-digit')) === 1) {
+                    $('#updatepass').attr('data-password-digit', 0);
+                    $('#digit').css({'color': 'red'});
+                    strength -= 20;
+                }
+            }
+
+
+            if (/[a-z]+/.test($('#updatepass').val())) {
+                if (parseInt($('#updatepass').attr('data-password-lower-case')) !== 1) {
+                    $('#updatepass').attr('data-password-lower-case', 1);
+                    $('#lowerCase').css({'color': 'green'});
+                    strength += 20;
+                }
+            } else {
+                if (parseInt($('#updatepass').attr('data-password-lower-case')) === 1) {
+                    $('#updatepass').attr('data-password-lower-case', 0);
+                    $('#lowerCase').css({'color': 'red'});
+                    strength -= 20;
+                }
+            }
+
+            if (/[A-Z]+/.test($('#updatepass').val().trim())) {
+                if (parseInt($('#updatepass').attr('data-password-upper-case')) !== 1) {
+                    $('#updatepass').attr('data-password-upper-case', 1);
+                    $('#upperCase').css({'color': 'green'});
+                    strength += 20;
+                }
+            } else {
+                if (parseInt($('#updatepass').attr('data-password-upper-case')) === 1) {
+                    $('#updatepass').attr('data-password-upper-case', 0);
+                    $('#upperCase').css({'color': 'red'});
+                    strength -= 20;
+                }
+            }
+
+            if (/[!@#$%()&*?{}\[\]\/]+/.test($('#updatepass').val().trim())) {
+                if (parseInt($('#updatepass').attr('data-password-special-case')) !== 1) {
+                    $('#updatepass').attr('data-password-special-case', 1);
+                    $('#specialChar').css({'color': 'green'});
+                    strength += 20;
+                }
+            } else {
+                if (parseInt($('#updatepass').attr('data-password-special-case')) === 1) {
+                    $('#updatepass').attr('data-password-special-case', 0);
+                    $('#specialChar').css({'color': 'red'});
+                    strength -= 20;
+                }
+            }
+
+            $('#updatepass').attr('passwordStrenght', strength);
         }
 
     </script>
-    <title>Hello World</title>
+    <title>iDate Password Reset</title>
 </head>
 <body>
 <div class="container">
