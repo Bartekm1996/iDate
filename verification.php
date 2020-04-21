@@ -213,7 +213,7 @@ else if (isset($_GET['reset'])) {
         $result = $conn->query($sql);
         if ($result->num_rows > 0)
         {
-            //display success message and redirect
+            //display success message and redirec
             echo "<div class='form-group' style='padding-top:50px'>".
                 "<input id='updateemail' type='hidden' value='{$_GET['reset']}'/>".
                 "<label class='form-control btn-warning'>Reset Password for</label>".
