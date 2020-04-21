@@ -114,7 +114,7 @@ else if (isset($_GET['reset'])) {
                 "<input id='updatepass' class='form-control' type='text' onkeyup='updateButton()' placeholder='New password' style='padding-bottom:10px'/>".
                 "<button id='resetbtn' class='btn btn-success' onclick='resetPassword()' disabled>Reset</button></div>";
         } else {
-            echo "Key is invalid or has expired please try again. " + $userName;
+            echo "Key is invalid or has expired please try again. ".$userName." ".$_GET['data'];
         }
     }
 
