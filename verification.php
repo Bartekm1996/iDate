@@ -25,31 +25,137 @@
             var request = {};
             request.updateemail = $('#updateemail').val();
             request.updatepass = $('#updatepass').val();
-            $.ajax({
-                method: "POST",
-                url: "update.php",
-                data: request,
-                success: function (response) {
-                    console.log(response);
-                    //TODO: use status code to determine what to do next
-                    Swal.fire(response.title, response.message, response.type);
-                    switch(response.statusCode) {
-                        default:
-                            Swal.fire(response.title, response.message, response.type);
-                            break;
-                    }
-                    //https://sweetalert2.github.io/#examples
-                    window.location.href = 'index.php';
 
-                },
-                failure: function (response) {
-                    console.log('failure:' + JSON.stringify(response));
-                },
-                error: function (response) {
-                    console.log('error:' + JSON.stringify(response));
-                }
-            });
+            if(parseInt($('#updatepass').attr('passwordStrenght')) === 100) {
+                $.ajax({
+                    method: "POST",
+                    url: "update.php",
+                    data: request,
+                    success: function (response) {
+                        console.log(response);
+                        //TODO: use status code to determine what to do next
+                        Swal.fire(response.title, response.message, response.type);
+                        switch (response.statusCode) {
+                            default:
+                                Swal.fire(response.title, response.message, response.type);
+                                break;
+                        }
+                        //https://sweetalert2.github.io/#examples
+                        window.location.href = 'index.php';
+
+                    },
+                    failure: function (response) {
+                        console.log('failure:' + JSON.stringify(response));
+                    },
+                    error: function (response) {
+                        console.log('error:' + JSON.stringify(response));
+                    }
+                });
+            }else {
+                Swal.fire({
+                    title: "Password Not Strong enough",
+                    text: "Failed to update Password",
+                    icon: "warning"
+                });
+            }
         }
+
+
+
+        function passWordCheck(elem) {
+                    let strength = parseInt($('#updatepass').attr('passwordStrenght'));
+
+                    if($(elem).val().match(" ")){
+                        Swal.fire({
+                            title: "Whitespace Error",
+                            text: "Password cannot contain whitespaces",
+                            icon: 'warning'
+                        });
+                    }
+
+                    if($(elem).val().length === 0){
+                        strength = 0;
+                        $('#digit').css({'color': 'red'});
+                        $('#upperCase').css({'color': 'red'});
+                        $('#lowerCase').css({'color': 'red'});
+                        $('#passLength').css({'color': 'red'});
+                        $('#specialChar').css({'color': 'red'});
+                    }
+
+                    if($(elem).val().length > 7){
+                        if(parseInt( $('#updatepass').attr('data-password-length')) !== 1) {
+                            $('#updatepass').attr('data-password-length', 1);
+                            strength += 20;
+                        }
+                    }else{
+                        if(parseInt( $('#updatepass').attr('data-password-length')) === 1) {
+                            $('#updatepass').attr('data-password-length', 0);
+                            strength -= 20;
+                        }
+                    }
+
+
+                    if(/\d/.test($(elem).val().trim())){
+                        if(parseInt($('#updatepass').attr('data-password-digit')) !== 1){
+                            $('#updatepass').attr('data-password-digit', 1);
+                            $('#digit').css({'color': 'green'});
+                            strength += 20;
+                        }
+                    }else {
+                        if(parseInt($('#updatepass').attr('data-password-digit')) === 1){
+                            $('#updatepass').attr('data-password-digit', 0);
+                            $('#digit').css({'color': 'red'});
+                            strength -= 20;
+                        }
+                    }
+
+
+                    if(/[a-z]+/.test($(elem).val())){
+                        if(parseInt($('#updatepass').attr('data-password-lower-case')) !== 1){
+                            $('#updatepass').attr('data-password-lower-case', 1);
+                            $('#lowerCase').css({'color': 'green'});
+                            strength += 20;
+                        }
+                    }else {
+                        if(parseInt($('#updatepass').attr('data-password-lower-case')) === 1){
+                            $('#updatepass').attr('data-password-lower-case', 0);
+                            $('#lowerCase').css({'color': 'red'});
+                            strength -= 20;
+                        }
+                    }
+
+                    if(/[A-Z]+/.test($(elem).val().trim())){
+                        if(parseInt($('#updatepass').attr('data-password-upper-case')) !== 1){
+                            $('#updatepass').attr('data-password-upper-case', 1);
+                            $('#upperCase').css({'color': 'green'});
+                            strength += 20;
+                        }
+                    }else {
+                        if(parseInt($('#updatepass').attr('data-password-upper-case')) === 1){
+                            $('#updatepass').attr('data-password-upper-case', 0);
+                            $('#upperCase').css({'color': 'red'});
+                            strength -= 20;
+                        }
+                    }
+
+                    if(/[!@#$%()&*?{}\[\]\/]+/.test($(elem).val().trim())){
+                        if(parseInt($('#updatepass').attr('data-password-special-case')) !== 1){
+                            $('#passWordId').attr('data-password-special-case', 1);
+                            $('#specialChar').css({'color': 'green'});
+                            strength += 20;
+                        }
+                    }else {
+                        if(parseInt($('#updatepass').attr('data-password-special-case')) === 1){
+                            $('#updatepass').attr('data-password-special-case', 0);
+                            $('#specialChar').css({'color': 'red'});
+                            strength -= 20;
+                        }
+                    }
+
+                $('#updatepass').attr('passwordStrenght', strength);
+            }
+        }
+
     </script>
     <title>Hello World</title>
 </head>
@@ -112,7 +218,19 @@ else if (isset($_GET['reset'])) {
                 "<input id='updateemail' type='hidden' value='{$_GET['reset']}'/>".
                 "<label class='form-control btn-warning'>Reset Password for</label>".
                 "<label class='form-control'>$decryptedUserName</label>".
-                "<input id='updatepass' class='form-control' type='text' onkeyup='updateButton()' placeholder='New password' style='padding-bottom:10px'/>".
+                "<input id='updatepass' class='form-control' type='text' onkeyup='passWordCheck(this)' placeholder='New password' style='padding-bottom:10px'/>".
+                '<div id="passWordInfo" style="padding: 5px; margin-top: 10px; margin-bottom: 10px;">'.
+                    '<div class="d-flex pos-justify ml-3">'.
+                        '<ul class="m-r-40" style="text-align: left;">'.
+                            '<li id="digit" class="m-b-20" style="color: red;">Contains 1 digit</li>'.
+                            '<li id="specialChar" class="m-b-20" style="color: red;">Contains 1 Special Char</li>'.
+                            '<li id="passLength" style="color: red;">7 Charchters Long</li></ul>'.
+                        '<ul style="text-align: left;">'.
+                            '<li id="upperCase" class="m-b-20" style="color: red;">Contains 2 upper case</li>'.
+                            '<li id="lowerCase" style="color: red;">Contains 2 lower case</li>'.
+                        '</ul>'.
+                    '</div>'.
+                "</div>".
                 "<button id='resetbtn' class='btn btn-success mt-2' onclick='resetPassword()' disabled>Reset</button></div>";
         } else {
             echo "Key is invalid or has expired please try again. ";
