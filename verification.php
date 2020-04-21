@@ -39,6 +39,7 @@
                             break;
                     }
                     //https://sweetalert2.github.io/#examples
+                    window.location.href = 'index.php';
 
                 },
                 failure: function (response) {
@@ -112,7 +113,7 @@ else if (isset($_GET['reset'])) {
                 "<label class='form-control btn-warning'>Reset Password for</label>".
                 "<label class='form-control'>$decryptedUserName</label>".
                 "<input id='updatepass' class='form-control' type='text' onkeyup='updateButton()' placeholder='New password' style='padding-bottom:10px'/>".
-                "<button id='resetbtn' class='btn btn-success' onclick='resetPassword()' disabled>Reset</button></div>";
+                "<button id='resetbtn' class='btn btn-success mt-2' onclick='resetPassword()' disabled>Reset</button></div>";
         } else {
             echo "Key is invalid or has expired please try again. ";
         }
