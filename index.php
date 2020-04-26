@@ -31,7 +31,7 @@
 
         onload = function () {
             document.getElementById('vid').play();
-        }
+        };
 
         function loginTest() {
             const request = {};

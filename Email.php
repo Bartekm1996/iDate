@@ -131,7 +131,7 @@ class Email
         $mail = new SendGrid\Mail($emailFrom, $subject, $emailTo, $emailContent);
 
 
-        $apiKey = "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";
+        $apiKey = getenv("SENDGRID_API_KEY");
         $sg = new SendGrid($apiKey);
 
         try {
